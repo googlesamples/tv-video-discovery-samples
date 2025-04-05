@@ -20,11 +20,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.tv.material3.Surface
-import androidx.tv.material3.Text
+import com.google.android.googlevideodiscovery.common.navigation.NavigationGraph
+import com.google.android.googlevideodiscovery.tv.ui.screens.TvNavigationScreens
 import com.google.android.googlevideodiscovery.tv.ui.theme.GoogleTvVideoDiscoverySampleTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,21 +32,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GoogleTvVideoDiscoverySampleTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    shape = RectangleShape
-                ) {
-                    Greeting("Android")
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    val screens = remember { TvNavigationScreens() }
+
+                    NavigationGraph(
+                        screens = screens
+                    )
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }

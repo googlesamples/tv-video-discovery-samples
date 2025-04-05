@@ -1,0 +1,28 @@
+package com.google.android.googlevideodiscovery.common.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+
+@Composable
+fun NavigationGraph(screens: NavigationScreens) {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = LoginScreen) {
+        composable<LoginScreen> {
+            screens.LoginScreen(
+                onLogin = {
+                    navController.navigate(HomeScreen) {
+                        popUpTo(LoginScreen) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
+        composable<HomeScreen> { screens.HomeScreen() }
+        composable<SettingsScreen> { screens.SettingsScreen() }
+        composable<EntityScreen> { screens.EntityScreen() }
+    }
+}

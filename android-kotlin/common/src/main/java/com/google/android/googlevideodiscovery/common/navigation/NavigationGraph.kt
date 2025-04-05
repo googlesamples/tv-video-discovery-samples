@@ -13,7 +13,7 @@ fun NavigationGraph(screens: NavigationScreens) {
         composable<LoginScreen> {
             screens.LoginScreen(
                 onLogin = {
-                    navController.navigate(HomeScreen) {
+                    navController.navigate(ProfilesScreen) {
                         popUpTo(LoginScreen) {
                             inclusive = true
                         }

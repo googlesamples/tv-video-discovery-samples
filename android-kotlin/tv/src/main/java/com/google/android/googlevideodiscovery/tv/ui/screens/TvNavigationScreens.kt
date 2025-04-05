@@ -6,7 +6,7 @@ import com.google.android.googlevideodiscovery.common.navigation.NavigationScree
 class TvNavigationScreens : NavigationScreens {
     @Composable
     override fun LoginScreen(onLogin: () -> Unit) {
-        TvLoginScreen()
+        TvLoginScreen(onLogin = onLogin)
     }
 
     @Composable

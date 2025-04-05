@@ -36,5 +36,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "GoogleTvVideoDiscoverySample"
+include(":common")
 include(":mobile")
 include(":tv")

@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-package com.google.android.googlevideodiscovery.ui.theme
+package com.google.android.googlevideodiscovery.tv.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable

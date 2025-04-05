@@ -8,6 +8,9 @@ interface NavigationScreens {
     fun LoginScreen(onLogin: () -> Unit)
 
     @Composable
+    fun ProfilesScreen()
+
+    @Composable
     fun HomeScreen()
 
     @Composable
@@ -19,6 +22,9 @@ interface NavigationScreens {
 
 @Serializable
 internal object LoginScreen
+
+@Serializable
+internal object ProfilesScreen
 
 @Serializable
 internal object HomeScreen

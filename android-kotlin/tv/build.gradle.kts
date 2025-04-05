@@ -26,7 +26,7 @@ android {
 
     defaultConfig {
         applicationId = "com.google.android.googlevideodiscovery.tv"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"

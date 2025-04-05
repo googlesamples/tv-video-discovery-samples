@@ -21,6 +21,7 @@ fun NavigationGraph(screens: NavigationScreens) {
                 }
             )
         }
+        composable<ProfilesScreen> { screens.ProfilesScreen() }
         composable<HomeScreen> { screens.HomeScreen() }
         composable<SettingsScreen> { screens.SettingsScreen() }
         composable<EntityScreen> { screens.EntityScreen() }

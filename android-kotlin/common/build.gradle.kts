@@ -49,4 +49,5 @@ dependencies {
     api(platform(libs.androidx.compose.bom))
     api("androidx.compose.ui:ui")
     api("androidx.compose.ui:ui-graphics")
+    api("androidx.compose.foundation:foundation")
 }

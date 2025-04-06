@@ -18,7 +18,10 @@ import androidx.compose.ui.unit.sp
 import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundationsProvider
 
 @Composable
-fun LoginScreen(onLogin: () -> Unit) {
+fun LoginScreen(
+    performRegistration: () -> Unit,
+    performLogin: () -> Unit,
+) {
     val foundations = LocalFoundationsProvider.current
 
     Column(
@@ -41,10 +44,11 @@ fun LoginScreen(onLogin: () -> Unit) {
             ),
         )
         Row(horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally)) {
-            foundations.Button(onClick = onLogin) {
+            foundations.Button(onClick = performLogin) {
                 foundations.Text("Login")
             }
-            foundations.Button(onClick = onLogin) {
+
+            foundations.Button(onClick = performRegistration) {
                 foundations.Text("Register")
             }
         }

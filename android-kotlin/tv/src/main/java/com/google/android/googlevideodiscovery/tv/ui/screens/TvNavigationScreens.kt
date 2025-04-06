@@ -6,8 +6,11 @@ import com.google.android.googlevideodiscovery.common.ui.screens.LoginScreen as 
 
 class TvNavigationScreens : NavigationScreens {
     @Composable
-    override fun LoginScreen(onLogin: () -> Unit) {
-        CommonLoginScreen(onLogin = onLogin)
+    override fun LoginScreen(
+        performRegistration: () -> Unit,
+        performLogin: () -> Unit
+    ) {
+        CommonLoginScreen(performRegistration = performRegistration, performLogin = performLogin)
     }
 
     @Composable

@@ -5,7 +5,10 @@ import kotlinx.serialization.Serializable
 
 interface NavigationScreens {
     @Composable
-    fun LoginScreen(onLogin: () -> Unit)
+    fun LoginScreen(
+        performRegistration: () -> Unit,
+        performLogin: () -> Unit
+    )
 
     @Composable
     fun ProfilesScreen()

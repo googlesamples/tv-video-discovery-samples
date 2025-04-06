@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.tv.material3.Surface
 import com.google.android.googlevideodiscovery.common.navigation.NavigationGraph
+import com.google.android.googlevideodiscovery.tv.ui.foundations.TvFoundations
 import com.google.android.googlevideodiscovery.tv.ui.screens.TvNavigationScreens
 import com.google.android.googlevideodiscovery.tv.ui.theme.GoogleTvVideoDiscoverySampleTheme
 
@@ -33,10 +34,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             GoogleTvVideoDiscoverySampleTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
+                    val foundations = remember { TvFoundations() }
                     val screens = remember { TvNavigationScreens() }
 
                     NavigationGraph(
-                        screens = screens
+                        foundations = foundations,
+                        screens = screens,
                     )
                 }
             }

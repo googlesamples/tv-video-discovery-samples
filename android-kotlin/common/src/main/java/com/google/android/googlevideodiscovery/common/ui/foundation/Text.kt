@@ -15,9 +15,7 @@ fun Text(
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle = FontStyle.Normal,
 ) {
-    val foundations = LocalFoundations.current
-
-    foundations.Text(
+    LocalFoundations.current.Text(
         text = text,
         modifier = modifier,
         style = TextStyle(

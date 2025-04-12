@@ -10,8 +10,7 @@ fun Button(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
-    val foundations = LocalFoundations.current
-    foundations.Button(
+    LocalFoundations.current.Button(
         onClick = onClick,
         modifier = modifier,
         content = content

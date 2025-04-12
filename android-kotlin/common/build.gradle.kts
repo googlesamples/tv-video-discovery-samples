@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-    api("androidx.core:core-ktx:1.15.0")
+    api("androidx.core:core-ktx:1.16.0")
     api("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     api("androidx.activity:activity-compose:1.10.1")
     api("androidx.appcompat:appcompat:1.7.0")
@@ -50,4 +50,6 @@ dependencies {
     api("androidx.compose.ui:ui")
     api("androidx.compose.ui:ui-graphics")
     api("androidx.compose.foundation:foundation")
+    api("androidx.compose.material:material-icons-core")
+    api("androidx.compose.material:material-icons-extended")
 }

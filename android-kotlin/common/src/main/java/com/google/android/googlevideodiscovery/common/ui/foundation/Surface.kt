@@ -9,9 +9,7 @@ fun Surface(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
-    val foundations = LocalFoundations.current
-
-    foundations.Surface(
+    LocalFoundations.current.Surface(
         modifier = modifier,
         content = content
     )
@@ -23,9 +21,7 @@ fun Surface(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
-    val foundations = LocalFoundations.current
-
-    foundations.Surface(
+    LocalFoundations.current.Surface(
         onClick = onClick,
         modifier = modifier,
         content = content

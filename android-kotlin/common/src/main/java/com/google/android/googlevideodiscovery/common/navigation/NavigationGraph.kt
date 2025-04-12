@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.googlevideodiscovery.common.ui.foundation.Foundations
-import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundationsProvider
+import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundations
 import com.google.android.googlevideodiscovery.common.viewmodels.AuthViewModel
 
 @Composable
@@ -18,7 +18,7 @@ fun NavigationGraph(
 ) {
     val navController = rememberNavController()
 
-    CompositionLocalProvider(LocalFoundationsProvider provides foundations) {
+    CompositionLocalProvider(LocalFoundations provides foundations) {
         NavHost(navController = navController, startDestination = LoginScreen) {
             composable<LoginScreen> {
                 val postAuth = {

@@ -22,17 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
-import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundationsProvider
+import com.google.android.googlevideodiscovery.common.ui.foundation.Button
+import com.google.android.googlevideodiscovery.common.ui.foundation.Text
 
 @Composable
 fun ProfilesScreen(account: Account) {
-    val foundations = LocalFoundationsProvider.current
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,7 +39,7 @@ fun ProfilesScreen(account: Account) {
         verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        foundations.Text("Welcome, ${account.name}!", style = TextStyle(fontSize = 24.sp))
+        Text("Welcome, ${account.name}!", fontSize = 24.sp)
 
         ProfilesGrid(profiles = account.profiles)
     }
@@ -50,18 +49,8 @@ fun ProfilesScreen(account: Account) {
 private fun ProfilesGrid(profiles: List<AccountProfile>) {
     val density = LocalDensity.current
     var screenWidth by remember { mutableStateOf(0.dp) }
-    val cardsPerRow = remember(screenWidth) {
-        when {
-            screenWidth < 200.dp -> 1
-            screenWidth < 300.dp -> 2
-            screenWidth < 400.dp -> 3
-            screenWidth < 600.dp -> 4
-            else -> 5
-        }
-    }
-    val profilesChunks = remember(cardsPerRow, profiles) {
-        profiles.chunked(cardsPerRow)
-    }
+    val profilesChunks =
+        remember(screenWidth, profiles) { profiles.chunked(calculateCardsPerRow(screenWidth)) }
 
     Box(
         modifier = Modifier
@@ -103,9 +92,15 @@ private fun AccountProfileCard(
     profile: AccountProfile,
     modifier: Modifier = Modifier
 ) {
-    val foundations = LocalFoundationsProvider.current
-
-    foundations.Surface(onClick = {}, modifier = modifier) {
-        foundations.Text(profile.name)
+    Button(onClick = {}, modifier = modifier) {
+        Text(profile.name)
     }
+}
+
+private fun calculateCardsPerRow(screenWidth: Dp) = when {
+    screenWidth < 200.dp -> 1
+    screenWidth < 300.dp -> 2
+    screenWidth < 400.dp -> 3
+    screenWidth < 600.dp -> 4
+    else -> 5
 }

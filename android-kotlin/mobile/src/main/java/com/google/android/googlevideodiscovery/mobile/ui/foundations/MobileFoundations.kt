@@ -14,31 +14,8 @@ class MobileFoundations : Foundations {
         @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
 
     @Composable
-    override fun Text(text: String) {
-        androidx.compose.material3.Text(text = text)
-    }
-
-    @Composable
-    override fun Text(text: String, modifier: Modifier) {
-        androidx.compose.material3.Text(text = text, modifier = modifier)
-    }
-
-    @Composable
-    override fun Text(text: String, style: TextStyle) {
-        androidx.compose.material3.Text(text = text, style = style)
-    }
-
-    @Composable
     override fun Text(text: String, modifier: Modifier, style: TextStyle) {
         androidx.compose.material3.Text(text = text, modifier = modifier, style = style)
-    }
-
-    @Composable
-    override fun Button(onClick: () -> Unit, content: @Composable (RowScope.() -> Unit)) {
-        androidx.compose.material3.Button(
-            onClick = onClick,
-            content = content
-        )
     }
 
     @Composable
@@ -55,22 +32,8 @@ class MobileFoundations : Foundations {
     }
 
     @Composable
-    override fun Surface(content: @Composable() (RowScope.() -> Unit)) {
-        androidx.compose.material3.Surface {
-            Row(content = content)
-        }
-    }
-
-    @Composable
     override fun Surface(modifier: Modifier, content: @Composable() (RowScope.() -> Unit)) {
         androidx.compose.material3.Surface(modifier = modifier) {
-            Row(content = content)
-        }
-    }
-
-    @Composable
-    override fun Surface(onClick: () -> Unit, content: @Composable() (RowScope.() -> Unit)) {
-        androidx.compose.material3.Surface(onClick = onClick) {
             Row(content = content)
         }
     }

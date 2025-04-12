@@ -11,15 +11,6 @@ interface Foundations {
         @Composable get
 
     @Composable
-    fun Text(text: String)
-
-    @Composable
-    fun Text(text: String, modifier: Modifier)
-
-    @Composable
-    fun Text(text: String, style: TextStyle)
-
-    @Composable
     fun Text(
         text: String,
         modifier: Modifier,
@@ -29,28 +20,13 @@ interface Foundations {
     @Composable
     fun Button(
         onClick: () -> Unit,
-        content: @Composable RowScope.() -> Unit
-    )
-
-    @Composable
-    fun Button(
-        onClick: () -> Unit,
-        modifier: Modifier = Modifier,
-        content: @Composable RowScope.() -> Unit
-    )
-
-    @Composable
-    fun Surface(content: @Composable RowScope.() -> Unit)
-
-    @Composable
-    fun Surface(
         modifier: Modifier,
         content: @Composable RowScope.() -> Unit
     )
 
     @Composable
     fun Surface(
-        onClick: () -> Unit,
+        modifier: Modifier,
         content: @Composable RowScope.() -> Unit
     )
 

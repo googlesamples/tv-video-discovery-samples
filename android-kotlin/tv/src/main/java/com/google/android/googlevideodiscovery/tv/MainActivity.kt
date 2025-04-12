@@ -23,11 +23,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.tv.material3.Surface
-import com.google.android.googlevideodiscovery.common.navigation.NavigationGraph
+import com.google.android.googlevideodiscovery.common.ui.navigation.NavigationGraph
 import com.google.android.googlevideodiscovery.tv.ui.foundations.TvFoundations
-import com.google.android.googlevideodiscovery.tv.ui.screens.TvNavigationScreens
 import com.google.android.googlevideodiscovery.tv.ui.theme.GoogleTvVideoDiscoverySampleTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +36,8 @@ class MainActivity : ComponentActivity() {
             GoogleTvVideoDiscoverySampleTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     val foundations = remember { TvFoundations() }
-                    val screens = remember { TvNavigationScreens() }
 
-                    NavigationGraph(
-                        foundations = foundations,
-                        screens = screens,
-                    )
+                    NavigationGraph(foundations = foundations)
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.google.android.googlevideodiscovery.common.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,14 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.ui.foundation.Icon
 import com.google.android.googlevideodiscovery.common.ui.foundation.Surface
 import com.google.android.googlevideodiscovery.common.ui.foundation.Text
 
 @Composable
-fun ProfilesScreen(account: Account) {
+internal fun ProfilesScreen(
+    accountName: String,
+    content: @Composable () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,56 +36,69 @@ fun ProfilesScreen(account: Account) {
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Welcome, ${account.name}!", fontSize = 24.sp)
+        Text("Welcome, $accountName!", fontSize = 24.sp)
 
-        ProfilesGrid(profiles = account.profiles)
+        content()
     }
 }
 
-@Composable
-private fun ProfilesGrid(profiles: List<AccountProfile>) {
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
-        contentPadding = PaddingValues(horizontal = 50.dp)
+object ProfilesScreenDefaults {
+    @Composable
+    fun ProfilesGrid(
+        profiles: List<AccountProfile>,
+        onCreateProfile: () -> Unit,
+        onSelectProfile: (AccountProfile) -> Unit,
+        modifier: Modifier = Modifier
     ) {
-        item {
-            AccountProfileCard(
-                icon = Icons.Default.AddCircleOutline,
-                title = "Create profile"
-            )
-        }
-
-        items(profiles) { profile ->
-            AccountProfileCard(title = profile.name)
-        }
-    }
-}
-
-@Composable
-private fun AccountProfileCard(
-    title: String,
-    icon: ImageVector = Icons.Default.AccountCircle,
-) {
-    Surface(
-        onClick = {},
-        modifier = Modifier
-            .width(100.dp)
-            .aspectRatio(3f / 4),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        LazyRow(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            contentPadding = PaddingValues(horizontal = 50.dp)
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
+            item {
+                AccountProfileCard(
+                    title = "Create profile",
+                    onClick = onCreateProfile,
+                    icon = Icons.Default.AddCircleOutline,
+                )
+            }
+
+            items(profiles) { profile ->
+                AccountProfileCard(
+                    title = profile.name,
+                    onClick = { onSelectProfile(profile) },
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun AccountProfileCard(
+        title: String,
+        onClick: () -> Unit,
+        icon: ImageVector = Icons.Default.AccountCircle,
+    ) {
+        Surface(
+            onClick = onClick,
+            modifier = Modifier
+                .width(100.dp)
+                .aspectRatio(3f / 4),
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f)
-            )
-            Text(title)
+                    .padding(5.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                )
+                Text(title)
+            }
         }
     }
 }

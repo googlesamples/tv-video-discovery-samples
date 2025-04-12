@@ -1,7 +1,8 @@
-package com.google.android.googlevideodiscovery.common.navigation
+package com.google.android.googlevideodiscovery.common.ui.navigation
 
 import androidx.compose.runtime.Composable
 import com.google.android.googlevideodiscovery.common.models.Account
+import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import kotlinx.serialization.Serializable
 
 interface NavigationScreens {
@@ -14,6 +15,8 @@ interface NavigationScreens {
     @Composable
     fun ProfilesScreen(
         account: Account,
+        onCreateProfile: () -> Unit,
+        onSelectProfile: (AccountProfile) -> Unit,
     )
 
     @Composable

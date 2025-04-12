@@ -18,6 +18,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -56,4 +59,7 @@ android {
 dependencies {
     implementation(project(":common"))
     implementation("androidx.tv:tv-material:1.1.0-alpha01")
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 }

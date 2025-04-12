@@ -4,9 +4,18 @@ import com.google.android.googlevideodiscovery.common.models.Account
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+private var fakeAccount: Account? = null
+
+@Synchronized
 @OptIn(ExperimentalUuidApi::class)
-val FAKE_ACCOUNT = Account(
-    id = Uuid.random().toHexString(),
-    name = "Champ",
-    profiles = (1..2).map { createFakeProfile() },
-)
+fun generateFakeAccount(): Account {
+    fakeAccount = fakeAccount ?: Account(
+        id = Uuid.random().toHexString(),
+        name = "Champ",
+    )
+
+    val account = fakeAccount!!
+    val profiles = (1..2).map { account.createFakeProfile() }
+
+    return account.copy(profiles = profiles)
+}

@@ -19,7 +19,7 @@ import com.google.android.googlevideodiscovery.common.ui.foundation.MaterialThem
 import com.google.android.googlevideodiscovery.common.ui.foundation.Text
 
 @Composable
-fun LoginScreen(
+internal fun LoginScreen(
     performRegistration: () -> Unit,
     performLogin: () -> Unit,
 ) {

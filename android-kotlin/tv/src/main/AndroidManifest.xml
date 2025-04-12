@@ -25,6 +25,7 @@ limitations under the License.
         android:required="false" />
 
     <application
+        android:name=".HiltApplication"
         android:allowBackup="true"
         android:banner="@mipmap/ic_launcher"
         android:icon="@mipmap/ic_launcher"

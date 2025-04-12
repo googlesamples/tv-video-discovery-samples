@@ -1,8 +1,10 @@
 package com.google.android.googlevideodiscovery.tv.ui.screens
 
 import androidx.compose.runtime.Composable
+import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.navigation.NavigationScreens
 import com.google.android.googlevideodiscovery.common.ui.screens.LoginScreen as CommonLoginScreen
+import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreen as CommonProfilesScreen
 
 class TvNavigationScreens : NavigationScreens {
     @Composable
@@ -14,8 +16,8 @@ class TvNavigationScreens : NavigationScreens {
     }
 
     @Composable
-    override fun ProfilesScreen() {
-        TvProfilesScreen()
+    override fun ProfilesScreen(account: Account) {
+        CommonProfilesScreen(account = account)
     }
 
     @Composable

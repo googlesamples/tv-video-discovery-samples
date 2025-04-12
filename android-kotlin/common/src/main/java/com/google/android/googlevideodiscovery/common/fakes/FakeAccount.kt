@@ -8,5 +8,5 @@ import kotlin.uuid.Uuid
 val FAKE_ACCOUNT = Account(
     id = Uuid.random().toHexString(),
     name = "Champ",
-    profiles = listOf(),
+    profiles = (1..2).map { createFakeProfile() },
 )

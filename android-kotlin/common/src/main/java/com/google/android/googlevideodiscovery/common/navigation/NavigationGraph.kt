@@ -42,7 +42,14 @@ fun NavigationGraph(
                     }
                 )
             }
-            composable<ProfilesScreen> { screens.ProfilesScreen() }
+            composable<ProfilesScreen> {
+                val account = authViewModel.account.value
+                account?.let {
+                    screens.ProfilesScreen(
+                        account = account
+                    )
+                }
+            }
             composable<HomeScreen> { screens.HomeScreen() }
             composable<SettingsScreen> { screens.SettingsScreen() }
             composable<EntityScreen> { screens.EntityScreen() }

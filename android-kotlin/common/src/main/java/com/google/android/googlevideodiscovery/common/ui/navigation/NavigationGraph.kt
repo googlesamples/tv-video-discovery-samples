@@ -51,11 +51,15 @@ fun NavigationGraph(
                     screens.ProfilesScreen(
                         account = account,
                         onCreateProfile = {
-                            identityAndAccountManagementViewModel.createNewProfile {
-
-                            }
+                            identityAndAccountManagementViewModel.createNewProfile {}
                         },
-                        onSelectProfile = {}
+                        onSelectProfile = {
+                            navController.navigate(HomeScreen) {
+                                popUpTo(ProfilesScreen) {
+                                    inclusive = true
+                                }
+                            }
+                        }
                     )
                 }
             }

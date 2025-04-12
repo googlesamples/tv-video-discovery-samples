@@ -29,7 +29,7 @@ class IdentityAndAccountManagementService @Inject constructor() {
 
         val result = CreateNewProfileResult(
             profile = profile,
-            account = account.copy(profiles = account.profiles + profile)
+            account = account.copy(profiles = listOf(profile) + account.profiles)
         )
 
         return Result.success(result)

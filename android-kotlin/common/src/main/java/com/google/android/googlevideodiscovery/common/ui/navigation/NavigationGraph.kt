@@ -2,21 +2,23 @@ package com.google.android.googlevideodiscovery.common.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.googlevideodiscovery.common.ui.foundation.Foundations
 import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundations
 import com.google.android.googlevideodiscovery.common.viewmodels.IdentityAndAccountManagementViewModel
+import com.google.android.googlevideodiscovery.common.viewmodels.MediaContentViewModel
 
 @Composable
 fun NavigationGraph(
     foundations: Foundations,
     screens: NavigationScreens = remember { NavigationScreensImpl() },
     iamViewModel: IdentityAndAccountManagementViewModel = hiltViewModel(),
+    mediaContentViewModel: MediaContentViewModel = hiltViewModel(),
 ) {
     val navController = rememberNavController()
 
@@ -45,7 +47,7 @@ fun NavigationGraph(
                 )
             }
             composable<ProfilesScreen> {
-                val accountState = iamViewModel.account.collectAsState()
+                val accountState = iamViewModel.account.collectAsStateWithLifecycle()
 
                 accountState.value?.let { account ->
                     screens.ProfilesScreen(
@@ -66,10 +68,18 @@ fun NavigationGraph(
                 }
             }
             composable<HomeScreen> {
-                val activeProfile = iamViewModel.activeProfile.collectAsState().value
+                val activeProfile = iamViewModel.activeProfile.collectAsStateWithLifecycle().value
                     ?: throw Error("No active profile selected")
 
-                screens.HomeScreen(activeProfile = activeProfile)
+                val movies = mediaContentViewModel.movies.collectAsStateWithLifecycle().value
+                val tvEpisodes =
+                    mediaContentViewModel.tvEpisodes.collectAsStateWithLifecycle().value
+
+                screens.HomeScreen(
+                    activeProfile = activeProfile,
+                    movies = movies,
+                    tvEpisodes = tvEpisodes
+                )
             }
             composable<SettingsScreen> { screens.SettingsScreen() }
             composable<EntityScreen> { screens.EntityScreen() }

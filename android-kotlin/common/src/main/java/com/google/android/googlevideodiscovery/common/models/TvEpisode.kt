@@ -1,0 +1,16 @@
+package com.google.android.googlevideodiscovery.common.models
+
+import kotlin.time.Duration
+
+data class TvEpisode(
+    val id: String,
+    val name: String,
+    val episodeNumber: Int,
+    val seasonNumber: Int,
+    val showTitle: String,
+    val duration: Duration,
+    val playbackUris: PlatformSpecificUris,
+    val images: List<Image>,
+    var nextEpisode: TvEpisode?,
+)
+

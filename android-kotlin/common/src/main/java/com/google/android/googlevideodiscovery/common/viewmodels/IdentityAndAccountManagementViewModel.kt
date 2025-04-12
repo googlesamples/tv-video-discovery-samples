@@ -4,10 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.googlevideodiscovery.common.fakes.getRandomName
 import com.google.android.googlevideodiscovery.common.models.Account
+import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,7 +17,10 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
 ) : ViewModel() {
     private val _account = MutableStateFlow<Account?>(null)
-    val account: StateFlow<Account?> = _account
+    val account = _account.asStateFlow()
+
+    private val _activeProfile = MutableStateFlow<AccountProfile?>(null)
+    val activeProfile = _activeProfile.asStateFlow()
 
     fun performRegistration(afterRegistration: () -> Unit) {
         viewModelScope.launch {
@@ -57,5 +61,10 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
                 afterProfileCreation()
             }
         }
+    }
+
+    fun selectProfile(profile: AccountProfile, afterProfileSelection: () -> Unit) {
+        _activeProfile.value = profile
+        afterProfileSelection()
     }
 }

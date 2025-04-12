@@ -20,7 +20,7 @@ interface NavigationScreens {
     )
 
     @Composable
-    fun HomeScreen()
+    fun HomeScreen(activeProfile: AccountProfile)
 
     @Composable
     fun SettingsScreen()

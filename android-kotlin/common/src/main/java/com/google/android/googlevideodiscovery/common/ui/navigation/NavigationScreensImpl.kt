@@ -38,8 +38,8 @@ class NavigationScreensImpl : NavigationScreens {
     }
 
     @Composable
-    override fun HomeScreen() {
-        CommonHomeScreen()
+    override fun HomeScreen(activeProfile: AccountProfile) {
+        CommonHomeScreen(activeProfile = activeProfile)
     }
 
     @Composable

@@ -16,7 +16,7 @@ import com.google.android.googlevideodiscovery.common.viewmodels.IdentityAndAcco
 fun NavigationGraph(
     foundations: Foundations,
     screens: NavigationScreens = remember { NavigationScreensImpl() },
-    identityAndAccountManagementViewModel: IdentityAndAccountManagementViewModel = hiltViewModel(),
+    iamViewModel: IdentityAndAccountManagementViewModel = hiltViewModel(),
 ) {
     val navController = rememberNavController()
 
@@ -33,37 +33,44 @@ fun NavigationGraph(
 
                 screens.LoginScreen(
                     performRegistration = {
-                        identityAndAccountManagementViewModel.performRegistration {
+                        iamViewModel.performRegistration {
                             postAuth()
                         }
                     },
                     performLogin = {
-                        identityAndAccountManagementViewModel.performLogin {
+                        iamViewModel.performLogin {
                             postAuth()
                         }
                     }
                 )
             }
             composable<ProfilesScreen> {
-                val accountState = identityAndAccountManagementViewModel.account.collectAsState()
+                val accountState = iamViewModel.account.collectAsState()
 
                 accountState.value?.let { account ->
                     screens.ProfilesScreen(
                         account = account,
                         onCreateProfile = {
-                            identityAndAccountManagementViewModel.createNewProfile {}
+                            iamViewModel.createNewProfile {}
                         },
-                        onSelectProfile = {
-                            navController.navigate(HomeScreen) {
-                                popUpTo(ProfilesScreen) {
-                                    inclusive = true
+                        onSelectProfile = { selectedProfile ->
+                            iamViewModel.selectProfile(selectedProfile) {
+                                navController.navigate(HomeScreen) {
+                                    popUpTo(ProfilesScreen) {
+                                        inclusive = true
+                                    }
                                 }
                             }
                         }
                     )
                 }
             }
-            composable<HomeScreen> { screens.HomeScreen() }
+            composable<HomeScreen> {
+                val activeProfile = iamViewModel.activeProfile.collectAsState().value
+                    ?: throw Error("No active profile selected")
+
+                screens.HomeScreen(activeProfile = activeProfile)
+            }
             composable<SettingsScreen> { screens.SettingsScreen() }
             composable<EntityScreen> { screens.EntityScreen() }
         }

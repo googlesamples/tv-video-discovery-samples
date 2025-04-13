@@ -89,6 +89,20 @@ class TvFoundations : Foundations {
     }
 
     @Composable
+    override fun IconButton(
+        onClick: () -> Unit,
+        modifier: Modifier,
+        content: @Composable () -> Unit
+    ) {
+        androidx.tv.material3.IconButton(
+            onClick = onClick,
+            modifier = modifier,
+        ) {
+            content()
+        }
+    }
+
+    @Composable
     override fun Surface(
         modifier: Modifier,
         content: @Composable RowScope.() -> Unit
@@ -131,5 +145,15 @@ class TvFoundations : Foundations {
             interactionSource = interactionSource,
             content = content,
         )
+    }
+
+    @Composable
+    override fun Slider(
+        value: Float,
+        onValueChange: (Float) -> Unit,
+        modifier: Modifier,
+        valueRange: ClosedFloatingPointRange<Float>
+    ) {
+        TODO("Not yet implemented")
     }
 }

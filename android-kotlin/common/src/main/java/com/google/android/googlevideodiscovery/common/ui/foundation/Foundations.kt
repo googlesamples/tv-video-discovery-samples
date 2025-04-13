@@ -68,6 +68,13 @@ interface Foundations {
     )
 
     @Composable
+    fun IconButton(
+        onClick: () -> Unit,
+        modifier: Modifier,
+        content: @Composable () -> Unit
+    )
+
+    @Composable
     fun Surface(
         modifier: Modifier,
         content: @Composable RowScope.() -> Unit
@@ -86,5 +93,13 @@ interface Foundations {
         modifier: Modifier,
         interactionSource: MutableInteractionSource,
         content: @Composable ColumnScope.() -> Unit,
+    )
+
+    @Composable
+    fun Slider(
+        value: Float,
+        onValueChange: (Float) -> Unit,
+        modifier: Modifier,
+        valueRange: ClosedFloatingPointRange<Float>,
     )
 }

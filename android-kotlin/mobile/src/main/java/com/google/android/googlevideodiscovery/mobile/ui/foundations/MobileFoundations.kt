@@ -83,6 +83,23 @@ class MobileFoundations : Foundations {
     }
 
     @Composable
+    override fun IconButton(
+        onClick: () -> Unit,
+        modifier: Modifier,
+        content: @Composable () -> Unit
+    ) {
+        androidx.compose.material3.IconButton(
+            onClick = onClick,
+            modifier = modifier,
+            colors = androidx.compose.material3.IconButtonDefaults.iconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            ),
+            content = content,
+        )
+    }
+
+    @Composable
     override fun Surface(modifier: Modifier, content: @Composable() (RowScope.() -> Unit)) {
         androidx.compose.material3.Surface(modifier = modifier) {
             Row(content = content)
@@ -112,6 +129,21 @@ class MobileFoundations : Foundations {
             modifier = modifier,
             interactionSource = interactionSource,
             content = content,
+        )
+    }
+
+    @Composable
+    override fun Slider(
+        value: Float,
+        onValueChange: (Float) -> Unit,
+        modifier: Modifier,
+        valueRange: ClosedFloatingPointRange<Float>,
+    ) {
+        androidx.compose.material3.Slider(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier,
+            valueRange = valueRange,
         )
     }
 }

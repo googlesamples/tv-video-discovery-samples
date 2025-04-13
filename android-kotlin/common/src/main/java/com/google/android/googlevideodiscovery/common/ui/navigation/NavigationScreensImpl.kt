@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.Movie
+import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisode
+import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreen as CommonEntityScreen
@@ -44,7 +46,8 @@ class NavigationScreensImpl : NavigationScreens {
     override fun HomeScreen(
         activeProfile: AccountProfile,
         movies: List<Movie>,
-        tvEpisodes: List<TvEpisode>
+        tvEpisodes: List<TvEpisode>,
+        onEntityClick: (PlaybackEntity) -> Unit,
     ) {
         CommonHomeScreen(
             activeProfile = activeProfile,
@@ -57,7 +60,8 @@ class NavigationScreensImpl : NavigationScreens {
                             releaseYear = movie.releaseYear,
                             duration = movie.duration,
                             genre = movie.genre
-                        )
+                        ),
+                        onClick = { onEntityClick(movie.toPlaybackEntity()) }
                     )
                 })
             },
@@ -75,7 +79,8 @@ class NavigationScreensImpl : NavigationScreens {
                                 releaseYear = tvEpisode.releaseYear,
                                 duration = tvEpisode.duration,
                                 genre = tvEpisode.genre
-                            )
+                            ),
+                            onClick = { onEntityClick(tvEpisode.toPlaybackEntity()) }
                         )
                     })
             }
@@ -83,8 +88,8 @@ class NavigationScreensImpl : NavigationScreens {
     }
 
     @Composable
-    override fun EntityScreen() {
-        CommonEntityScreen()
+    override fun EntityScreen(entity: PlaybackEntity?) {
+        CommonEntityScreen(entity)
     }
 
     @Composable

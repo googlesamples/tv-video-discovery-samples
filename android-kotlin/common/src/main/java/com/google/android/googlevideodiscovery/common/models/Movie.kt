@@ -12,3 +12,11 @@ data class Movie(
     val genre: String,
     var nextMovie: Movie?,
 )
+
+fun Movie.toPlaybackEntity() = PlaybackEntity(
+    entityId = id,
+    title = name,
+    releaseYear = releaseYear,
+    duration = duration,
+    startFrom = null
+)

@@ -81,10 +81,11 @@ internal object HomeScreenDefaults {
     fun ChannelCard(
         title: String,
         subtitle: String,
+        onClick: () -> Unit,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Card(
-                onClick = {},
+                onClick = onClick,
                 modifier = Modifier
                     .width(150.dp)
                     .aspectRatio(16f / 9),

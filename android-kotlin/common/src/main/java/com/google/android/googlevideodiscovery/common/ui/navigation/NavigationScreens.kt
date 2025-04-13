@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.Movie
+import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisode
 import kotlinx.serialization.Serializable
+import kotlin.time.Duration
 
 interface NavigationScreens {
     @Composable
@@ -22,13 +24,18 @@ interface NavigationScreens {
     )
 
     @Composable
-    fun HomeScreen(activeProfile: AccountProfile, movies: List<Movie>, tvEpisodes: List<TvEpisode>)
+    fun HomeScreen(
+        activeProfile: AccountProfile,
+        movies: List<Movie>,
+        tvEpisodes: List<TvEpisode>,
+        onEntityClick: (PlaybackEntity) -> Unit,
+    )
 
     @Composable
     fun SettingsScreen()
 
     @Composable
-    fun EntityScreen()
+    fun EntityScreen(entity: PlaybackEntity?)
 }
 
 @Serializable
@@ -44,4 +51,4 @@ internal object HomeScreen
 internal object SettingsScreen
 
 @Serializable
-data class EntityScreen(val entityId: String)
+data class EntityScreen(val entityId: String, val startFromMillis: Long?)

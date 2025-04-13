@@ -16,3 +16,10 @@ data class TvEpisode(
     var nextEpisode: TvEpisode?,
 )
 
+fun TvEpisode.toPlaybackEntity() = PlaybackEntity(
+    entityId = id,
+    title = name,
+    releaseYear = releaseYear,
+    duration = duration,
+    startFrom = null
+)

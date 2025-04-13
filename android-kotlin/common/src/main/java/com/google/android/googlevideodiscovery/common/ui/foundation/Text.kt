@@ -14,11 +14,12 @@ fun Text(
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle = FontStyle.Normal,
+    style: TextStyle = TextStyle.Default
 ) {
     LocalFoundations.current.Text(
         text = text,
         modifier = modifier,
-        style = TextStyle(
+        style = style.copy(
             color = color,
             fontSize = fontSize,
             fontStyle = fontStyle,

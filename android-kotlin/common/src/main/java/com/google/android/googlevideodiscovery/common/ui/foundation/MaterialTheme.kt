@@ -35,4 +35,9 @@ object MaterialTheme {
         val borderVariant @Composable get() = LocalFoundations.current.borderVariant
         val scrim @Composable get() = LocalFoundations.current.scrim
     }
+
+    object typography {
+        val titleMedium @Composable get() = LocalFoundations.current.titleMedium
+        val bodySmall @Composable get() = LocalFoundations.current.bodySmall
+    }
 }

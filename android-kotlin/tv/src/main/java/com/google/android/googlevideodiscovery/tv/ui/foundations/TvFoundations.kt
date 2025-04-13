@@ -1,9 +1,12 @@
 package com.google.android.googlevideodiscovery.tv.ui.foundations
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -44,6 +47,9 @@ class TvFoundations : Foundations {
     override val border: Color @Composable get() = MaterialTheme.colorScheme.border
     override val borderVariant: Color @Composable get() = MaterialTheme.colorScheme.borderVariant
     override val scrim: Color @Composable get() = MaterialTheme.colorScheme.scrim
+
+    override val titleMedium: TextStyle @Composable get() = MaterialTheme.typography.titleMedium
+    override val bodySmall: TextStyle @Composable get() = MaterialTheme.typography.bodySmall
 
     @Composable
     override fun Text(text: String, modifier: Modifier, style: TextStyle) {
@@ -110,5 +116,20 @@ class TvFoundations : Foundations {
                 content = content
             )
         }
+    }
+
+    @Composable
+    override fun Card(
+        onClick: () -> Unit,
+        modifier: Modifier,
+        interactionSource: MutableInteractionSource,
+        content: @Composable ColumnScope.() -> Unit
+    ) {
+        androidx.tv.material3.Card(
+            onClick = onClick,
+            modifier = modifier,
+            interactionSource = interactionSource,
+            content = content,
+        )
     }
 }

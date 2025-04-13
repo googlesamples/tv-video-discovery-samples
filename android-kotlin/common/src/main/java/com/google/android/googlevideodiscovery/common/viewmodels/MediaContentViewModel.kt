@@ -12,9 +12,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class MediaContentViewModel(
+class MediaContentViewModel @Inject constructor(
     private val moviesService: MoviesService,
     private val tvShowsService: TvShowsService,
 ) : ViewModel() {
@@ -44,7 +45,7 @@ class MediaContentViewModel(
 
     private fun loadTvEpisodes() {
         viewModelScope.launch {
-            _tvEpisodes.value = tvShowsService.fetchTvEpisodes().reversed()
+            _tvEpisodes.value = tvShowsService.fetchTvEpisodes()
         }
     }
 }

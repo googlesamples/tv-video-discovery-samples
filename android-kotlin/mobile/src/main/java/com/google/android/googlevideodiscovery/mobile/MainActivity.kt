@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.android.googlevideodiscovery.common.ui.navigation.NavigationGraph
@@ -20,10 +20,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GoogleTvVideoDiscoverySampleTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
+                Scaffold { paddings ->
                     val foundations = remember { MobileFoundations() }
 
-                    NavigationGraph(foundations = foundations)
+                    NavigationGraph(
+                        modifier = Modifier.padding(paddings),
+                        foundations = foundations
+                    )
                 }
             }
         }

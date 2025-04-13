@@ -11,6 +11,8 @@ data class TvEpisode(
     val duration: Duration,
     val playbackUris: PlatformSpecificUris,
     val images: List<Image>,
+    val releaseYear: Int,
+    val genre: String,
     var nextEpisode: TvEpisode?,
 )
 

@@ -3,6 +3,7 @@ package com.google.android.googlevideodiscovery.common.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -16,6 +17,7 @@ import com.google.android.googlevideodiscovery.common.viewmodels.MediaContentVie
 @Composable
 fun NavigationGraph(
     foundations: Foundations,
+    modifier: Modifier = Modifier,
     screens: NavigationScreens = remember { NavigationScreensImpl() },
     iamViewModel: IdentityAndAccountManagementViewModel = hiltViewModel(),
     mediaContentViewModel: MediaContentViewModel = hiltViewModel(),
@@ -23,7 +25,7 @@ fun NavigationGraph(
     val navController = rememberNavController()
 
     CompositionLocalProvider(LocalFoundations provides foundations) {
-        NavHost(navController = navController, startDestination = LoginScreen) {
+        NavHost(navController = navController, modifier = modifier, startDestination = LoginScreen) {
             composable<LoginScreen> {
                 val postAuth = {
                     navController.navigate(ProfilesScreen) {

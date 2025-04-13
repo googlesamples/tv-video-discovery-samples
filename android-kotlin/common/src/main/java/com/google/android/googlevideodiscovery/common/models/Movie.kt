@@ -8,5 +8,7 @@ data class Movie(
     val duration: Duration,
     val playbackUris: PlatformSpecificUris,
     val images: List<Image>,
-    var nextMovie: Movie?
+    val releaseYear: Int,
+    val genre: String,
+    var nextMovie: Movie?,
 )

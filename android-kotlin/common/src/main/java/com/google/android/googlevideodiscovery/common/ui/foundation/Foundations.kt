@@ -1,5 +1,7 @@
 package com.google.android.googlevideodiscovery.common.ui.foundation
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,6 +42,9 @@ interface Foundations {
     val borderVariant: Color @Composable get
     val scrim: Color @Composable get
 
+    val titleMedium: TextStyle @Composable get
+    val bodySmall: TextStyle @Composable get
+
     @Composable
     fun Text(
         text: String,
@@ -73,5 +78,13 @@ interface Foundations {
         onClick: () -> Unit,
         modifier: Modifier,
         content: @Composable RowScope.() -> Unit
+    )
+
+    @Composable
+    fun Card(
+        onClick: () -> Unit,
+        modifier: Modifier,
+        interactionSource: MutableInteractionSource,
+        content: @Composable ColumnScope.() -> Unit,
     )
 }

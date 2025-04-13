@@ -49,10 +49,35 @@ class NavigationScreensImpl : NavigationScreens {
         CommonHomeScreen(
             activeProfile = activeProfile,
             moviesContent = {
-                HomeScreenDefaults.MoviesChannel(movies = movies)
+                HomeScreenDefaults.MoviesChannel(movieCount = movies.size, cardContent = { index ->
+                    val movie = movies[index]
+                    HomeScreenDefaults.ChannelCard(
+                        title = movie.name,
+                        subtitle = HomeScreenDefaults.buildSubtitle(
+                            releaseYear = movie.releaseYear,
+                            duration = movie.duration,
+                            genre = movie.genre
+                        )
+                    )
+                })
             },
             tvEpisodesContent = {
-                HomeScreenDefaults.TvEpisodesChannel(tvEpisodes = tvEpisodes)
+                HomeScreenDefaults.TvEpisodesChannel(
+                    tvEpisodesCount = tvEpisodes.size,
+                    cardContent = { index ->
+                        val tvEpisode = tvEpisodes[index]
+                        HomeScreenDefaults.ChannelCard(
+                            title = HomeScreenDefaults.buildEpisodeTitle(
+                                episodeName = tvEpisode.name,
+                                episodeNumber = tvEpisode.episodeNumber,
+                            ),
+                            subtitle = HomeScreenDefaults.buildSubtitle(
+                                releaseYear = tvEpisode.releaseYear,
+                                duration = tvEpisode.duration,
+                                genre = tvEpisode.genre
+                            )
+                        )
+                    })
             }
         )
     }

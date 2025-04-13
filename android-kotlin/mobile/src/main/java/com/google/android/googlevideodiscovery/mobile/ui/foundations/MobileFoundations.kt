@@ -1,5 +1,7 @@
 package com.google.android.googlevideodiscovery.mobile.ui.foundations
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.LocalContentColor
@@ -43,6 +45,9 @@ class MobileFoundations : Foundations {
     override val border: Color @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
     override val borderVariant: Color @Composable get() = MaterialTheme.colorScheme.surfaceVariant
     override val scrim: Color @Composable get() = MaterialTheme.colorScheme.scrim
+
+    override val titleMedium: TextStyle @Composable get() = MaterialTheme.typography.titleMedium
+    override val bodySmall: TextStyle @Composable get() = MaterialTheme.typography.bodySmall
 
     @Composable
     override fun Text(text: String, modifier: Modifier, style: TextStyle) {
@@ -95,4 +100,18 @@ class MobileFoundations : Foundations {
         }
     }
 
+    @Composable
+    override fun Card(
+        onClick: () -> Unit,
+        modifier: Modifier,
+        interactionSource: MutableInteractionSource,
+        content: @Composable ColumnScope.() -> Unit
+    ) {
+        androidx.compose.material3.Card(
+            onClick = onClick,
+            modifier = modifier,
+            interactionSource = interactionSource,
+            content = content,
+        )
+    }
 }

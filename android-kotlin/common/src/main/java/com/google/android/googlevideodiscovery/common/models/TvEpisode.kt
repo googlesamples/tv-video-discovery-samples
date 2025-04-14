@@ -1,6 +1,7 @@
 package com.google.android.googlevideodiscovery.common.models
 
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 data class TvEpisode(
     val id: String,
@@ -21,5 +22,5 @@ fun TvEpisode.toPlaybackEntity() = PlaybackEntity(
     title = name,
     releaseYear = releaseYear,
     duration = duration,
-    startFrom = null
+    playbackPosition = 0.seconds
 )

@@ -7,5 +7,5 @@ data class PlaybackEntity(
     val title: String,
     val releaseYear: Int,
     val duration: Duration,
-    var startFrom: Duration?
+    var playbackPosition: Duration,
 )

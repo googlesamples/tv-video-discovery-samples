@@ -9,7 +9,14 @@ import com.google.android.googlevideodiscovery.common.models.TvEpisode
 import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreenDefaults
+import kotlin.time.Duration
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreen as CommonEntityScreen
+import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults
+import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackUpdateReason
+import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.ProgressBar as EntityScreenProgressBar
+import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.PauseButton as EntityScreenPauseButton
+import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.PlayButton as EntityScreenPlayButton
+import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.PlayerHeading as EntityScreenPlayerHeading
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreen as CommonHomeScreen
 import com.google.android.googlevideodiscovery.common.ui.screens.LoginScreen as CommonLoginScreen
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreen as CommonProfilesScreen
@@ -88,8 +95,43 @@ class NavigationScreensImpl : NavigationScreens {
     }
 
     @Composable
-    override fun EntityScreen(entity: PlaybackEntity?) {
-        CommonEntityScreen(entity)
+    override fun EntityScreen(
+        entity: PlaybackEntity?,
+        isPlaying: Boolean,
+        updateIsPlaying: (Boolean) -> Unit,
+        onUpdatePlaybackPosition: (Duration, PlaybackUpdateReason) -> Unit
+    ) {
+        if (entity == null) {
+            EntityScreenDefaults.LoadingEntityScreen()
+            return
+        }
+
+        CommonEntityScreen(
+            playPauseButtonContent = {
+                if (isPlaying) {
+                    EntityScreenPauseButton(onClick = { updateIsPlaying(false) })
+                } else {
+                    EntityScreenPlayButton(onClick = { updateIsPlaying(true) })
+                }
+            },
+            playerTitleContent = {
+                EntityScreenPlayerHeading(
+                    entityTitle = entity.title,
+                    entityReleaseYear = entity.releaseYear
+                )
+            },
+            progressBarContent = {
+                EntityScreenProgressBar(
+                    isPlaying = isPlaying,
+                    duration = entity.duration,
+                    currentPosition = entity.playbackPosition,
+                    onUpdatePlaybackPosition = onUpdatePlaybackPosition,
+                    onPlaybackEnd = {
+                        updateIsPlaying(false)
+                    },
+                )
+            }
+        )
     }
 
     @Composable

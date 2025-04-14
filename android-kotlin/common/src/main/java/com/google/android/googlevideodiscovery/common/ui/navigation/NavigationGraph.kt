@@ -16,6 +16,7 @@ import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundat
 import com.google.android.googlevideodiscovery.common.viewmodels.IdentityAndAccountManagementViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.MediaContentViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackEntityViewModel
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -94,7 +95,8 @@ fun NavigationGraph(
                         navController.navigate(
                             EntityScreen(
                                 entityId = playbackEntity.entityId,
-                                startFromMillis = playbackEntity.startFrom?.inWholeMilliseconds
+                                startFromMillis = playbackEntity.playbackPosition?.inWholeMilliseconds
+                                    ?: 0
                             )
                         )
                     }
@@ -105,23 +107,33 @@ fun NavigationGraph(
                 val entityScreen = it.toRoute<EntityScreen>()
 
                 val playbackEntityViewModel = hiltViewModel<PlaybackEntityViewModel>()
-                val playbackEntityState =
-                    playbackEntityViewModel.playbackEntity.collectAsStateWithLifecycle()
-
                 val playbackEntity =
-                    remember(playbackEntityState.value, entityScreen.startFromMillis) {
-                        playbackEntityState.value?.copy(
-                            startFrom = entityScreen.startFromMillis?.toDuration(
-                                DurationUnit.MILLISECONDS
-                            )
-                        )
-                    }
+                    playbackEntityViewModel.playbackEntity.collectAsStateWithLifecycle()
+                val isPlaying = playbackEntityViewModel.isPlaying.collectAsStateWithLifecycle()
 
-                LaunchedEffect(entityScreen.entityId) {
-                    playbackEntityViewModel.loadPlaybackEntity(entityScreen.entityId)
+                LaunchedEffect(entityScreen.entityId, entityScreen.startFromMillis) {
+                    playbackEntityViewModel.loadPlaybackEntity(
+                        entityId = entityScreen.entityId,
+                        initialPlaybackPosition = entityScreen.startFromMillis?.toDuration(
+                            DurationUnit.MILLISECONDS
+                        )
+                    )
                 }
 
-                screens.EntityScreen(playbackEntity)
+                screens.EntityScreen(
+                    entity = playbackEntity.value,
+                    isPlaying = isPlaying.value,
+                    updateIsPlaying = { newIsPlaying ->
+                        playbackEntityViewModel.updateIsPlaying(
+                            newIsPlaying
+                        )
+                    },
+                    onUpdatePlaybackPosition = { newPosition, reason ->
+                        playbackEntityViewModel.updatePlaybackPosition(
+                            newPosition = newPosition,
+                            reason = reason
+                        )
+                    })
             }
         }
     }

@@ -6,6 +6,7 @@ import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.Movie
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisode
+import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackUpdateReason
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration
 
@@ -35,7 +36,12 @@ interface NavigationScreens {
     fun SettingsScreen()
 
     @Composable
-    fun EntityScreen(entity: PlaybackEntity?)
+    fun EntityScreen(
+        entity: PlaybackEntity?,
+        isPlaying: Boolean,
+        updateIsPlaying: (Boolean) -> Unit,
+        onUpdatePlaybackPosition: (Duration, PlaybackUpdateReason) -> Unit
+    )
 }
 
 @Serializable

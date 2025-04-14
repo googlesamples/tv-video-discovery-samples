@@ -16,6 +16,7 @@ data class DbContinueWatchingEntity(
     val playbackPositionMillis: Long,
     val lastEngagementTimeMillis: Long,
     val continueWatchingType: ContinueWatchingType,
+    val profileId: String,
 )
 
 enum class ContinueWatchingType {

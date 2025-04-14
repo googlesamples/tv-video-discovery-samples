@@ -4,9 +4,11 @@ import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 
 fun Account.createFakeProfile(profileName: String): AccountProfile {
-    val id = profileName.lowercase().replace(' ', '-')
+    val accountId = id.lowercase().replace(' ', '-')
+    val profileNameSlug = profileName.lowercase().replace(' ', '-')
+    val profileId = "$accountId-$profileNameSlug"
     return AccountProfile(
-        id = id,
+        id = profileId,
         name = profileName,
         account = this
     )

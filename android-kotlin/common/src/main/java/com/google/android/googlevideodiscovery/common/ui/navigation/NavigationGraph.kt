@@ -100,10 +100,13 @@ fun NavigationGraph(
                 val tvEpisodes =
                     mediaContentViewModel.tvEpisodes.collectAsStateWithLifecycle().value
 
+                LaunchedEffect(activeProfile.id) {
+                    continueWatchingViewModel.loadContinueWatchingEntities(profileId = activeProfile.id)
+                }
+
                 screens.HomeScreen(
                     activeProfile = activeProfile,
                     continueWatchingEntities = continueWatchingEntities,
-//                    continueWatchingEntities = movies.map { it.toPlaybackEntity() },
                     movies = movies,
                     tvEpisodes = tvEpisodes,
                     onEntityClick = { playbackEntity ->

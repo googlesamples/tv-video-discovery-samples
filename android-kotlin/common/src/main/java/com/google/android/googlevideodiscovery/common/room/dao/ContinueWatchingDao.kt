@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ContinueWatchingDao {
 
-    @Query("SELECT * FROM continue_watching_rows ORDER BY lastEngagementTimeMillis DESC")
-    fun getContinueWatchingEntities(): Flow<List<DbContinueWatchingEntity>>
+    @Query("SELECT * FROM continue_watching_rows WHERE profileId = :profileId ORDER BY lastEngagementTimeMillis DESC")
+    suspend fun getContinueWatchingEntities(profileId: String): List<DbContinueWatchingEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addToContinueWatching(entity: DbContinueWatchingEntity)

@@ -15,6 +15,7 @@ data class PlaybackEntity(
 )
 
 fun PlaybackEntity.toDbContinueWatchingEntity(
+    profileId: String,
     continueWatchingType: ContinueWatchingType,
     lastEngagementTime: Instant
 ) = DbContinueWatchingEntity(
@@ -25,5 +26,6 @@ fun PlaybackEntity.toDbContinueWatchingEntity(
     genre = genre,
     playbackPositionMillis = playbackPosition.inWholeMilliseconds,
     continueWatchingType = continueWatchingType,
-    lastEngagementTimeMillis = lastEngagementTime.toEpochMilli()
+    lastEngagementTimeMillis = lastEngagementTime.toEpochMilli(),
+    profileId = profileId,
 )

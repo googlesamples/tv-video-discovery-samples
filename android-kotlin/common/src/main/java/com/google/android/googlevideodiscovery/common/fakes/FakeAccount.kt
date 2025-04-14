@@ -15,7 +15,11 @@ fun generateFakeAccount(): Account {
     )
 
     val account = fakeAccount!!
-    val profiles = (1..2).map { account.createFakeProfile() }
+
+    val profiles = listOf(
+        account.createFakeProfile(FakeProfileNames.AANYA),
+        account.createFakeProfile(FakeProfileNames.DIVYA),
+    )
 
     return account.copy(profiles = profiles)
 }

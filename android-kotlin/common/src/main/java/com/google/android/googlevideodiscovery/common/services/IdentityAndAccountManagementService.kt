@@ -25,11 +25,11 @@ class IdentityAndAccountManagementService @Inject constructor() {
     ): Result<CreateNewProfileResult> {
         // Profile creation business logic
 
-        val profile = account.createFakeProfile()
+        val profile = account.createFakeProfile(profileName)
 
         val result = CreateNewProfileResult(
             profile = profile,
-            account = account.copy(profiles = listOf(profile) + account.profiles)
+            account = account.copy(profiles = account.profiles + profile)
         )
 
         return Result.success(result)

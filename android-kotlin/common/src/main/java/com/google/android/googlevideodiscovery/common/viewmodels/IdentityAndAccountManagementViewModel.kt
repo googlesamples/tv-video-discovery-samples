@@ -2,7 +2,7 @@ package com.google.android.googlevideodiscovery.common.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.googlevideodiscovery.common.fakes.getRandomName
+import com.google.android.googlevideodiscovery.common.fakes.FakeProfileNames
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
@@ -53,8 +53,9 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
     fun createNewProfile(afterProfileCreation: () -> Unit) {
         viewModelScope.launch {
             val account = _account.value ?: return@launch
+            val newProfileName = account.getNewProfileName() ?: return@launch
             val response =
-                identityAndAccountManagementService.createProfile(account, getRandomName())
+                identityAndAccountManagementService.createProfile(account, newProfileName)
             if (response.isSuccess) {
                 val result = response.getOrThrow()
                 _account.value = result.account
@@ -66,5 +67,15 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
     fun selectProfile(profile: AccountProfile, afterProfileSelection: () -> Unit) {
         _activeProfile.value = profile
         afterProfileSelection()
+    }
+
+    private fun Account.getNewProfileName(): String? {
+        val existingNames = profiles.map { it.name }
+        return when {
+            FakeProfileNames.AANYA !in existingNames -> FakeProfileNames.AANYA
+            FakeProfileNames.DIVYA !in existingNames -> FakeProfileNames.DIVYA
+            FakeProfileNames.GUEST !in existingNames -> FakeProfileNames.GUEST
+            else -> null
+        }
     }
 }

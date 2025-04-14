@@ -2,13 +2,11 @@ package com.google.android.googlevideodiscovery.common.fakes
 
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
-fun Account.createFakeProfile(profileName: String = getRandomName()): AccountProfile {
+fun Account.createFakeProfile(profileName: String): AccountProfile {
+    val id = profileName.lowercase().replace(' ', '-')
     return AccountProfile(
-        id = Uuid.random().toHexString(),
+        id = id,
         name = profileName,
         account = this
     )

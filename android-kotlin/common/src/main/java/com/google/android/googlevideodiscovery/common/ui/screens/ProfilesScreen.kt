@@ -55,12 +55,14 @@ object ProfilesScreenDefaults {
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             contentPadding = PaddingValues(horizontal = 50.dp)
         ) {
-            item {
-                AccountProfileCard(
-                    title = "Create profile",
-                    onClick = onCreateProfile,
-                    icon = Icons.Default.AddCircleOutline,
-                )
+            if (profiles.size < 3) {
+                item {
+                    AccountProfileCard(
+                        title = "Create profile",
+                        onClick = onCreateProfile,
+                        icon = Icons.Default.AddCircleOutline,
+                    )
+                }
             }
 
             items(profiles) { profile ->

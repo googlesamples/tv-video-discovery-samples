@@ -1,4 +1,4 @@
-package com.google.android.googlevideodiscovery.common.room
+package com.google.android.googlevideodiscovery.common.room.repository
 
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.room.dao.AccountProfileDao
@@ -13,16 +13,16 @@ import javax.inject.Inject
 class AccountProfileRepository @Inject constructor(
     private val accountProfileDao: AccountProfileDao,
 ) {
-
-    fun getLoggedInUser(): Flow<Account> {
+    fun getLoggedInUser(): Flow<Account?> {
         return combine(
             accountProfileDao.getLoggedInUser(),
             accountProfileDao.getProfiles()
         ) { dbAccount, profiles ->
-            val account = dbAccount.toAccount()
-            account.copy(
-                profiles = profiles.map { it.toAccountProfile(account) }
-            )
+            dbAccount?.toAccount()?.let { account ->
+                account.copy(
+                    profiles = profiles.map { it.toAccountProfile(account) }
+                )
+            }
         }
     }
 

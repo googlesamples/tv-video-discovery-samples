@@ -5,14 +5,14 @@ import com.google.android.googlevideodiscovery.common.fakes.generateFakeAccount
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.toDbAccount
 import com.google.android.googlevideodiscovery.common.models.toDbAccountProfile
-import com.google.android.googlevideodiscovery.common.room.AccountProfileRepository
+import com.google.android.googlevideodiscovery.common.room.repository.AccountProfileRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class IdentityAndAccountManagementService @Inject constructor(
     private val accountProfileRepository: AccountProfileRepository
 ) {
-    fun getLoggedInUser(): Flow<Account> {
+    fun getLoggedInUser(): Flow<Account?> {
         return accountProfileRepository.getLoggedInUser()
     }
 

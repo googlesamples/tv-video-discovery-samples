@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class IdentityAndAccountManagementViewModel @Inject constructor(
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
 ) : ViewModel() {
-    val account: Flow<Account> = identityAndAccountManagementService.getLoggedInUser()
+    val account: Flow<Account?> = identityAndAccountManagementService.getLoggedInUser()
 
     private val _activeProfile = MutableStateFlow<AccountProfile?>(null)
     val activeProfile = _activeProfile.asStateFlow()
@@ -47,14 +47,11 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
         }
     }
 
-    fun createNewProfile(afterProfileCreation: () -> Unit) {
+    fun createNewProfile() {
         viewModelScope.launch {
-            val latestAccount = account.last()
-            val newProfileName = latestAccount.getNewProfileName() ?: return@launch
-            val response =
+            account.collectLatest { latestAccount ->
+                val newProfileName = latestAccount?.getNewProfileName() ?: return@collectLatest
                 identityAndAccountManagementService.createProfile(latestAccount, newProfileName)
-            if (response.isSuccess) {
-                afterProfileCreation()
             }
         }
     }

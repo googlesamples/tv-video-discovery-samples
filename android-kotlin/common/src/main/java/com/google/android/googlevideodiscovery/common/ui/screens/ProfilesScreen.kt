@@ -2,14 +2,12 @@ package com.google.android.googlevideodiscovery.common.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddCircleOutline
@@ -50,22 +48,21 @@ object ProfilesScreenDefaults {
         onSelectProfile: (AccountProfile) -> Unit,
         modifier: Modifier = Modifier
     ) {
-        LazyRow(
-            modifier = modifier,
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-            contentPadding = PaddingValues(horizontal = 50.dp)
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 40.dp),
+            horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally),
         ) {
             if (profiles.size < 3) {
-                item {
-                    AccountProfileCard(
-                        title = "Create profile",
-                        onClick = onCreateProfile,
-                        icon = Icons.Default.AddCircleOutline,
-                    )
-                }
+                AccountProfileCard(
+                    title = "Create profile",
+                    onClick = onCreateProfile,
+                    icon = Icons.Default.AddCircleOutline,
+                )
             }
 
-            items(profiles) { profile ->
+            for (profile in profiles) {
                 AccountProfileCard(
                     title = profile.name,
                     onClick = { onSelectProfile(profile) },

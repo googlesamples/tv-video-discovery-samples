@@ -71,7 +71,7 @@ fun NavigationGraph(
                     screens.ProfilesScreen(
                         account = account,
                         onCreateProfile = {
-                            iamViewModel.createNewProfile {}
+                            iamViewModel.createNewProfile()
                         },
                         onSelectProfile = { selectedProfile ->
                             iamViewModel.selectProfile(selectedProfile) {

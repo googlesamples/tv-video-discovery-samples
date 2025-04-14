@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface AccountProfileDao {
 
     @Query("SELECT * FROM accounts WHERE isLoggedIn = 1 LIMIT 1")
-    fun getLoggedInUser(): Flow<DbAccount>
+    fun getLoggedInUser(): Flow<DbAccount?>
 
     @Query("SELECT * FROM account_profiles")
     fun getProfiles(): Flow<List<DbAccountProfile>>

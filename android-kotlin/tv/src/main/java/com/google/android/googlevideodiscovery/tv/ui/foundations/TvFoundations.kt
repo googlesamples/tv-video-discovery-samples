@@ -154,6 +154,6 @@ class TvFoundations : Foundations {
         modifier: Modifier,
         valueRange: ClosedFloatingPointRange<Float>
     ) {
-        TODO("Not yet implemented")
+        androidx.tv.material3.Text("Slider....")
     }
 }

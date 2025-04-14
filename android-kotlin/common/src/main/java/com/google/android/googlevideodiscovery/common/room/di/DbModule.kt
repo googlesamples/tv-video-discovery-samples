@@ -3,6 +3,7 @@ package com.google.android.googlevideodiscovery.common.room.di
 import android.content.Context
 import androidx.room.Room
 import com.google.android.googlevideodiscovery.common.room.dao.AccountProfileDao
+import com.google.android.googlevideodiscovery.common.room.dao.ContinueWatchingDao
 import com.google.android.googlevideodiscovery.common.room.database.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -31,6 +32,12 @@ object DbModule {
     @Provides
     fun provideAccountProfileDao(db: AppDatabase): AccountProfileDao {
         return db.accountProfileDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideContinueWatchingDao(db: AppDatabase): ContinueWatchingDao {
+        return db.continueWatchingDao()
     }
 
 }

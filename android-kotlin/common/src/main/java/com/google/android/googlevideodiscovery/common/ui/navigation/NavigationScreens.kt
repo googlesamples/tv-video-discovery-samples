@@ -27,6 +27,7 @@ interface NavigationScreens {
     @Composable
     fun HomeScreen(
         activeProfile: AccountProfile,
+        continueWatchingEntities: List<PlaybackEntity>,
         movies: List<Movie>,
         tvEpisodes: List<TvEpisode>,
         onEntityClick: (PlaybackEntity) -> Unit,

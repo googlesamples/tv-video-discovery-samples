@@ -19,5 +19,6 @@ fun Movie.toPlaybackEntity() = PlaybackEntity(
     title = name,
     releaseYear = releaseYear,
     duration = duration,
+    genre = genre,
     playbackPosition = 0.seconds
 )

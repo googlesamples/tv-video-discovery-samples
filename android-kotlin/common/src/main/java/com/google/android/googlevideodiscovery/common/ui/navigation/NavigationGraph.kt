@@ -11,8 +11,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
 import com.google.android.googlevideodiscovery.common.ui.foundation.Foundations
 import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundations
+import com.google.android.googlevideodiscovery.common.viewmodels.ContinueWatchingViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.IdentityAndAccountManagementViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.MediaContentViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackEntityViewModel
@@ -88,21 +90,27 @@ fun NavigationGraph(
             composable<HomeScreen> {
                 val activeProfile = iamViewModel.activeProfile.collectAsStateWithLifecycle().value
                     ?: throw Error("No active profile selected")
+                val continueWatchingViewModel = hiltViewModel<ContinueWatchingViewModel>()
 
+                val continueWatchingEntities =
+                    continueWatchingViewModel.continueWatchingEntities.collectAsStateWithLifecycle(
+                        emptyList()
+                    ).value
                 val movies = mediaContentViewModel.movies.collectAsStateWithLifecycle().value
                 val tvEpisodes =
                     mediaContentViewModel.tvEpisodes.collectAsStateWithLifecycle().value
 
                 screens.HomeScreen(
                     activeProfile = activeProfile,
+                    continueWatchingEntities = continueWatchingEntities,
+//                    continueWatchingEntities = movies.map { it.toPlaybackEntity() },
                     movies = movies,
                     tvEpisodes = tvEpisodes,
                     onEntityClick = { playbackEntity ->
                         navController.navigate(
                             EntityScreen(
                                 entityId = playbackEntity.entityId,
-                                startFromMillis = playbackEntity.playbackPosition?.inWholeMilliseconds
-                                    ?: 0
+                                startFromMillis = playbackEntity.playbackPosition.inWholeMilliseconds
                             )
                         )
                     }

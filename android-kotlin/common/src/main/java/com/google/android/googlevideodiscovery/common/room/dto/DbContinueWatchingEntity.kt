@@ -12,6 +12,7 @@ data class DbContinueWatchingEntity(
     val title: String,
     val releaseYear: Int,
     val durationMillis: Long,
+    val genre: String,
     val playbackPositionMillis: Long,
     val lastEngagementTimeMillis: Long,
     val continueWatchingType: ContinueWatchingType,
@@ -27,5 +28,6 @@ fun DbContinueWatchingEntity.toPlaybackEntity() = PlaybackEntity(
     title = title,
     releaseYear = releaseYear,
     duration = durationMillis.toDuration(DurationUnit.MILLISECONDS),
+    genre = genre,
     playbackPosition = playbackPositionMillis.toDuration(DurationUnit.MILLISECONDS),
 )

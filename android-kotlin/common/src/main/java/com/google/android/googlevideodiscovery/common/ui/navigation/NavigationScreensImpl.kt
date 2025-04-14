@@ -52,12 +52,39 @@ class NavigationScreensImpl : NavigationScreens {
     @Composable
     override fun HomeScreen(
         activeProfile: AccountProfile,
+        continueWatchingEntities: List<PlaybackEntity>,
         movies: List<Movie>,
         tvEpisodes: List<TvEpisode>,
         onEntityClick: (PlaybackEntity) -> Unit,
     ) {
         CommonHomeScreen(
             activeProfile = activeProfile,
+            continueWatchingContent = if (continueWatchingEntities.isEmpty()) {
+                null
+            } else {
+                {
+                    HomeScreenDefaults.ContinueWatchingChannel(
+                        continueWatchingEntitiesCount = continueWatchingEntities.size,
+                        cardContent = { index ->
+                            val entity = continueWatchingEntities[index]
+                            val progressPercent =
+                                entity.playbackPosition.inWholeMilliseconds.toFloat() / entity.duration.inWholeMilliseconds
+
+                            HomeScreenDefaults.ChannelCard(
+                                title = entity.title,
+                                subtitle = HomeScreenDefaults.buildSubtitle(
+                                    releaseYear = entity.releaseYear,
+                                    duration = entity.duration,
+                                    genre = entity.genre
+                                ),
+                                onClick = {}
+                            ) {
+                                HomeScreenDefaults.ProgressBar(progressPercent = progressPercent)
+                            }
+                        }
+                    )
+                }
+            },
             moviesContent = {
                 HomeScreenDefaults.MoviesChannel(movieCount = movies.size, cardContent = { index ->
                     val movie = movies[index]
@@ -69,7 +96,8 @@ class NavigationScreensImpl : NavigationScreens {
                             genre = movie.genre
                         ),
                         onClick = { onEntityClick(movie.toPlaybackEntity()) }
-                    )
+                    ) {
+                    }
                 })
             },
             tvEpisodesContent = {
@@ -88,7 +116,7 @@ class NavigationScreensImpl : NavigationScreens {
                                 genre = tvEpisode.genre
                             ),
                             onClick = { onEntityClick(tvEpisode.toPlaybackEntity()) }
-                        )
+                        ) {}
                     })
             }
         )

@@ -1,17 +1,27 @@
 package com.google.android.googlevideodiscovery.common.ui.screens
 
+import androidx.annotation.FloatRange
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
@@ -25,8 +35,11 @@ internal fun HomeScreen(
     activeProfile: AccountProfile,
     moviesContent: @Composable () -> Unit,
     tvEpisodesContent: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    continueWatchingContent: (@Composable () -> Unit)? = null,
 ) {
     LazyColumn(
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(25.dp),
         contentPadding = PaddingValues(vertical = 30.dp)
     ) {
@@ -36,6 +49,12 @@ internal fun HomeScreen(
                 fontSize = 48.sp,
                 modifier = Modifier.padding(horizontal = 40.dp)
             )
+        }
+
+        continueWatchingContent?.let {
+            item {
+                continueWatchingContent()
+            }
         }
 
         item {
@@ -49,6 +68,20 @@ internal fun HomeScreen(
 }
 
 internal object HomeScreenDefaults {
+    @Composable
+    fun ContinueWatchingChannel(
+        continueWatchingEntitiesCount: Int,
+        cardContent: @Composable (Int) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Channel(
+            title = "Continue Watching",
+            itemCount = continueWatchingEntitiesCount,
+            cardContent = cardContent,
+            modifier = modifier,
+        )
+    }
+
     @Composable
     fun MoviesChannel(
         movieCount: Int,
@@ -82,21 +115,28 @@ internal object HomeScreenDefaults {
         title: String,
         subtitle: String,
         onClick: () -> Unit,
+        cardContent: @Composable () -> Unit,
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.width(150.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             Card(
                 onClick = onClick,
                 modifier = Modifier
-                    .width(150.dp)
+                    .fillMaxWidth()
                     .aspectRatio(16f / 9),
             ) {
+                cardContent()
             }
             Text(
                 title,
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium.copy(textAlign = TextAlign.Center),
             )
             Text(
                 subtitle,
@@ -105,6 +145,32 @@ internal object HomeScreenDefaults {
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 style = MaterialTheme.typography.bodySmall
             )
+        }
+    }
+
+    @Composable
+    fun ProgressBar(progressPercent: Float) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(bottom = 5.dp)
+                    .fillMaxWidth()
+                    .height(4.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(progressPercent)
+                        .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                )
+            }
         }
     }
 

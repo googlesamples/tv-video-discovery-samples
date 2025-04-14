@@ -1,16 +1,13 @@
 package com.google.android.googlevideodiscovery.common.fakes
 
 import com.google.android.googlevideodiscovery.common.models.Account
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 private var fakeAccount: Account? = null
 
 @Synchronized
-@OptIn(ExperimentalUuidApi::class)
 fun generateFakeAccount(): Account {
     fakeAccount = fakeAccount ?: Account(
-        id = Uuid.random().toHexString(),
+        id = "account-000001",
         name = "Champ",
     )
 

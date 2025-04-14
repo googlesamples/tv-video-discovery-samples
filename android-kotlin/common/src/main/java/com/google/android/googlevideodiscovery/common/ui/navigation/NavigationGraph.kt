@@ -16,7 +16,6 @@ import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundat
 import com.google.android.googlevideodiscovery.common.viewmodels.IdentityAndAccountManagementViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.MediaContentViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackEntityViewModel
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -37,7 +36,8 @@ fun NavigationGraph(
             startDestination = LoginScreen
         ) {
             composable<LoginScreen> {
-                val postAuth = {
+                val accountState = iamViewModel.account.collectAsStateWithLifecycle(null)
+                val navigateToProfilesScreen = {
                     navController.navigate(ProfilesScreen) {
                         popUpTo(LoginScreen) {
                             inclusive = true
@@ -45,21 +45,27 @@ fun NavigationGraph(
                     }
                 }
 
+                LaunchedEffect(accountState.value) {
+                    if (accountState.value != null) {
+                        navigateToProfilesScreen()
+                    }
+                }
+
                 screens.LoginScreen(
                     performRegistration = {
                         iamViewModel.performRegistration {
-                            postAuth()
+                            navigateToProfilesScreen()
                         }
                     },
                     performLogin = {
                         iamViewModel.performLogin {
-                            postAuth()
+                            navigateToProfilesScreen()
                         }
                     }
                 )
             }
             composable<ProfilesScreen> {
-                val accountState = iamViewModel.account.collectAsStateWithLifecycle()
+                val accountState = iamViewModel.account.collectAsStateWithLifecycle(null)
 
                 accountState.value?.let { account ->
                     screens.ProfilesScreen(
@@ -133,7 +139,8 @@ fun NavigationGraph(
                             newPosition = newPosition,
                             reason = reason
                         )
-                    })
+                    }
+                )
             }
         }
     }

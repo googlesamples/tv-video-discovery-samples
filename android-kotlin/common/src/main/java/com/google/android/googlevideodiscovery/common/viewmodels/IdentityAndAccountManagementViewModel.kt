@@ -7,8 +7,10 @@ import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,8 +18,7 @@ import javax.inject.Inject
 class IdentityAndAccountManagementViewModel @Inject constructor(
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
 ) : ViewModel() {
-    private val _account = MutableStateFlow<Account?>(null)
-    val account = _account.asStateFlow()
+    val account: Flow<Account> = identityAndAccountManagementService.getLoggedInUser()
 
     private val _activeProfile = MutableStateFlow<AccountProfile?>(null)
     val activeProfile = _activeProfile.asStateFlow()
@@ -29,8 +30,6 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
                 password = "..."
             )
             if (response.isSuccess) {
-                val account = response.getOrThrow()
-                _account.value = account
                 afterRegistration()
             }
         }
@@ -43,8 +42,6 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
                 password = "..."
             )
             if (response.isSuccess) {
-                val account = response.getOrThrow()
-                _account.value = account
                 afterLoginSuccess()
             }
         }
@@ -52,13 +49,11 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
 
     fun createNewProfile(afterProfileCreation: () -> Unit) {
         viewModelScope.launch {
-            val account = _account.value ?: return@launch
-            val newProfileName = account.getNewProfileName() ?: return@launch
+            val latestAccount = account.last()
+            val newProfileName = latestAccount.getNewProfileName() ?: return@launch
             val response =
-                identityAndAccountManagementService.createProfile(account, newProfileName)
+                identityAndAccountManagementService.createProfile(latestAccount, newProfileName)
             if (response.isSuccess) {
-                val result = response.getOrThrow()
-                _account.value = result.account
                 afterProfileCreation()
             }
         }

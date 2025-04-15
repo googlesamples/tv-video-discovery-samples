@@ -18,6 +18,12 @@ interface AccountProfileDao {
     @Query("SELECT * FROM account_profiles")
     fun getProfiles(): Flow<List<DbAccountProfile>>
 
+    @Query("SELECT * FROM account_profiles WHERE id = :profileId")
+    suspend fun getProfile(profileId: String): DbAccountProfile?
+
+    @Query("SELECT * FROM accounts WHERE id = :accountId")
+    suspend fun getAccount(accountId: String): DbAccount?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun createAccount(account: DbAccount)
 

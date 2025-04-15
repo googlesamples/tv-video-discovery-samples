@@ -2,33 +2,29 @@ package com.google.android.googlevideodiscovery.common.room.dto
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
+import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
+import com.google.android.googlevideodiscovery.common.models.ContinueWatchingType
+import com.google.android.googlevideodiscovery.common.models.EntityType
+import com.google.android.googlevideodiscovery.common.models.VideoEntity
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 @Entity(tableName = "continue_watching_rows")
 data class DbContinueWatchingEntity(
     @PrimaryKey val entityId: String,
-    val title: String,
-    val releaseYear: Int,
-    val durationMillis: Long,
-    val genre: String,
+    val entityType: EntityType,
     val playbackPositionMillis: Long,
     val lastEngagementTimeMillis: Long,
     val continueWatchingType: ContinueWatchingType,
     val profileId: String,
 )
 
-enum class ContinueWatchingType {
-    CONTINUE,
-    NEXT,
+fun DbContinueWatchingEntity.toContinueWatchingEntity(videoEntity: VideoEntity): ContinueWatchingEntity {
+    return ContinueWatchingEntity(
+        entity = videoEntity,
+        playbackPosition = playbackPositionMillis.toDuration(DurationUnit.MILLISECONDS),
+        continueWatchingType = continueWatchingType,
+        lastEngagementTimeMillis = lastEngagementTimeMillis,
+        profileId = profileId,
+    )
 }
-
-fun DbContinueWatchingEntity.toPlaybackEntity() = PlaybackEntity(
-    entityId = entityId,
-    title = title,
-    releaseYear = releaseYear,
-    duration = durationMillis.toDuration(DurationUnit.MILLISECONDS),
-    genre = genre,
-    playbackPosition = playbackPositionMillis.toDuration(DurationUnit.MILLISECONDS),
-)

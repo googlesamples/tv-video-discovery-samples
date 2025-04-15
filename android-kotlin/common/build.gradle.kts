@@ -60,6 +60,10 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
 
+    // Work
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
+
+    // Compose
     api(platform(libs.androidx.compose.bom))
     api("androidx.compose.ui:ui")
     api("androidx.compose.ui:ui-graphics")

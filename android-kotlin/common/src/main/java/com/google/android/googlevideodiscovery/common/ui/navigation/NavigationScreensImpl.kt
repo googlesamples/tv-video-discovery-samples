@@ -3,20 +3,21 @@ package com.google.android.googlevideodiscovery.common.ui.navigation
 import androidx.compose.runtime.Composable
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
+import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.models.Movie
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisode
 import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
+import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreenDefaults
+import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackUpdateReason
 import kotlin.time.Duration
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreen as CommonEntityScreen
-import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults
-import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackUpdateReason
-import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.ProgressBar as EntityScreenProgressBar
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.PauseButton as EntityScreenPauseButton
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.PlayButton as EntityScreenPlayButton
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.PlayerHeading as EntityScreenPlayerHeading
+import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.ProgressBar as EntityScreenProgressBar
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreen as CommonHomeScreen
 import com.google.android.googlevideodiscovery.common.ui.screens.LoginScreen as CommonLoginScreen
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreen as CommonProfilesScreen
@@ -52,7 +53,7 @@ class NavigationScreensImpl : NavigationScreens {
     @Composable
     override fun HomeScreen(
         activeProfile: AccountProfile,
-        continueWatchingEntities: List<PlaybackEntity>,
+        continueWatchingEntities: List<ContinueWatchingEntity>,
         movies: List<Movie>,
         tvEpisodes: List<TvEpisode>,
         onEntityClick: (PlaybackEntity) -> Unit,
@@ -66,16 +67,36 @@ class NavigationScreensImpl : NavigationScreens {
                     HomeScreenDefaults.ContinueWatchingChannel(
                         continueWatchingEntitiesCount = continueWatchingEntities.size,
                         cardContent = { index ->
-                            val entity = continueWatchingEntities[index]
+                            val continueWatchingEntity = continueWatchingEntities[index]
+                            val entity = continueWatchingEntity.entity
+                            val entityDuration = when (entity) {
+                                is Movie -> entity.duration
+                                is TvEpisode -> entity.duration
+                            }
+                            val entityReleaseYear = when (entity) {
+                                is Movie -> entity.releaseYear
+                                is TvEpisode -> entity.releaseYear
+                            }
+                            val entityGenre = when (entity) {
+                                is Movie -> entity.genre
+                                is TvEpisode -> entity.genre
+                            }
                             val progressPercent =
-                                entity.playbackPosition.inWholeMilliseconds.toFloat() / entity.duration.inWholeMilliseconds
+                                continueWatchingEntity.playbackPosition.inWholeMilliseconds.toFloat() / entityDuration.inWholeMilliseconds
+                            val cardTitle = when (entity) {
+                                is Movie -> entity.name
+                                is TvEpisode -> HomeScreenDefaults.buildEpisodeTitle(
+                                    episodeName = entity.name,
+                                    episodeNumber = entity.episodeNumber,
+                                )
+                            }
 
                             HomeScreenDefaults.ChannelCard(
-                                title = entity.title,
+                                title = cardTitle,
                                 subtitle = HomeScreenDefaults.buildSubtitle(
-                                    releaseYear = entity.releaseYear,
-                                    duration = entity.duration,
-                                    genre = entity.genre
+                                    releaseYear = entityReleaseYear,
+                                    duration = entityDuration,
+                                    genre = entityGenre
                                 ),
                                 onClick = {}
                             ) {

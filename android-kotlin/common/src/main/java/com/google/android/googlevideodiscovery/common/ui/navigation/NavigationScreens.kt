@@ -3,6 +3,7 @@ package com.google.android.googlevideodiscovery.common.ui.navigation
 import androidx.compose.runtime.Composable
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
+import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.models.Movie
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisode
@@ -27,7 +28,7 @@ interface NavigationScreens {
     @Composable
     fun HomeScreen(
         activeProfile: AccountProfile,
-        continueWatchingEntities: List<PlaybackEntity>,
+        continueWatchingEntities: List<ContinueWatchingEntity>,
         movies: List<Movie>,
         tvEpisodes: List<TvEpisode>,
         onEntityClick: (PlaybackEntity) -> Unit,

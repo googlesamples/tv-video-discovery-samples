@@ -2,9 +2,9 @@ package com.google.android.googlevideodiscovery.common.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
-import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
-import com.google.android.googlevideodiscovery.common.room.dto.ContinueWatchingType
+import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
+import com.google.android.googlevideodiscovery.common.models.ContinueWatchingType
+import com.google.android.googlevideodiscovery.common.models.toContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.room.repository.ContinueWatchingRepository
 import com.google.android.googlevideodiscovery.common.services.MoviesService
 import com.google.android.googlevideodiscovery.common.services.TvShowsService
@@ -12,8 +12,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ContinueWatchingViewModel @Inject constructor(
@@ -22,7 +24,8 @@ class ContinueWatchingViewModel @Inject constructor(
     private val tvShowsService: TvShowsService,
 ) : ViewModel() {
 
-    private val _continueWatchingEntities = MutableStateFlow<List<PlaybackEntity>>(emptyList())
+    private val _continueWatchingEntities =
+        MutableStateFlow<List<ContinueWatchingEntity>>(emptyList())
     val continueWatchingEntities = _continueWatchingEntities.asStateFlow()
 
     fun loadContinueWatchingEntities(profileId: String) {
@@ -37,9 +40,12 @@ class ContinueWatchingViewModel @Inject constructor(
             val tvEpisode = tvShowsService.fetchTvEpisodes().find { it.id == episodeId }
             tvEpisode?.let { mTvEpisode ->
                 continueWatchingRepository.addToContinueWatching(
-                    entity = mTvEpisode.toPlaybackEntity(),
-                    continueWatchingType = ContinueWatchingType.CONTINUE,
-                    profileId = profileId,
+                    entity = mTvEpisode.toContinueWatchingEntity(
+                        continueWatchingType = ContinueWatchingType.CONTINUE,
+                        profileId = profileId,
+                        playbackPosition = 0.seconds,
+                        lastEngagementTime = Instant.now(),
+                    )
                 )
             }
         }
@@ -50,9 +56,12 @@ class ContinueWatchingViewModel @Inject constructor(
             val movie = moviesService.fetchMovies().find { it.id == movieId }
             movie?.let { mMovie ->
                 continueWatchingRepository.addToContinueWatching(
-                    entity = mMovie.toPlaybackEntity(),
-                    continueWatchingType = ContinueWatchingType.CONTINUE,
-                    profileId = profileId,
+                    entity = mMovie.toContinueWatchingEntity(
+                        continueWatchingType = ContinueWatchingType.CONTINUE,
+                        profileId = profileId,
+                        playbackPosition = 0.seconds,
+                        lastEngagementTime = Instant.now(),
+                    )
                 )
             }
         }

@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.google.android.googlevideodiscovery.common.room.dto.DbContinueWatchingEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ContinueWatchingDao {

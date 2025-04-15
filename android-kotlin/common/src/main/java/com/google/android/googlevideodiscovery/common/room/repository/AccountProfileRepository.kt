@@ -1,6 +1,7 @@
 package com.google.android.googlevideodiscovery.common.room.repository
 
 import com.google.android.googlevideodiscovery.common.models.Account
+import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.room.dao.AccountProfileDao
 import com.google.android.googlevideodiscovery.common.room.dto.DbAccount
 import com.google.android.googlevideodiscovery.common.room.dto.DbAccountProfile
@@ -23,6 +24,15 @@ class AccountProfileRepository @Inject constructor(
                     profiles = profiles.map { it.toAccountProfile(account) }
                 )
             }
+        }
+    }
+
+    suspend fun getProfile(profileId: String): AccountProfile? {
+        val profile = accountProfileDao.getProfile(profileId)
+        val accountId = profile?.accountId ?: return null
+        val account = accountProfileDao.getAccount(accountId)?.toAccount()
+        return account?.let {
+            profile.toAccountProfile(account)
         }
     }
 

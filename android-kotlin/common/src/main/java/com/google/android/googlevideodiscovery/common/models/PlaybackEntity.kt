@@ -1,8 +1,5 @@
 package com.google.android.googlevideodiscovery.common.models
 
-import com.google.android.googlevideodiscovery.common.room.dto.ContinueWatchingType
-import com.google.android.googlevideodiscovery.common.room.dto.DbContinueWatchingEntity
-import java.time.Instant
 import kotlin.time.Duration
 
 data class PlaybackEntity(
@@ -12,20 +9,4 @@ data class PlaybackEntity(
     val duration: Duration,
     val genre: String,
     var playbackPosition: Duration,
-)
-
-fun PlaybackEntity.toDbContinueWatchingEntity(
-    profileId: String,
-    continueWatchingType: ContinueWatchingType,
-    lastEngagementTime: Instant
-) = DbContinueWatchingEntity(
-    entityId = entityId,
-    title = title,
-    releaseYear = releaseYear,
-    durationMillis = duration.inWholeMilliseconds,
-    genre = genre,
-    playbackPositionMillis = playbackPosition.inWholeMilliseconds,
-    continueWatchingType = continueWatchingType,
-    lastEngagementTimeMillis = lastEngagementTime.toEpochMilli(),
-    profileId = profileId,
 )

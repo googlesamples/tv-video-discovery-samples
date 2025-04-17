@@ -17,8 +17,12 @@ class IdentityAndAccountManagementService @Inject constructor(
         return accountProfileRepository.getLoggedInUser()
     }
 
-    suspend fun getProfileByProfileId(profileId: String): AccountProfile? {
+    suspend fun getProfileById(profileId: String): AccountProfile? {
         return accountProfileRepository.getProfile(profileId)
+    }
+
+    suspend fun getAccountById(accountId: String): Account? {
+        return accountProfileRepository.getAccount(accountId)
     }
 
     suspend fun login(username: String, password: String): Result<Unit> {

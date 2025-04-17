@@ -27,10 +27,14 @@ class AccountProfileRepository @Inject constructor(
         }
     }
 
+    suspend fun getAccount(accountId: String): Account? {
+        return accountProfileDao.getAccount(accountId)?.toAccount()
+    }
+
     suspend fun getProfile(profileId: String): AccountProfile? {
         val profile = accountProfileDao.getProfile(profileId)
         val accountId = profile?.accountId ?: return null
-        val account = accountProfileDao.getAccount(accountId)?.toAccount()
+        val account = getAccount(accountId)
         return account?.let {
             profile.toAccountProfile(account)
         }

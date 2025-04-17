@@ -35,7 +35,7 @@ class PublishContinuationClusterWorker @Inject constructor(
 
     override suspend fun doWork(): Result {
         val profileId = inputData.getString(INPUT_DATA_PROFILE_ID_KEY) ?: return Result.failure()
-        val profile = identityAndAccountManagementService.getProfileByProfileId(profileId)
+        val profile = identityAndAccountManagementService.getProfileById(profileId)
             ?: return Result.failure()
         val continueWatchingEntities =
             continueWatchingRepository.getContinueWatchingEntities(profileId)

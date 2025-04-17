@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingType
-import com.google.android.googlevideodiscovery.common.models.toContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.room.repository.ContinueWatchingRepository
 import com.google.android.googlevideodiscovery.common.services.MoviesService
 import com.google.android.googlevideodiscovery.common.services.TvShowsService
@@ -31,7 +30,7 @@ class ContinueWatchingViewModel @Inject constructor(
     fun loadContinueWatchingEntities(profileId: String) {
         viewModelScope.launch {
             _continueWatchingEntities.value =
-                continueWatchingRepository.getContinueWatchingEntities(profileId = profileId)
+                continueWatchingRepository.getMany(profileId = profileId)
         }
     }
 
@@ -39,7 +38,7 @@ class ContinueWatchingViewModel @Inject constructor(
         viewModelScope.launch {
             val tvEpisode = tvShowsService.fetchTvEpisodes().find { it.id == episodeId }
             tvEpisode?.let { mTvEpisode ->
-                continueWatchingRepository.addToContinueWatching(
+                continueWatchingRepository.insertOrUpdateOne(
                     entity = mTvEpisode.toContinueWatchingEntity(
                         continueWatchingType = ContinueWatchingType.CONTINUE,
                         profileId = profileId,
@@ -55,7 +54,7 @@ class ContinueWatchingViewModel @Inject constructor(
         viewModelScope.launch {
             val movie = moviesService.fetchMovies().find { it.id == movieId }
             movie?.let { mMovie ->
-                continueWatchingRepository.addToContinueWatching(
+                continueWatchingRepository.insertOrUpdateOne(
                     entity = mMovie.toContinueWatchingEntity(
                         continueWatchingType = ContinueWatchingType.CONTINUE,
                         profileId = profileId,
@@ -101,7 +100,7 @@ class ContinueWatchingViewModel @Inject constructor(
 
     fun removeFromContinueWatching(entityId: String) {
         viewModelScope.launch {
-            continueWatchingRepository.removeFromContinueWatching(entityId)
+            continueWatchingRepository.removeOne(entityId)
         }
     }
 }

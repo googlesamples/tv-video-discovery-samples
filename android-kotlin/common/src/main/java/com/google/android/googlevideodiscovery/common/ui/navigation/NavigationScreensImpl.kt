@@ -11,7 +11,6 @@ import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreenDefaults
-import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackUpdateReason
 import kotlin.time.Duration
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreen as CommonEntityScreen
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults.PauseButton as EntityScreenPauseButton
@@ -148,7 +147,7 @@ class NavigationScreensImpl : NavigationScreens {
         entity: PlaybackEntity?,
         isPlaying: Boolean,
         updateIsPlaying: (Boolean) -> Unit,
-        onUpdatePlaybackPosition: (Duration, PlaybackUpdateReason) -> Unit
+        onUpdatePlaybackPosition: (Duration) -> Unit
     ) {
         if (entity == null) {
             EntityScreenDefaults.LoadingEntityScreen()

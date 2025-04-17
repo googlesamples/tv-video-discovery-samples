@@ -7,7 +7,6 @@ import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEnt
 import com.google.android.googlevideodiscovery.common.models.Movie
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisode
-import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackUpdateReason
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration
 
@@ -42,7 +41,7 @@ interface NavigationScreens {
         entity: PlaybackEntity?,
         isPlaying: Boolean,
         updateIsPlaying: (Boolean) -> Unit,
-        onUpdatePlaybackPosition: (Duration, PlaybackUpdateReason) -> Unit
+        onUpdatePlaybackPosition: (Duration) -> Unit
     )
 }
 

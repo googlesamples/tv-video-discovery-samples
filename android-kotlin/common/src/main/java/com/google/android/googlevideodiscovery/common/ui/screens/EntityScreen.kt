@@ -25,7 +25,6 @@ import com.google.android.googlevideodiscovery.common.ui.foundation.LocalContent
 import com.google.android.googlevideodiscovery.common.ui.foundation.Slider
 import com.google.android.googlevideodiscovery.common.ui.foundation.Surface
 import com.google.android.googlevideodiscovery.common.ui.foundation.Text
-import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackUpdateReason
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -84,7 +83,7 @@ internal object EntityScreenDefaults {
         onPlaybackEnd: () -> Unit,
         modifier: Modifier = Modifier,
         currentPosition: Duration,
-        onUpdatePlaybackPosition: (Duration, PlaybackUpdateReason) -> Unit
+        onUpdatePlaybackPosition: (Duration) -> Unit
     ) {
         val updatedCurrentPosition = rememberUpdatedState(currentPosition)
 
@@ -104,7 +103,6 @@ internal object EntityScreenDefaults {
                         val newPlaybackPosition = (updatedCurrentPosition.value + 1.seconds)
                         onUpdatePlaybackPosition(
                             newPlaybackPosition.coerceAtMost(duration),
-                            PlaybackUpdateReason.AUTO_UPDATE
                         )
 
                         if (newPlaybackPosition >= duration) {
@@ -121,8 +119,7 @@ internal object EntityScreenDefaults {
                 value = currentPosition.inWholeSeconds.toFloat(),
                 onValueChange = {
                     onUpdatePlaybackPosition(
-                        it.toInt().toDuration(DurationUnit.SECONDS),
-                        PlaybackUpdateReason.USER_SCRUB
+                        it.toInt().toDuration(DurationUnit.SECONDS)
                     )
                 },
                 modifier = Modifier.weight(1f),

@@ -4,7 +4,20 @@ import java.time.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-sealed interface VideoEntity
+sealed interface VideoEntity {
+    fun toContinueWatchingEntity(
+        continueWatchingType: ContinueWatchingType,
+        profileId: String,
+        playbackPosition: Duration,
+        lastEngagementTime: Instant
+    ) = ContinueWatchingEntity(
+        entity = this,
+        continueWatchingType = continueWatchingType,
+        playbackPosition = playbackPosition,
+        profileId = profileId,
+        lastEngagementTimeMillis = lastEngagementTime.toEpochMilli()
+    )
+}
 
 data class Movie(
     val id: String,
@@ -31,6 +44,11 @@ data class TvEpisode(
     var nextEpisode: TvEpisode?,
 ) : VideoEntity
 
+fun VideoEntity.toPlaybackEntity(playbackPosition: Duration? = null) = when (this) {
+    is Movie -> toPlaybackEntity(playbackPosition = playbackPosition)
+    is TvEpisode -> toPlaybackEntity(playbackPosition = playbackPosition)
+}
+
 fun Movie.toPlaybackEntity(playbackPosition: Duration? = null) = PlaybackEntity(
     entityId = id,
     title = name,
@@ -47,30 +65,4 @@ fun TvEpisode.toPlaybackEntity(playbackPosition: Duration? = null) = PlaybackEnt
     duration = duration,
     genre = genre,
     playbackPosition = playbackPosition ?: 0.seconds
-)
-
-fun Movie.toContinueWatchingEntity(
-    continueWatchingType: ContinueWatchingType,
-    profileId: String,
-    playbackPosition: Duration,
-    lastEngagementTime: Instant
-) = ContinueWatchingEntity(
-    entity = this,
-    continueWatchingType = continueWatchingType,
-    playbackPosition = playbackPosition,
-    profileId = profileId,
-    lastEngagementTimeMillis = lastEngagementTime.toEpochMilli()
-)
-
-fun TvEpisode.toContinueWatchingEntity(
-    continueWatchingType: ContinueWatchingType,
-    profileId: String,
-    playbackPosition: Duration,
-    lastEngagementTime: Instant
-) = ContinueWatchingEntity(
-    entity = this,
-    continueWatchingType = continueWatchingType,
-    playbackPosition = playbackPosition,
-    profileId = profileId,
-    lastEngagementTimeMillis = lastEngagementTime.toEpochMilli()
 )

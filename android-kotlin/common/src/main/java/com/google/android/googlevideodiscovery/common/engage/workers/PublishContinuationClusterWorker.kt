@@ -37,8 +37,7 @@ class PublishContinuationClusterWorker @Inject constructor(
         val profileId = inputData.getString(INPUT_DATA_PROFILE_ID_KEY) ?: return Result.failure()
         val profile = identityAndAccountManagementService.getProfileById(profileId)
             ?: return Result.failure()
-        val continueWatchingEntities =
-            continueWatchingRepository.getContinueWatchingEntities(profileId)
+        val continueWatchingEntities = continueWatchingRepository.getMany(profileId)
         val userConsentToSendDataToGoogle =
             syncAcrossDevicesConsentService.getSyncAcrossDevicesConsentValue(profile.account.id)
 

@@ -1,17 +1,14 @@
 package com.google.android.googlevideodiscovery.common.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.googlevideodiscovery.common.models.ContinueWatchingType
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
-import com.google.android.googlevideodiscovery.common.room.repository.ContinueWatchingRepository
-import com.google.android.googlevideodiscovery.common.services.EngageInteractionService
+import com.google.android.googlevideodiscovery.common.services.ContinueWatchingService
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
-import com.google.android.googlevideodiscovery.common.services.MoviesService
-import com.google.android.googlevideodiscovery.common.services.TvShowsService
+import com.google.android.googlevideodiscovery.common.services.MediaContentService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,12 +17,9 @@ import kotlin.time.Duration
 
 @HiltViewModel
 class PlaybackEntityViewModel @Inject constructor(
-    private val moviesService: MoviesService,
-    private val tvShowsService: TvShowsService,
-    private val engageInteractionService: EngageInteractionService,
-    private val continueWatchingRepository: ContinueWatchingRepository,
+    private val mediaContentService: MediaContentService,
+    private val continueWatchingService: ContinueWatchingService,
     identityAndAccountManagementService: IdentityAndAccountManagementService,
-    @ApplicationContext private val context: Context,
 ) : ViewModel() {
     private val activeProfile = identityAndAccountManagementService.activeProfile
 
@@ -36,19 +30,19 @@ class PlaybackEntityViewModel @Inject constructor(
     val isPlaying = _isPlaying.asStateFlow()
 
     fun loadPlaybackEntity(entityId: String) {
+        val activeProfileId = activeProfile.value?.id ?: return
+
         viewModelScope.launch {
-            val continueWatchingEntity = continueWatchingRepository.getContinueWatchingEntity(
-                entityId,
-                profileId = activeProfile.value?.id
+            val continueWatchingEntity = continueWatchingService.getOne(
+                entityId = entityId,
+                profileId = activeProfileId
             )?.toPlaybackEntity()
+
             _playbackEntity.value = continueWatchingEntity ?: fetchPlaybackEntity(entityId)
         }
     }
 
-    fun updatePlaybackPosition(
-        newPosition: Duration,
-        reason: PlaybackUpdateReason
-    ) {
+    fun updatePlaybackPosition(newPosition: Duration) {
         _playbackEntity.value = _playbackEntity.value?.copy(
             playbackPosition = newPosition
         )
@@ -56,21 +50,26 @@ class PlaybackEntityViewModel @Inject constructor(
 
     fun updateIsPlaying(isPlaying: Boolean) {
         _isPlaying.value = isPlaying
+        if (!isPlaying) {
+            updateContinueWatching()
+        }
     }
 
     private suspend fun fetchPlaybackEntity(entityId: String): PlaybackEntity? {
-        // Instead of fetching your entire catalog in the ui, do this efficiently in your code.
-        val movies = moviesService.fetchMovies()
-        val tvEpisodes = tvShowsService.fetchTvEpisodes()
-
-        val playbackEntities =
-            movies.map { it.toPlaybackEntity() } + tvEpisodes.map { it.toPlaybackEntity() }
-
-        return playbackEntities.find { it.entityId == entityId }
+        return mediaContentService.findVideoEntityById(entityId)?.toPlaybackEntity()
     }
-}
 
-enum class PlaybackUpdateReason {
-    AUTO_UPDATE,
-    USER_SCRUB,
+    private fun updateContinueWatching() {
+        val entity = playbackEntity.value ?: return
+        val activeProfileId = activeProfile.value?.id ?: return
+
+        viewModelScope.launch {
+            continueWatchingService.insertOrUpdateOne(
+                entityId = entity.entityId,
+                continueWatchingType = ContinueWatchingType.CONTINUE,
+                profileId = activeProfileId,
+                playbackPosition = entity.playbackPosition
+            )
+        }
+    }
 }

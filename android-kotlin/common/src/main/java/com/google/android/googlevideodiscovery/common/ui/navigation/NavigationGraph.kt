@@ -139,9 +139,12 @@ fun NavigationGraph(
 
                     // Listen to app close event
                     lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
-                        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                        override fun onStateChanged(
+                            source: LifecycleOwner,
+                            event: Lifecycle.Event
+                        ) {
                             if (event == Lifecycle.Event.ON_PAUSE) {
-                                // TODO: update CW
+                                playbackEntityViewModel.updateIsPlaying(isPlaying = false)
                             }
                         }
                     })
@@ -153,10 +156,9 @@ fun NavigationGraph(
                     updateIsPlaying = { newIsPlaying ->
                         playbackEntityViewModel.updateIsPlaying(isPlaying = newIsPlaying)
                     },
-                    onUpdatePlaybackPosition = { newPosition, reason ->
+                    onUpdatePlaybackPosition = { newPosition ->
                         playbackEntityViewModel.updatePlaybackPosition(
                             newPosition = newPosition,
-                            reason = reason
                         )
                     },
                 )

@@ -54,7 +54,7 @@ class NavigationScreensImpl : NavigationScreens {
         continueWatchingEntities: List<ContinueWatchingEntity>,
         movieEntities: List<MovieEntity>,
         tvEpisodeEntities: List<TvEpisodeEntity>,
-        onEntityClick: (PlaybackEntity) -> Unit,
+        onEntityClick: (String) -> Unit,
     ) {
         CommonHomeScreen(
             activeProfile = activeProfile,
@@ -84,7 +84,7 @@ class NavigationScreensImpl : NavigationScreens {
                                     duration = entity.duration,
                                     genre = entity.genre
                                 ),
-                                onClick = {}
+                                onClick = { onEntityClick(entity.id) }
                             ) {
                                 HomeScreenDefaults.ProgressBar(progressPercent = progressPercent)
                             }
@@ -104,7 +104,7 @@ class NavigationScreensImpl : NavigationScreens {
                                 duration = movie.duration,
                                 genre = movie.genre
                             ),
-                            onClick = { onEntityClick(movie.toPlaybackEntity()) }
+                            onClick = { onEntityClick(movie.id) }
                         ) {
                         }
                     })
@@ -124,7 +124,7 @@ class NavigationScreensImpl : NavigationScreens {
                                 duration = tvEpisode.duration,
                                 genre = tvEpisode.genre
                             ),
-                            onClick = { onEntityClick(tvEpisode.toPlaybackEntity()) }
+                            onClick = { onEntityClick(tvEpisode.id) }
                         ) {}
                     })
             }

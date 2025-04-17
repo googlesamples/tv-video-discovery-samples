@@ -112,8 +112,8 @@ fun NavigationGraph(
                     continueWatchingEntities = continueWatchingEntities,
                     movieEntities = movies,
                     tvEpisodeEntities = tvEpisodes,
-                    onEntityClick = { playbackEntity ->
-                        navController.navigate(EntityScreen(entityId = playbackEntity.entityId))
+                    onEntityClick = { entityId ->
+                        navController.navigate(EntityScreen(entityId = entityId))
                     }
                 )
             }

@@ -30,7 +30,7 @@ interface NavigationScreens {
         continueWatchingEntities: List<ContinueWatchingEntity>,
         movieEntities: List<MovieEntity>,
         tvEpisodeEntities: List<TvEpisodeEntity>,
-        onEntityClick: (PlaybackEntity) -> Unit,
+        onEntityClick: (String) -> Unit,
     )
 
     @Composable

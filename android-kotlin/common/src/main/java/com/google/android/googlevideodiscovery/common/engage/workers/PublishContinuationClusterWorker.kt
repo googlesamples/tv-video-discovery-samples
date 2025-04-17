@@ -15,15 +15,15 @@ import com.google.android.googlevideodiscovery.common.engage.converters.buildEng
 import com.google.android.googlevideodiscovery.common.services.ContinueWatchingService
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import com.google.android.googlevideodiscovery.common.services.SyncAcrossDevicesConsentService
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @HiltWorker
-class PublishContinuationClusterWorker @Inject constructor(
-    @ApplicationContext appContext: Context,
-    params: WorkerParameters,
+class PublishContinuationClusterWorker @AssistedInject constructor(
+    @Assisted appContext: Context,
+    @Assisted params: WorkerParameters,
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
     private val continueWatchingService: ContinueWatchingService,
     private val syncAcrossDevicesConsentService: SyncAcrossDevicesConsentService,

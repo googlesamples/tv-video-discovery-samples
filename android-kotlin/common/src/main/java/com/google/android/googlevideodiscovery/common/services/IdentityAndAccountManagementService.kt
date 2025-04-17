@@ -14,7 +14,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class IdentityAndAccountManagementService @Inject constructor(
     private val accountProfileRepository: AccountProfileRepository,
 ) {

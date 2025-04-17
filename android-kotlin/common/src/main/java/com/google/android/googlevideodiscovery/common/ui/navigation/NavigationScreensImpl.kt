@@ -4,10 +4,9 @@ import androidx.compose.runtime.Composable
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
-import com.google.android.googlevideodiscovery.common.models.Movie
+import com.google.android.googlevideodiscovery.common.models.MovieEntity
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
-import com.google.android.googlevideodiscovery.common.models.TvEpisode
-import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
+import com.google.android.googlevideodiscovery.common.models.TvEpisodeEntity
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreenDefaults
@@ -53,8 +52,8 @@ class NavigationScreensImpl : NavigationScreens {
     override fun HomeScreen(
         activeProfile: AccountProfile,
         continueWatchingEntities: List<ContinueWatchingEntity>,
-        movies: List<Movie>,
-        tvEpisodes: List<TvEpisode>,
+        movieEntities: List<MovieEntity>,
+        tvEpisodeEntities: List<TvEpisodeEntity>,
         onEntityClick: (PlaybackEntity) -> Unit,
     ) {
         CommonHomeScreen(
@@ -68,23 +67,11 @@ class NavigationScreensImpl : NavigationScreens {
                         cardContent = { index ->
                             val continueWatchingEntity = continueWatchingEntities[index]
                             val entity = continueWatchingEntity.entity
-                            val entityDuration = when (entity) {
-                                is Movie -> entity.duration
-                                is TvEpisode -> entity.duration
-                            }
-                            val entityReleaseYear = when (entity) {
-                                is Movie -> entity.releaseYear
-                                is TvEpisode -> entity.releaseYear
-                            }
-                            val entityGenre = when (entity) {
-                                is Movie -> entity.genre
-                                is TvEpisode -> entity.genre
-                            }
                             val progressPercent =
-                                continueWatchingEntity.playbackPosition.inWholeMilliseconds.toFloat() / entityDuration.inWholeMilliseconds
+                                continueWatchingEntity.playbackPosition.inWholeMilliseconds.toFloat() / entity.duration.inWholeMilliseconds
                             val cardTitle = when (entity) {
-                                is Movie -> entity.name
-                                is TvEpisode -> HomeScreenDefaults.buildEpisodeTitle(
+                                is MovieEntity -> entity.name
+                                is TvEpisodeEntity -> HomeScreenDefaults.buildEpisodeTitle(
                                     episodeName = entity.name,
                                     episodeNumber = entity.episodeNumber,
                                 )
@@ -93,9 +80,9 @@ class NavigationScreensImpl : NavigationScreens {
                             HomeScreenDefaults.ChannelCard(
                                 title = cardTitle,
                                 subtitle = HomeScreenDefaults.buildSubtitle(
-                                    releaseYear = entityReleaseYear,
-                                    duration = entityDuration,
-                                    genre = entityGenre
+                                    releaseYear = entity.releaseYear,
+                                    duration = entity.duration,
+                                    genre = entity.genre
                                 ),
                                 onClick = {}
                             ) {
@@ -106,25 +93,27 @@ class NavigationScreensImpl : NavigationScreens {
                 }
             },
             moviesContent = {
-                HomeScreenDefaults.MoviesChannel(movieCount = movies.size, cardContent = { index ->
-                    val movie = movies[index]
-                    HomeScreenDefaults.ChannelCard(
-                        title = movie.name,
-                        subtitle = HomeScreenDefaults.buildSubtitle(
-                            releaseYear = movie.releaseYear,
-                            duration = movie.duration,
-                            genre = movie.genre
-                        ),
-                        onClick = { onEntityClick(movie.toPlaybackEntity()) }
-                    ) {
-                    }
-                })
+                HomeScreenDefaults.MoviesChannel(
+                    movieCount = movieEntities.size,
+                    cardContent = { index ->
+                        val movie = movieEntities[index]
+                        HomeScreenDefaults.ChannelCard(
+                            title = movie.name,
+                            subtitle = HomeScreenDefaults.buildSubtitle(
+                                releaseYear = movie.releaseYear,
+                                duration = movie.duration,
+                                genre = movie.genre
+                            ),
+                            onClick = { onEntityClick(movie.toPlaybackEntity()) }
+                        ) {
+                        }
+                    })
             },
             tvEpisodesContent = {
                 HomeScreenDefaults.TvEpisodesChannel(
-                    tvEpisodesCount = tvEpisodes.size,
+                    tvEpisodesCount = tvEpisodeEntities.size,
                     cardContent = { index ->
-                        val tvEpisode = tvEpisodes[index]
+                        val tvEpisode = tvEpisodeEntities[index]
                         HomeScreenDefaults.ChannelCard(
                             title = HomeScreenDefaults.buildEpisodeTitle(
                                 episodeName = tvEpisode.name,

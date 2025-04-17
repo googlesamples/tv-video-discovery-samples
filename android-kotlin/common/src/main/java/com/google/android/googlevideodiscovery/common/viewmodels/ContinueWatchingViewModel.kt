@@ -80,7 +80,7 @@ class ContinueWatchingViewModel @Inject constructor(
         viewModelScope.launch {
             val currentMovie = moviesService.fetchMovies().find { it.id == currentMovieId }
 
-            currentMovie?.nextMovie?.let { nextMovie ->
+            currentMovie?.nextMovieEntity?.let { nextMovie ->
                 addMovieToContinueWatching(movieId = nextMovie.id, profileId = profileId)
             }
         }

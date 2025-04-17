@@ -1,19 +1,19 @@
 package com.google.android.googlevideodiscovery.common.engage.converters
 
-import com.google.android.engage.common.datamodel.Entity
-import com.google.android.engage.video.datamodel.MovieEntity
-import com.google.android.engage.video.datamodel.TvEpisodeEntity
+import com.google.android.engage.common.datamodel.Entity as EngageEntity
+import com.google.android.engage.video.datamodel.MovieEntity as EngageMovieEntity
+import com.google.android.engage.video.datamodel.TvEpisodeEntity as EngageTvEpisodeEntity
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
-import com.google.android.googlevideodiscovery.common.models.Movie
-import com.google.android.googlevideodiscovery.common.models.TvEpisode
+import com.google.android.googlevideodiscovery.common.models.MovieEntity
+import com.google.android.googlevideodiscovery.common.models.TvEpisodeEntity
 
-internal fun ContinueWatchingEntity.convertToEngageEntity(): Entity = when (entity) {
-    is Movie -> entity.convertToEngageMovieEntity(this)
-    is TvEpisode -> entity.convertToEngageTvEpisodeEntity(this)
+internal fun ContinueWatchingEntity.convertToEngageEntity(): EngageEntity = when (entity) {
+    is MovieEntity -> entity.convertToEngageMovieEntity(this)
+    is TvEpisodeEntity -> entity.convertToEngageTvEpisodeEntity(this)
 }
 
-private fun Movie.convertToEngageMovieEntity(continueWatchingEntity: ContinueWatchingEntity) =
-    MovieEntity.Builder()
+private fun MovieEntity.convertToEngageMovieEntity(continueWatchingEntity: ContinueWatchingEntity) =
+    EngageMovieEntity.Builder()
         .setEntityId(id)
         .setName(name)
         .addGenre(genre)
@@ -29,8 +29,8 @@ private fun Movie.convertToEngageMovieEntity(continueWatchingEntity: ContinueWat
         )
         .build()
 
-private fun TvEpisode.convertToEngageTvEpisodeEntity(continueWatchingEntity: ContinueWatchingEntity) =
-    TvEpisodeEntity.Builder()
+private fun TvEpisodeEntity.convertToEngageTvEpisodeEntity(continueWatchingEntity: ContinueWatchingEntity) =
+    EngageTvEpisodeEntity.Builder()
         .setEntityId(id)
         .setName(name)
         .setShowTitle(showTitle)

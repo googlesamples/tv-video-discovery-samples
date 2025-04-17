@@ -2,13 +2,13 @@ package com.google.android.googlevideodiscovery.common.services
 
 import com.google.android.googlevideodiscovery.common.models.Image
 import com.google.android.googlevideodiscovery.common.models.PlatformSpecificUris
-import com.google.android.googlevideodiscovery.common.models.TvEpisode
+import com.google.android.googlevideodiscovery.common.models.TvEpisodeEntity
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 class TvShowsService @Inject constructor() {
-    suspend fun fetchTvEpisodes(): List<TvEpisode> {
+    suspend fun fetchTvEpisodes(): List<TvEpisodeEntity> {
         val episode1 = createTvEpisode(
             name = "Pilot",
             episodeNumber = 1,
@@ -180,9 +180,9 @@ private fun createTvEpisode(
     name: String,
     episodeNumber: Int,
     duration: Duration,
-): TvEpisode {
+): TvEpisodeEntity {
     val slug = name.lowercase().replace(" ", "-")
-    return TvEpisode(
+    return TvEpisodeEntity(
         name = name,
         id = slug,
         episodeNumber = episodeNumber,

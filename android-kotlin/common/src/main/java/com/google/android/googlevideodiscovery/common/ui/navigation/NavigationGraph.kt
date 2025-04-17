@@ -110,8 +110,8 @@ fun NavigationGraph(
                 screens.HomeScreen(
                     activeProfile = activeProfile,
                     continueWatchingEntities = continueWatchingEntities,
-                    movies = movies,
-                    tvEpisodes = tvEpisodes,
+                    movieEntities = movies,
+                    tvEpisodeEntities = tvEpisodes,
                     onEntityClick = { playbackEntity ->
                         navController.navigate(EntityScreen(entityId = playbackEntity.entityId))
                     }

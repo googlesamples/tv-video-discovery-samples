@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
-import com.google.android.googlevideodiscovery.common.models.Movie
+import com.google.android.googlevideodiscovery.common.models.MovieEntity
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
-import com.google.android.googlevideodiscovery.common.models.TvEpisode
+import com.google.android.googlevideodiscovery.common.models.TvEpisodeEntity
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration
 
@@ -28,8 +28,8 @@ interface NavigationScreens {
     fun HomeScreen(
         activeProfile: AccountProfile,
         continueWatchingEntities: List<ContinueWatchingEntity>,
-        movies: List<Movie>,
-        tvEpisodes: List<TvEpisode>,
+        movieEntities: List<MovieEntity>,
+        tvEpisodeEntities: List<TvEpisodeEntity>,
         onEntityClick: (PlaybackEntity) -> Unit,
     )
 

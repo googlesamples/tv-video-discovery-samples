@@ -1,14 +1,14 @@
 package com.google.android.googlevideodiscovery.common.services
 
 import com.google.android.googlevideodiscovery.common.models.Image
-import com.google.android.googlevideodiscovery.common.models.Movie
+import com.google.android.googlevideodiscovery.common.models.MovieEntity
 import com.google.android.googlevideodiscovery.common.models.PlatformSpecificUris
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 class MoviesService @Inject constructor() {
-    suspend fun fetchMovies(): List<Movie> {
+    suspend fun fetchMovies(): List<MovieEntity> {
         // Business logic to fetch from server
 
         val ironGuy = createMovie(name = "Iron Guy", duration = 126.minutes, releaseYear = 2008)
@@ -39,10 +39,10 @@ class MoviesService @Inject constructor() {
                 releaseYear = 2023
             )
 
-        ironGuy.nextMovie = ironGuy2
-        ironGuy2.nextMovie = ironGuy3
-        protectorsOfTheGalaxy.nextMovie = protectorsOfTheGalaxy2
-        protectorsOfTheGalaxy2.nextMovie = protectorsOfTheGalaxy3
+        ironGuy.nextMovieEntity = ironGuy2
+        ironGuy2.nextMovieEntity = ironGuy3
+        protectorsOfTheGalaxy.nextMovieEntity = protectorsOfTheGalaxy2
+        protectorsOfTheGalaxy2.nextMovieEntity = protectorsOfTheGalaxy3
 
         return listOf(
             ironGuy,
@@ -59,9 +59,9 @@ class MoviesService @Inject constructor() {
     }
 }
 
-private fun createMovie(name: String, duration: Duration, releaseYear: Int): Movie {
+private fun createMovie(name: String, duration: Duration, releaseYear: Int): MovieEntity {
     val slug = name.lowercase().replace(" ", "-")
-    return Movie(
+    return MovieEntity(
         id = slug,
         name = name,
         images = listOf(
@@ -79,6 +79,6 @@ private fun createMovie(name: String, duration: Duration, releaseYear: Int): Mov
         ),
         releaseYear = releaseYear,
         genre = "Sci-Fi",
-        nextMovie = null
+        nextMovieEntity = null
     )
 }

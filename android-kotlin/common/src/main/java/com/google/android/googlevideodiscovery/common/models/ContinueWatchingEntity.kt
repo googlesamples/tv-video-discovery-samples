@@ -11,22 +11,10 @@ data class ContinueWatchingEntity(
     val profileId: String,
 )
 
-val ContinueWatchingEntity.entityId
-    get() = run {
-        when (entity) {
-            is Movie -> entity.id
-            is TvEpisode -> entity.id
-        }
-    }
-
 fun ContinueWatchingEntity.toDbContinueWatchingEntity(): DbContinueWatchingEntity {
-    val entityType = when (entity) {
-        is Movie -> EntityType.MOVIE
-        is TvEpisode -> EntityType.TV_EPISODE
-    }
     return DbContinueWatchingEntity(
-        entityId = entityId,
-        entityType = entityType,
+        entityId = entity.id,
+        entityType = entity.type,
         playbackPositionMillis = playbackPosition.inWholeMilliseconds,
         lastEngagementTimeMillis = lastEngagementTimeMillis,
         continueWatchingType = continueWatchingType,
@@ -34,7 +22,5 @@ fun ContinueWatchingEntity.toDbContinueWatchingEntity(): DbContinueWatchingEntit
     )
 }
 
-fun ContinueWatchingEntity.toPlaybackEntity() = when (entity) {
-    is Movie -> entity.toPlaybackEntity(playbackPosition = playbackPosition)
-    is TvEpisode -> entity.toPlaybackEntity(playbackPosition = playbackPosition)
-}
+fun ContinueWatchingEntity.toPlaybackEntity() =
+    entity.toPlaybackEntity(playbackPosition = playbackPosition)

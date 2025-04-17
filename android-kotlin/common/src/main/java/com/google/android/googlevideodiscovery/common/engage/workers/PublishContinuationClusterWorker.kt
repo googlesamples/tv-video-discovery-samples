@@ -62,7 +62,7 @@ class PublishContinuationClusterWorker @Inject constructor(
     companion object {
         private const val INPUT_DATA_PROFILE_ID_KEY = "profile-id"
 
-        fun Context.publishContinueWatching(profileId: String) {
+        fun Context.publishContinuationCluster(profileId: String) {
             val request = buildWorkRequest(profileId = profileId)
 
             WorkManager.getInstance(context = this)

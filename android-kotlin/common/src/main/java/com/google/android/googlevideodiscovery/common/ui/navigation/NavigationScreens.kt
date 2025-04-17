@@ -59,4 +59,4 @@ internal object HomeScreen
 internal object SettingsScreen
 
 @Serializable
-data class EntityScreen(val entityId: String, val startFromMillis: Long?)
+data class EntityScreen(val entityId: String)

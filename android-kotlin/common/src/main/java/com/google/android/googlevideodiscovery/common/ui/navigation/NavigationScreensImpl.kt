@@ -179,7 +179,7 @@ class NavigationScreensImpl : NavigationScreens {
                         updateIsPlaying(false)
                     },
                 )
-            }
+            },
         )
     }
 

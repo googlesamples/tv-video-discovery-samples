@@ -6,6 +6,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,12 +17,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.google.android.googlevideodiscovery.common.ui.foundation.Foundations
 import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundations
+import com.google.android.googlevideodiscovery.common.ui.utils.LockScreenOrientation
+import com.google.android.googlevideodiscovery.common.ui.utils.ScreenOrientation
 import com.google.android.googlevideodiscovery.common.viewmodels.ContinueWatchingViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.IdentityAndAccountManagementViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.MediaContentViewModel
 import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackEntityViewModel
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
 @Composable
 fun NavigationGraph(
@@ -109,12 +113,7 @@ fun NavigationGraph(
                     movies = movies,
                     tvEpisodes = tvEpisodes,
                     onEntityClick = { playbackEntity ->
-                        navController.navigate(
-                            EntityScreen(
-                                entityId = playbackEntity.entityId,
-                                startFromMillis = playbackEntity.playbackPosition.inWholeMilliseconds
-                            )
-                        )
+                        navController.navigate(EntityScreen(entityId = playbackEntity.entityId))
                     }
                 )
             }
@@ -127,13 +126,25 @@ fun NavigationGraph(
                     playbackEntityViewModel.playbackEntity.collectAsStateWithLifecycle()
                 val isPlaying = playbackEntityViewModel.isPlaying.collectAsStateWithLifecycle()
 
-                LaunchedEffect(entityScreen.entityId, entityScreen.startFromMillis) {
+                val lifecycleOwner = LocalLifecycleOwner.current
+
+                // Locks the screen orientation to landscape mode
+                LockScreenOrientation(ScreenOrientation.LANDSCAPE)
+
+                LaunchedEffect(entityScreen.entityId) {
+                    // Load playback entity
                     playbackEntityViewModel.loadPlaybackEntity(
                         entityId = entityScreen.entityId,
-                        initialPlaybackPosition = entityScreen.startFromMillis?.toDuration(
-                            DurationUnit.MILLISECONDS
-                        )
                     )
+
+                    // Listen to app close event
+                    lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
+                        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                            if (event == Lifecycle.Event.ON_PAUSE) {
+                                // TODO: update CW
+                            }
+                        }
+                    })
                 }
 
                 screens.EntityScreen(
@@ -147,7 +158,7 @@ fun NavigationGraph(
                             newPosition = newPosition,
                             reason = reason
                         )
-                    }
+                    },
                 )
             }
         }

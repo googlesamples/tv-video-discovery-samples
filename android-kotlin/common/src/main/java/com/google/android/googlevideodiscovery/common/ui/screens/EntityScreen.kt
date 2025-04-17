@@ -25,8 +25,6 @@ import com.google.android.googlevideodiscovery.common.ui.foundation.LocalContent
 import com.google.android.googlevideodiscovery.common.ui.foundation.Slider
 import com.google.android.googlevideodiscovery.common.ui.foundation.Surface
 import com.google.android.googlevideodiscovery.common.ui.foundation.Text
-import com.google.android.googlevideodiscovery.common.ui.utils.LockScreenOrientation
-import com.google.android.googlevideodiscovery.common.ui.utils.ScreenOrientation
 import com.google.android.googlevideodiscovery.common.viewmodels.PlaybackUpdateReason
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
@@ -41,8 +39,6 @@ internal fun EntityScreen(
     progressBarContent: @Composable BoxScope.() -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LockScreenOrientation(ScreenOrientation.LANDSCAPE)
-
     Surface(
         modifier = modifier
             .fillMaxSize()

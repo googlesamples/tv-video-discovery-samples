@@ -2,6 +2,7 @@ package com.google.android.googlevideodiscovery.common.room.repository
 
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.models.EntityType
+import com.google.android.googlevideodiscovery.common.models.entityId
 import com.google.android.googlevideodiscovery.common.models.toDbContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.room.dao.ContinueWatchingDao
 import com.google.android.googlevideodiscovery.common.room.dto.toContinueWatchingEntity
@@ -15,6 +16,16 @@ class ContinueWatchingRepository @Inject constructor(
     private val tvShowsService: TvShowsService,
     private val continueWatchingDao: ContinueWatchingDao
 ) {
+    suspend fun getContinueWatchingEntity(
+        entityId: String,
+        profileId: String?
+    ): ContinueWatchingEntity? {
+        if (profileId == null) {
+            return null
+        }
+        return getContinueWatchingEntities(profileId).find { it.entityId == entityId }
+    }
+
     suspend fun getContinueWatchingEntities(profileId: String): List<ContinueWatchingEntity> {
         val movies = moviesService.fetchMovies()
         val tvEpisodes = tvShowsService.fetchTvEpisodes()

@@ -31,22 +31,22 @@ data class TvEpisode(
     var nextEpisode: TvEpisode?,
 ) : VideoEntity
 
-fun Movie.toPlaybackEntity() = PlaybackEntity(
+fun Movie.toPlaybackEntity(playbackPosition: Duration? = null) = PlaybackEntity(
     entityId = id,
     title = name,
     releaseYear = releaseYear,
     duration = duration,
     genre = genre,
-    playbackPosition = 0.seconds
+    playbackPosition = playbackPosition ?: 0.seconds
 )
 
-fun TvEpisode.toPlaybackEntity() = PlaybackEntity(
+fun TvEpisode.toPlaybackEntity(playbackPosition: Duration? = null) = PlaybackEntity(
     entityId = id,
     title = name,
     releaseYear = releaseYear,
     duration = duration,
     genre = genre,
-    playbackPosition = 0.seconds
+    playbackPosition = playbackPosition ?: 0.seconds
 )
 
 fun Movie.toContinueWatchingEntity(

@@ -56,7 +56,8 @@ class PlaybackEntityViewModel @Inject constructor(
     }
 
     private suspend fun fetchPlaybackEntity(entityId: String): PlaybackEntity? {
-        return mediaContentService.findVideoEntityById(entityId)?.toPlaybackEntity()
+        return mediaContentService.findVideoEntityById(entityId)
+            ?.toPlaybackEntity(playbackPosition = null)
     }
 
     private fun updateContinueWatching() {

@@ -12,7 +12,7 @@ import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import com.google.android.engage.service.AppEngagePublishClient
 import com.google.android.googlevideodiscovery.common.engage.converters.buildEngagePublishContinuationRequest
-import com.google.android.googlevideodiscovery.common.room.repository.ContinueWatchingRepository
+import com.google.android.googlevideodiscovery.common.services.ContinueWatchingService
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import com.google.android.googlevideodiscovery.common.services.SyncAcrossDevicesConsentService
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,7 +25,7 @@ class PublishContinuationClusterWorker @Inject constructor(
     @ApplicationContext appContext: Context,
     params: WorkerParameters,
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
-    private val continueWatchingRepository: ContinueWatchingRepository,
+    private val continueWatchingService: ContinueWatchingService,
     private val syncAcrossDevicesConsentService: SyncAcrossDevicesConsentService,
 ) : CoroutineWorker(
     appContext = appContext,
@@ -37,7 +37,7 @@ class PublishContinuationClusterWorker @Inject constructor(
         val profileId = inputData.getString(INPUT_DATA_PROFILE_ID_KEY) ?: return Result.failure()
         val profile = identityAndAccountManagementService.getProfileById(profileId)
             ?: return Result.failure()
-        val continueWatchingEntities = continueWatchingRepository.getMany(profileId)
+        val continueWatchingEntities = continueWatchingService.getMany(profileId)
         val userConsentToSendDataToGoogle =
             syncAcrossDevicesConsentService.getSyncAcrossDevicesConsentValue(profile.account.id)
 

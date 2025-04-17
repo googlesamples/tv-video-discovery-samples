@@ -1,13 +1,11 @@
 package com.google.android.googlevideodiscovery.common.room.repository
 
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
-import com.google.android.googlevideodiscovery.common.models.entityId
 import com.google.android.googlevideodiscovery.common.models.toDbContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.room.dao.ContinueWatchingDao
 import com.google.android.googlevideodiscovery.common.room.dto.toContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.services.MediaContentService
 import javax.inject.Inject
-import kotlin.time.Duration
 
 class ContinueWatchingRepository @Inject constructor(
     private val mediaContentService: MediaContentService,
@@ -20,15 +18,17 @@ class ContinueWatchingRepository @Inject constructor(
         if (profileId == null) {
             return null
         }
-        return getMany(profileId).find { it.entityId == entityId }
+        return getMany(profileId).find { it.entity.id == entityId }
     }
 
     suspend fun getMany(profileId: String): List<ContinueWatchingEntity> {
-        return continueWatchingDao.getContinueWatchingEntities(profileId = profileId)
+        return continueWatchingDao.getMany(profileId = profileId)
             .mapNotNull { continueWatchingEntity ->
-                val videoEntity =
-                    mediaContentService.findVideoEntityById(continueWatchingEntity.entityId)
-                videoEntity?.let { continueWatchingEntity.toContinueWatchingEntity(videoEntity) }
+                val entityId = continueWatchingEntity.entityId
+                val videoEntity = mediaContentService.findVideoEntityById(entityId)
+                videoEntity?.let {
+                    continueWatchingEntity.toContinueWatchingEntity(videoEntity)
+                }
             }
     }
 
@@ -38,12 +38,5 @@ class ContinueWatchingRepository @Inject constructor(
 
     suspend fun removeOne(entityId: String) {
         continueWatchingDao.removeFromContinueWatching(entityId)
-    }
-
-    suspend fun updatePlaybackPosition(entityId: String, playbackPosition: Duration) {
-        continueWatchingDao.updatePlaybackPosition(
-            entityId = entityId,
-            playbackPositionMillis = playbackPosition.inWholeMilliseconds
-        )
     }
 }

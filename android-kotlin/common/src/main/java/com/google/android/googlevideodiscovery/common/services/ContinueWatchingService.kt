@@ -2,10 +2,14 @@ package com.google.android.googlevideodiscovery.common.services
 
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingType
+import com.google.android.googlevideodiscovery.common.models.MovieEntity
+import com.google.android.googlevideodiscovery.common.models.TvEpisodeEntity
 import com.google.android.googlevideodiscovery.common.room.repository.ContinueWatchingRepository
 import java.time.Instant
 import javax.inject.Inject
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 class ContinueWatchingService @Inject constructor(
     private val mediaContentService: MediaContentService,
@@ -13,6 +17,10 @@ class ContinueWatchingService @Inject constructor(
 ) {
     suspend fun getOne(entityId: String, profileId: String): ContinueWatchingEntity? {
         return continueWatchingRepository.getOne(entityId = entityId, profileId = profileId)
+    }
+
+    suspend fun getMany(profileId: String): List<ContinueWatchingEntity> {
+        return continueWatchingRepository.getMany(profileId)
     }
 
     suspend fun insertOrUpdateOne(
@@ -30,6 +38,45 @@ class ContinueWatchingService @Inject constructor(
             profileId = profileId,
         )
 
-        continueWatchingRepository.insertOrUpdateOne(continueWatchingEntity)
+        if (isNearingEnd(continueWatchingEntity)) {
+            continueWatchingRepository.removeOne(entityId = continueWatchingEntity.entity.id)
+            val nextEntity = findNextContinueWatchingEntity(
+                continueWatchingEntity = continueWatchingEntity,
+                profileId = profileId
+            )
+            nextEntity?.let { continueWatchingRepository.insertOrUpdateOne(nextEntity) }
+        } else {
+            continueWatchingRepository.insertOrUpdateOne(continueWatchingEntity)
+        }
+    }
+
+    private fun isNearingEnd(continueWatchingEntity: ContinueWatchingEntity): Boolean {
+        val playbackPosition = continueWatchingEntity.playbackPosition
+        val duration = continueWatchingEntity.entity.duration
+        return duration - playbackPosition < END_THRESHOLD
+    }
+
+    private fun findNextContinueWatchingEntity(
+        continueWatchingEntity: ContinueWatchingEntity,
+        profileId: String
+    ): ContinueWatchingEntity? = when (val entity = continueWatchingEntity.entity) {
+        is MovieEntity -> entity.nextMovieEntity?.toContinueWatchingEntity(
+            continueWatchingType = ContinueWatchingType.NEXT,
+            profileId = profileId,
+            playbackPosition = 0.seconds,
+            lastEngagementTime = Instant.now()
+        )
+
+        is TvEpisodeEntity -> entity.nextEpisode?.toContinueWatchingEntity(
+            continueWatchingType = ContinueWatchingType.NEXT,
+            profileId = profileId,
+            playbackPosition = 0.seconds,
+            lastEngagementTime = Instant.now()
+        )
+    }
+
+
+    companion object {
+        private val END_THRESHOLD = 5.minutes
     }
 }

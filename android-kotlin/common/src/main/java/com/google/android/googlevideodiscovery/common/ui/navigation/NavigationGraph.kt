@@ -37,7 +37,7 @@ fun NavigationGraph(
             startDestination = LoginScreen
         ) {
             composable<LoginScreen> {
-                val accountState = iamViewModel.account.collectAsStateWithLifecycle(null)
+                val accountState = iamViewModel.loggedInAccount.collectAsStateWithLifecycle(null)
                 val navigateToProfilesScreen = {
                     navController.navigate(ProfilesScreen) {
                         popUpTo(LoginScreen) {
@@ -66,7 +66,7 @@ fun NavigationGraph(
                 )
             }
             composable<ProfilesScreen> {
-                val accountState = iamViewModel.account.collectAsStateWithLifecycle(null)
+                val accountState = iamViewModel.loggedInAccount.collectAsStateWithLifecycle(null)
 
                 accountState.value?.let { account ->
                     screens.ProfilesScreen(
@@ -140,9 +140,7 @@ fun NavigationGraph(
                     entity = playbackEntity.value,
                     isPlaying = isPlaying.value,
                     updateIsPlaying = { newIsPlaying ->
-                        playbackEntityViewModel.updateIsPlaying(
-                            newIsPlaying
-                        )
+                        playbackEntityViewModel.updateIsPlaying(isPlaying = newIsPlaying)
                     },
                     onUpdatePlaybackPosition = { newPosition, reason ->
                         playbackEntityViewModel.updatePlaybackPosition(

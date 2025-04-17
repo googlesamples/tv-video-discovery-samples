@@ -1,24 +1,22 @@
-package com.google.android.googlevideodiscovery.common.viewmodels
+package com.google.android.googlevideodiscovery.common.services
 
 import android.content.Context
 import android.widget.Toast
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 import com.google.android.googlevideodiscovery.common.engage.workers.PublishContinuationClusterWorker.Companion.publishContinuationCluster
+import javax.inject.Inject
 
-@HiltViewModel
-class EngageViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
-) : ViewModel() {
-    fun publishContinuationCluster(profileId: String, reason: PublishContinueWatchingReason) {
-        displayToast("Publishing continue watching. Reason: ${reason.message}")
+class EngageInteractionService @Inject constructor() {
+    fun publishContinuationCluster(
+        context: Context,
+        profileId: String,
+        reason: PublishContinueWatchingReason
+    ) {
+        context.displayToast("Publishing continue watching. Reason: ${reason.message}")
         context.publishContinuationCluster(profileId)
     }
 
-    private fun displayToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    private fun Context.displayToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
 

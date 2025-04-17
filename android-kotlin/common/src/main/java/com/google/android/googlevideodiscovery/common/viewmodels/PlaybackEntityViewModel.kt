@@ -1,12 +1,17 @@
 package com.google.android.googlevideodiscovery.common.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
+import com.google.android.googlevideodiscovery.common.services.EngageInteractionService
+import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import com.google.android.googlevideodiscovery.common.services.MoviesService
+import com.google.android.googlevideodiscovery.common.services.PublishContinueWatchingReason
 import com.google.android.googlevideodiscovery.common.services.TvShowsService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -18,7 +23,12 @@ import kotlin.time.Duration.Companion.seconds
 class PlaybackEntityViewModel @Inject constructor(
     private val moviesService: MoviesService,
     private val tvShowsService: TvShowsService,
+    private val engageInteractionService: EngageInteractionService,
+    private val identityAndAccountManagementService: IdentityAndAccountManagementService,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
+    private val activeProfile = identityAndAccountManagementService.activeProfile
+
     private val _playbackEntity = MutableStateFlow<PlaybackEntity?>(null)
     val playbackEntity = _playbackEntity.asStateFlow()
 
@@ -51,6 +61,14 @@ class PlaybackEntityViewModel @Inject constructor(
 
     fun updateIsPlaying(isPlaying: Boolean) {
         _isPlaying.value = isPlaying
+        if (!isPlaying) {
+            val activeProfileId = activeProfile.value?.id ?: return
+            engageInteractionService.publishContinuationCluster(
+                context = context,
+                profileId = activeProfileId,
+                reason = PublishContinueWatchingReason.VIDEO_PAUSED
+            )
+        }
     }
 }
 

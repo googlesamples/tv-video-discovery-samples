@@ -1,15 +1,16 @@
 package com.google.android.googlevideodiscovery.common.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.googlevideodiscovery.common.fakes.FakeProfileNames
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
+import com.google.android.googlevideodiscovery.common.services.EngageInteractionService
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
+import com.google.android.googlevideodiscovery.common.services.PublishContinueWatchingReason
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,11 +18,11 @@ import javax.inject.Inject
 @HiltViewModel
 class IdentityAndAccountManagementViewModel @Inject constructor(
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
+    private val engageInteractionService: EngageInteractionService,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
-    val account: Flow<Account?> = identityAndAccountManagementService.getLoggedInUser()
-
-    private val _activeProfile = MutableStateFlow<AccountProfile?>(null)
-    val activeProfile = _activeProfile.asStateFlow()
+    val loggedInAccount = identityAndAccountManagementService.loggedInAccount
+    val activeProfile = identityAndAccountManagementService.activeProfile
 
     fun performRegistration(afterRegistration: () -> Unit) {
         viewModelScope.launch {
@@ -49,7 +50,7 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
 
     fun createNewProfile() {
         viewModelScope.launch {
-            account.collectLatest { latestAccount ->
+            loggedInAccount.collectLatest { latestAccount ->
                 val newProfileName = latestAccount?.getNewProfileName() ?: return@collectLatest
                 identityAndAccountManagementService.createProfile(latestAccount, newProfileName)
             }
@@ -57,8 +58,13 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
     }
 
     fun selectProfile(profile: AccountProfile, afterProfileSelection: () -> Unit) {
-        _activeProfile.value = profile
+        identityAndAccountManagementService.setActiveProfile(profile)
         afterProfileSelection()
+        engageInteractionService.publishContinuationCluster(
+            context = context,
+            profileId = profile.id,
+            reason = PublishContinueWatchingReason.PROFILE_SELECTION
+        )
     }
 
     private fun Account.getNewProfileName(): String? {

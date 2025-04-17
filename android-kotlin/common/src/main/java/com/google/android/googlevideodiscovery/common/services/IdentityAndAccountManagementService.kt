@@ -13,9 +13,8 @@ import javax.inject.Inject
 class IdentityAndAccountManagementService @Inject constructor(
     private val accountProfileRepository: AccountProfileRepository
 ) {
-    fun getLoggedInUser(): Flow<Account?> {
-        return accountProfileRepository.getLoggedInUser()
-    }
+    val loggedInAccount = accountProfileRepository.loggedInAccount
+    val activeProfile = accountProfileRepository.activeProfile
 
     suspend fun getProfileById(profileId: String): AccountProfile? {
         return accountProfileRepository.getProfile(profileId)
@@ -31,6 +30,7 @@ class IdentityAndAccountManagementService @Inject constructor(
         account.profiles.map { profile ->
             createProfile(account, profile.name)
         }
+        accountProfileRepository.updateLoginStatus(account.id, isLoggedIn = true)
         return Result.success(Unit)
     }
 
@@ -40,6 +40,7 @@ class IdentityAndAccountManagementService @Inject constructor(
         account.profiles.map { profile ->
             createProfile(account, profile.name)
         }
+        accountProfileRepository.updateLoginStatus(account.id, isLoggedIn = true)
         return Result.success(Unit)
     }
 
@@ -50,5 +51,9 @@ class IdentityAndAccountManagementService @Inject constructor(
         val profile = account.createFakeProfile(profileName)
         accountProfileRepository.createAccountProfile(profile.toDbAccountProfile())
         return Result.success(Unit)
+    }
+
+    fun setActiveProfile(profile: AccountProfile) {
+        accountProfileRepository.setActiveProfile(profile)
     }
 }

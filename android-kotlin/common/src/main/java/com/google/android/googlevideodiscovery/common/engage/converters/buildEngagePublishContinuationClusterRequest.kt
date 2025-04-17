@@ -15,7 +15,7 @@ fun buildEngagePublishContinuationRequest(
         continuationClusterBuilder.addEntity(entity.convertToEngageEntity())
     }
     continuationClusterBuilder.setSyncAcrossDevices(syncAcrossDevices)
-    continuationClusterBuilder.setAccountProfile(accountProfile.convertToEngageAccountProfile())
+    continuationClusterBuilder.setAccountProfile(accountProfile.toEngageAccountProfile())
 
     return PublishContinuationClusterRequest.Builder()
         .setContinuationCluster(continuationClusterBuilder.build())

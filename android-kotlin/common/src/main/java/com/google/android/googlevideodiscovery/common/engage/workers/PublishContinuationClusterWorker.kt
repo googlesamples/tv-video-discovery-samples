@@ -1,4 +1,4 @@
-package com.google.android.googlevideodiscovery.common.engage
+package com.google.android.googlevideodiscovery.common.engage.workers
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import com.google.android.engage.service.AppEngagePublishClient
+import com.google.android.googlevideodiscovery.common.engage.converters.buildEngagePublishContinuationRequest
 import com.google.android.googlevideodiscovery.common.room.repository.ContinueWatchingRepository
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import com.google.android.googlevideodiscovery.common.services.SyncAcrossDevicesConsentService

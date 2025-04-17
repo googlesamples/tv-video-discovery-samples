@@ -1,4 +1,4 @@
-package com.google.android.googlevideodiscovery.common.engage
+package com.google.android.googlevideodiscovery.common.engage.converters
 
 import androidx.core.net.toUri
 import com.google.android.engage.common.datamodel.PlatformSpecificUri

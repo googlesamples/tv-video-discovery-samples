@@ -1,4 +1,4 @@
-package com.google.android.googlevideodiscovery.common.engage
+package com.google.android.googlevideodiscovery.common.engage.converters
 
 import com.google.android.engage.common.datamodel.ContinuationCluster
 import com.google.android.engage.service.PublishContinuationClusterRequest

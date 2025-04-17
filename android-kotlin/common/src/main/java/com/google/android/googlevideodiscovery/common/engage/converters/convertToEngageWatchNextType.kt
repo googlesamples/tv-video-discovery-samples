@@ -1,4 +1,4 @@
-package com.google.android.googlevideodiscovery.common.engage
+package com.google.android.googlevideodiscovery.common.engage.converters
 
 import com.google.android.engage.video.datamodel.WatchNextType
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingType

@@ -3,6 +3,7 @@ package com.google.android.googlevideodiscovery.common.services
 import com.google.android.googlevideodiscovery.common.fakes.createFakeProfile
 import com.google.android.googlevideodiscovery.common.fakes.generateFakeAccount
 import com.google.android.googlevideodiscovery.common.models.Account
+import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.toDbAccount
 import com.google.android.googlevideodiscovery.common.models.toDbAccountProfile
 import com.google.android.googlevideodiscovery.common.room.repository.AccountProfileRepository
@@ -14,6 +15,10 @@ class IdentityAndAccountManagementService @Inject constructor(
 ) {
     fun getLoggedInUser(): Flow<Account?> {
         return accountProfileRepository.getLoggedInUser()
+    }
+
+    suspend fun getProfileByProfileId(profileId: String): AccountProfile? {
+        return accountProfileRepository.getProfile(profileId)
     }
 
     suspend fun login(username: String, password: String): Result<Unit> {

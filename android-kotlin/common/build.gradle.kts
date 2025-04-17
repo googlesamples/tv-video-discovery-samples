@@ -45,12 +45,19 @@ dependencies {
     api("androidx.activity:activity-compose:1.10.1")
     api("androidx.appcompat:appcompat:1.7.0")
 
+    // Coroutines - compatibility
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+
+    // Engage
+    compileOnly("com.google.android.engage:engage-tv:1.0.2")
+
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.8.9")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     // Hilt
+    implementation(libs.androidx.hilt.work)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 

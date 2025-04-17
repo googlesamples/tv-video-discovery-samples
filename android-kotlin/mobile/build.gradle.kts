@@ -44,6 +44,9 @@ dependencies {
     implementation(project(":common"))
     implementation("androidx.compose.material3:material3")
 
+    implementation("com.google.android.engage:engage-core:1.5.7")
+
+    implementation(libs.androidx.hilt.work)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 }

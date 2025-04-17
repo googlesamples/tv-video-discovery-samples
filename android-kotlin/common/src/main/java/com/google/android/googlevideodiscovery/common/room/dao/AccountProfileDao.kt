@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.google.android.googlevideodiscovery.common.room.dto.DbAccount
 import com.google.android.googlevideodiscovery.common.room.dto.DbAccountProfile
 import kotlinx.coroutines.flow.Flow
@@ -29,6 +30,9 @@ interface AccountProfileDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createAccountProfile(profile: DbAccountProfile)
+
+    @Update
+    suspend fun updateAccount(account: DbAccount)
 
     @Transaction
     suspend fun updateLoginStatus(accountId: String, isLoggedIn: Boolean) {

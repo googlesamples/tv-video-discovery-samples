@@ -8,7 +8,8 @@ import com.google.android.googlevideodiscovery.common.models.Account
 data class DbAccount(
     @PrimaryKey val id: String,
     val name: String,
-    val isLoggedIn: Boolean = false
+    val isLoggedIn: Boolean = false,
+    val userConsentToSendDataToGoogle: Boolean = false,
 )
 
 fun DbAccount.toAccount() = Account(

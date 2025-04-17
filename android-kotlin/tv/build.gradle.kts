@@ -60,6 +60,9 @@ dependencies {
     implementation(project(":common"))
     implementation("androidx.tv:tv-material:1.1.0-alpha01")
 
+    implementation("com.google.android.engage:engage-tv:1.0.2")
+
+    implementation(libs.androidx.hilt.work)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 }

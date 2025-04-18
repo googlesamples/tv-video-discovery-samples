@@ -61,8 +61,9 @@ class NavigationScreensImpl : NavigationScreens {
             continueWatchingContent = if (continueWatchingEntities.isEmpty()) {
                 null
             } else {
-                {
+                { rootHorizontalPadding ->
                     HomeScreenDefaults.ContinueWatchingChannel(
+                        rootHorizontalPadding = rootHorizontalPadding,
                         continueWatchingEntitiesCount = continueWatchingEntities.size,
                         cardContent = { index ->
                             val continueWatchingEntity = continueWatchingEntities[index]
@@ -92,8 +93,9 @@ class NavigationScreensImpl : NavigationScreens {
                     )
                 }
             },
-            moviesContent = {
+            moviesContent = { rootHorizontalPadding ->
                 HomeScreenDefaults.MoviesChannel(
+                    rootHorizontalPadding = rootHorizontalPadding,
                     movieCount = movieEntities.size,
                     cardContent = { index ->
                         val movie = movieEntities[index]
@@ -109,8 +111,9 @@ class NavigationScreensImpl : NavigationScreens {
                         }
                     })
             },
-            tvEpisodesContent = {
+            tvEpisodesContent = { rootHorizontalPadding ->
                 HomeScreenDefaults.TvEpisodesChannel(
+                    rootHorizontalPadding = rootHorizontalPadding,
                     tvEpisodesCount = tvEpisodeEntities.size,
                     cardContent = { index ->
                         val tvEpisode = tvEpisodeEntities[index]

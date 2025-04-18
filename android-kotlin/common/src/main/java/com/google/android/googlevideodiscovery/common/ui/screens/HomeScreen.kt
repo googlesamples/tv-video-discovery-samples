@@ -3,6 +3,7 @@ package com.google.android.googlevideodiscovery.common.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
@@ -32,36 +34,43 @@ import kotlin.time.Duration
 @Composable
 internal fun HomeScreen(
     activeProfile: AccountProfile,
-    moviesContent: @Composable () -> Unit,
-    tvEpisodesContent: @Composable () -> Unit,
+    moviesContent: @Composable (Dp) -> Unit,
+    tvEpisodesContent: @Composable (Dp) -> Unit,
     modifier: Modifier = Modifier,
-    continueWatchingContent: (@Composable () -> Unit)? = null,
+    continueWatchingContent: (@Composable (Dp) -> Unit)? = null,
 ) {
-    LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(25.dp),
-        contentPadding = PaddingValues(vertical = 30.dp)
-    ) {
-        item {
-            Text(
-                "Hi, ${activeProfile.name}",
-                fontSize = 48.sp,
-                modifier = Modifier.padding(horizontal = 40.dp)
-            )
+    BoxWithConstraints {
+        val rootHorizontalPadding = when {
+            maxWidth <= 600.dp -> 20.dp
+            maxWidth <= 800.dp -> 40.dp
+            else -> 56.dp
         }
-
-        continueWatchingContent?.let {
+        LazyColumn(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(25.dp),
+            contentPadding = PaddingValues(vertical = 30.dp)
+        ) {
             item {
-                continueWatchingContent()
+                Text(
+                    "Hi, ${activeProfile.name}",
+                    fontSize = 48.sp,
+                    modifier = Modifier.padding(horizontal = rootHorizontalPadding)
+                )
             }
-        }
 
-        item {
-            moviesContent()
-        }
+            continueWatchingContent?.let {
+                item {
+                    continueWatchingContent(rootHorizontalPadding)
+                }
+            }
 
-        item {
-            tvEpisodesContent()
+            item {
+                moviesContent(rootHorizontalPadding)
+            }
+
+            item {
+                tvEpisodesContent(rootHorizontalPadding)
+            }
         }
     }
 }
@@ -69,11 +78,13 @@ internal fun HomeScreen(
 internal object HomeScreenDefaults {
     @Composable
     fun ContinueWatchingChannel(
+        rootHorizontalPadding: Dp,
         continueWatchingEntitiesCount: Int,
         cardContent: @Composable (Int) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Channel(
+            rootHorizontalPadding = rootHorizontalPadding,
             title = "Continue Watching",
             itemCount = continueWatchingEntitiesCount,
             cardContent = cardContent,
@@ -83,11 +94,13 @@ internal object HomeScreenDefaults {
 
     @Composable
     fun MoviesChannel(
+        rootHorizontalPadding: Dp,
         movieCount: Int,
         cardContent: @Composable (Int) -> Unit,
         modifier: Modifier = Modifier
     ) {
         Channel(
+            rootHorizontalPadding = rootHorizontalPadding,
             title = "Popular movies",
             itemCount = movieCount,
             cardContent = cardContent,
@@ -97,11 +110,13 @@ internal object HomeScreenDefaults {
 
     @Composable
     fun TvEpisodesChannel(
+        rootHorizontalPadding: Dp,
         tvEpisodesCount: Int,
         cardContent: @Composable (Int) -> Unit,
         modifier: Modifier = Modifier
     ) {
         Channel(
+            rootHorizontalPadding = rootHorizontalPadding,
             title = "Watch The Red Streak",
             itemCount = tvEpisodesCount,
             cardContent = cardContent,
@@ -186,6 +201,7 @@ internal object HomeScreenDefaults {
 
     @Composable
     private fun Channel(
+        rootHorizontalPadding: Dp,
         title: String,
         itemCount: Int,
         cardContent: @Composable (Int) -> Unit,
@@ -197,11 +213,15 @@ internal object HomeScreenDefaults {
                 .fillMaxWidth()
                 .heightIn(min = 220.dp)
         ) {
-            Text(title, fontSize = 24.sp, modifier = Modifier.padding(horizontal = 40.dp))
+            Text(
+                title,
+                fontSize = 24.sp,
+                modifier = Modifier.padding(horizontal = rootHorizontalPadding)
+            )
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
-                contentPadding = PaddingValues(horizontal = 40.dp)
+                contentPadding = PaddingValues(horizontal = rootHorizontalPadding)
             ) {
                 items(itemCount) { index ->
                     cardContent(index)

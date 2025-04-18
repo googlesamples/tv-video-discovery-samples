@@ -161,13 +161,13 @@ internal object HomeScreenDefaults {
                     .fillMaxWidth()
                     .height(4.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(MaterialTheme.colorScheme.inverseOnSurface)
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
                         .fillMaxWidth(progressPercent)
-                        .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                        .background(MaterialTheme.colorScheme.inverseSurface)
                 )
             }
         }
@@ -193,7 +193,9 @@ internal object HomeScreenDefaults {
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = modifier.fillMaxWidth().heightIn(min = 220.dp)
+            modifier = modifier
+                .fillMaxWidth()
+                .heightIn(min = 220.dp)
         ) {
             Text(title, fontSize = 24.sp, modifier = Modifier.padding(horizontal = 40.dp))
 

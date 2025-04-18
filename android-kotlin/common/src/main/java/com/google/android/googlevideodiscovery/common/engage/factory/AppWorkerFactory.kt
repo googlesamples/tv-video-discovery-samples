@@ -10,7 +10,7 @@ import com.google.android.googlevideodiscovery.common.services.IdentityAndAccoun
 import com.google.android.googlevideodiscovery.common.services.SyncAcrossDevicesConsentService
 import javax.inject.Inject
 
-class PublishContinuationClusterWorkerFactory @Inject constructor(
+class AppWorkerFactory @Inject constructor(
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
     private val continueWatchingService: ContinueWatchingService,
     private val syncAcrossDevicesConsentService: SyncAcrossDevicesConsentService,
@@ -20,13 +20,16 @@ class PublishContinuationClusterWorkerFactory @Inject constructor(
         appContext: Context,
         workerClassName: String,
         workerParameters: WorkerParameters
-    ): ListenableWorker {
-        return PublishContinuationClusterWorker(
-            appContext = appContext,
-            params = workerParameters,
-            identityAndAccountManagementService = identityAndAccountManagementService,
-            continueWatchingService = continueWatchingService,
-            syncAcrossDevicesConsentService = syncAcrossDevicesConsentService
-        )
+    ): ListenableWorker? {
+        if (workerClassName == "PublishContinuationClusterWorker") {
+            return PublishContinuationClusterWorker(
+                appContext = appContext,
+                params = workerParameters,
+                identityAndAccountManagementService = identityAndAccountManagementService,
+                continueWatchingService = continueWatchingService,
+                syncAcrossDevicesConsentService = syncAcrossDevicesConsentService
+            )
+        }
+        return null
     }
 }

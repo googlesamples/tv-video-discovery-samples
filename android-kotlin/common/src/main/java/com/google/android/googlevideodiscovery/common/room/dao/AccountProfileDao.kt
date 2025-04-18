@@ -36,17 +36,16 @@ interface AccountProfileDao {
 
     @Transaction
     suspend fun updateLoginStatus(accountId: String, isLoggedIn: Boolean) {
+        logoutAccounts()
         if (isLoggedIn) {
-            logoutAllUsers()
-        } else {
-            logoutUser(accountId)
+            loginAccount(accountId = accountId)
         }
     }
 
     @Query("UPDATE accounts SET isLoggedIn = 0")
-    suspend fun logoutAllUsers()
+    suspend fun logoutAccounts()
 
-    @Query("UPDATE accounts SET isLoggedIn = 0 WHERE id = :accountId")
-    suspend fun logoutUser(accountId: String)
+    @Query("UPDATE accounts SET isLoggedIn = 1 WHERE id = :accountId")
+    suspend fun loginAccount(accountId: String)
 
 }

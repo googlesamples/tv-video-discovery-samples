@@ -29,8 +29,6 @@ fun NavigationGraph(
     foundations: Foundations,
     modifier: Modifier = Modifier,
     screens: NavigationScreens = remember { NavigationScreensImpl() },
-    iamViewModel: IdentityAndAccountManagementViewModel = hiltViewModel(),
-    mediaContentViewModel: MediaContentViewModel = hiltViewModel(),
 ) {
     val navController = rememberNavController()
 
@@ -41,6 +39,8 @@ fun NavigationGraph(
             startDestination = LoginScreen
         ) {
             composable<LoginScreen> {
+                val iamViewModel = hiltViewModel<IdentityAndAccountManagementViewModel>()
+
                 val accountState = iamViewModel.loggedInAccount.collectAsStateWithLifecycle(null)
                 val navigateToProfilesScreen = {
                     navController.navigate(ProfilesScreen) {
@@ -70,6 +70,8 @@ fun NavigationGraph(
                 )
             }
             composable<ProfilesScreen> {
+                val iamViewModel = hiltViewModel<IdentityAndAccountManagementViewModel>()
+
                 val accountState = iamViewModel.loggedInAccount.collectAsStateWithLifecycle(null)
 
                 accountState.value?.let { account ->
@@ -91,9 +93,12 @@ fun NavigationGraph(
                 }
             }
             composable<HomeScreen> {
+                val iamViewModel = hiltViewModel<IdentityAndAccountManagementViewModel>()
+                val mediaContentViewModel = hiltViewModel<MediaContentViewModel>()
+                val continueWatchingViewModel = hiltViewModel<ContinueWatchingViewModel>()
+
                 val activeProfile = iamViewModel.activeProfile.collectAsStateWithLifecycle().value
                     ?: throw Error("No active profile selected")
-                val continueWatchingViewModel = hiltViewModel<ContinueWatchingViewModel>()
 
                 val continueWatchingEntities =
                     continueWatchingViewModel.continueWatchingEntities.collectAsStateWithLifecycle(

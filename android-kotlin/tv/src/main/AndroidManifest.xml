@@ -22,7 +22,7 @@ limitations under the License.
         android:required="false" />
     <uses-feature
         android:name="android.software.leanback"
-        android:required="false" />
+        android:required="true" />
 
     <application
         android:name=".HiltApplication"
@@ -34,11 +34,11 @@ limitations under the License.
         android:theme="@style/Theme.GoogleTvVideoDiscoverySample">
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.GoogleTvVideoDiscoverySample">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>

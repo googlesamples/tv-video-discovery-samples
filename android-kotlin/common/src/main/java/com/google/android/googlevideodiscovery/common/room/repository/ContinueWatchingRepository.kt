@@ -5,6 +5,8 @@ import com.google.android.googlevideodiscovery.common.models.toDbContinueWatchin
 import com.google.android.googlevideodiscovery.common.room.dao.ContinueWatchingDao
 import com.google.android.googlevideodiscovery.common.room.dto.toContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.services.MediaContentService
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ContinueWatchingRepository @Inject constructor(
@@ -18,7 +20,24 @@ class ContinueWatchingRepository @Inject constructor(
         if (profileId == null) {
             return null
         }
-        return getMany(profileId).find { it.entity.id == entityId }
+        val videoEntity = mediaContentService.findVideoEntityById(entityId) ?: return null
+        return continueWatchingDao.getOne(entityId = entityId, profileId = profileId)
+            ?.toContinueWatchingEntity(
+                videoEntity = videoEntity
+            )
+    }
+
+    fun getAll(): Flow<List<ContinueWatchingEntity>> {
+        return continueWatchingDao.getAll()
+            .map { entities ->
+                entities.mapNotNull { continueWatchingEntity ->
+                    val entityId = continueWatchingEntity.entityId
+                    val videoEntity = mediaContentService.findVideoEntityById(entityId)
+                    videoEntity?.let {
+                        continueWatchingEntity.toContinueWatchingEntity(videoEntity)
+                    }
+                }
+            }
     }
 
     suspend fun getMany(profileId: String): List<ContinueWatchingEntity> {
@@ -30,13 +49,14 @@ class ContinueWatchingRepository @Inject constructor(
                     continueWatchingEntity.toContinueWatchingEntity(videoEntity)
                 }
             }
+
     }
 
     suspend fun insertOrUpdateOne(entity: ContinueWatchingEntity) {
         continueWatchingDao.insertOrUpdate(entity.toDbContinueWatchingEntity())
     }
 
-    suspend fun removeOne(entityId: String, profileId: String) {
-        continueWatchingDao.removeFromContinueWatching(entityId = entityId, profileId = profileId)
+    suspend fun removeOne(continueWatchingEntity: ContinueWatchingEntity) {
+        continueWatchingDao.removeFromContinueWatching(continueWatchingEntity.toDbContinueWatchingEntity())
     }
 }

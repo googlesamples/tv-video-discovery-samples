@@ -5,6 +5,7 @@ import com.google.android.googlevideodiscovery.common.models.ContinueWatchingTyp
 import com.google.android.googlevideodiscovery.common.models.MovieEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisodeEntity
 import com.google.android.googlevideodiscovery.common.room.repository.ContinueWatchingRepository
+import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -17,6 +18,10 @@ class ContinueWatchingService @Inject constructor(
 ) {
     suspend fun getOne(entityId: String, profileId: String): ContinueWatchingEntity? {
         return continueWatchingRepository.getOne(entityId = entityId, profileId = profileId)
+    }
+
+    fun getAll(): Flow<List<ContinueWatchingEntity>> {
+        return continueWatchingRepository.getAll()
     }
 
     suspend fun getMany(profileId: String): List<ContinueWatchingEntity> {
@@ -39,10 +44,7 @@ class ContinueWatchingService @Inject constructor(
         )
 
         if (isNearingEnd(continueWatchingEntity)) {
-            continueWatchingRepository.removeOne(
-                entityId = continueWatchingEntity.entity.id,
-                profileId = profileId
-            )
+            continueWatchingRepository.removeOne(continueWatchingEntity)
             val nextEntity = findNextContinueWatchingEntity(
                 continueWatchingEntity = continueWatchingEntity,
                 profileId = profileId
@@ -54,10 +56,7 @@ class ContinueWatchingService @Inject constructor(
     }
 
     suspend fun removeFromContinueWatching(continueWatchingEntity: ContinueWatchingEntity) {
-        continueWatchingRepository.removeOne(
-            entityId = continueWatchingEntity.entity.id,
-            profileId = continueWatchingEntity.profileId
-        )
+        continueWatchingRepository.removeOne(continueWatchingEntity)
     }
 
     private fun isNearingEnd(continueWatchingEntity: ContinueWatchingEntity): Boolean {

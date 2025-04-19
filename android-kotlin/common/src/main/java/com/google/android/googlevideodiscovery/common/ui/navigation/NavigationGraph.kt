@@ -108,10 +108,6 @@ fun NavigationGraph(
                 val tvEpisodes =
                     mediaContentViewModel.tvEpisodes.collectAsStateWithLifecycle().value
 
-                LaunchedEffect(activeProfile.id) {
-                    continueWatchingViewModel.loadContinueWatchingEntities(profileId = activeProfile.id)
-                }
-
                 screens.HomeScreen(
                     activeProfile = activeProfile,
                     continueWatchingEntities = continueWatchingEntities,

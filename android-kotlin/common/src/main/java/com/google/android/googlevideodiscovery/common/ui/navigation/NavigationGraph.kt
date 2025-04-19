@@ -117,6 +117,9 @@ fun NavigationGraph(
                     continueWatchingEntities = continueWatchingEntities,
                     movieEntities = movies,
                     tvEpisodeEntities = tvEpisodes,
+                    onConfirmRemoveFromContinueWatchingRow = { continueWatchingEntity ->
+                        continueWatchingViewModel.removeFromContinueWatching(continueWatchingEntity = continueWatchingEntity)
+                    },
                     onEntityClick = { entityId ->
                         navController.navigate(EntityScreen(entityId = entityId))
                     }

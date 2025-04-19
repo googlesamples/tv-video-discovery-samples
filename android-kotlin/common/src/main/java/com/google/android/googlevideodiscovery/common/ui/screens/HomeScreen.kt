@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +26,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
+import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
+import com.google.android.googlevideodiscovery.common.ui.foundation.Button
 import com.google.android.googlevideodiscovery.common.ui.foundation.Card
 import com.google.android.googlevideodiscovery.common.ui.foundation.MaterialTheme
 import com.google.android.googlevideodiscovery.common.ui.foundation.Text
@@ -150,16 +154,19 @@ internal object HomeScreenDefaults {
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .fillMaxWidth(),
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleMedium.copy(textAlign = TextAlign.Center),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 16.sp
+                ),
             )
             Text(
                 subtitle,
                 modifier = Modifier.padding(top = 5.dp),
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                )
             )
         }
     }
@@ -186,6 +193,60 @@ internal object HomeScreenDefaults {
                         .fillMaxWidth(progressPercent)
                         .background(MaterialTheme.colorScheme.inverseSurface)
                 )
+            }
+        }
+    }
+
+    @Composable
+    fun RemoveContinueWatchingEntityConfirmationDialog(
+        onDismiss: () -> Unit,
+        onConfirm: () -> Unit,
+        continueWatchingEntity: ContinueWatchingEntity,
+    ) {
+        Dialog(onDismissRequest = onDismiss) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        MaterialTheme.colorScheme.surface,
+                        RoundedCornerShape(20.dp)
+                    )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    Text(
+                        "Remove from Continue Watching?",
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    )
+
+                    Text(
+                        "Remove '${continueWatchingEntity.entity.name}' will be removed from the Continue Watching row",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            15.dp,
+                            Alignment.End
+                        )
+                    ) {
+                        Button(onClick = onDismiss) {
+                            Text("Cancel")
+                        }
+                        Button(onClick = onConfirm) {
+                            Text("Remove")
+                        }
+                    }
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 
@@ -44,6 +45,8 @@ interface Foundations {
 
     val titleMedium: TextStyle @Composable get
     val bodySmall: TextStyle @Composable get
+    val bodyMedium: TextStyle @Composable get
+    val headlineSmall: TextStyle @Composable get
 
     @Composable
     fun Text(
@@ -77,6 +80,7 @@ interface Foundations {
     @Composable
     fun Surface(
         modifier: Modifier,
+        shape: Shape,
         content: @Composable RowScope.() -> Unit
     )
 

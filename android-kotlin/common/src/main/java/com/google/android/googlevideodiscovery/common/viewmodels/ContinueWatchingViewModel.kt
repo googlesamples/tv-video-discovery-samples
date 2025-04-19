@@ -24,4 +24,10 @@ class ContinueWatchingViewModel @Inject constructor(
             _continueWatchingEntities.value = continueWatchingService.getMany(profileId = profileId)
         }
     }
+
+    fun removeFromContinueWatching(continueWatchingEntity: ContinueWatchingEntity) {
+        viewModelScope.launch {
+            continueWatchingService.removeFromContinueWatching(continueWatchingEntity)
+        }
+    }
 }

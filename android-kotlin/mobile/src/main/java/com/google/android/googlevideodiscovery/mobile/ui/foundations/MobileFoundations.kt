@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -51,6 +52,8 @@ class MobileFoundations : Foundations {
 
     override val titleMedium: TextStyle @Composable get() = MaterialTheme.typography.titleMedium
     override val bodySmall: TextStyle @Composable get() = MaterialTheme.typography.bodySmall
+    override val bodyMedium: TextStyle @Composable get() = MaterialTheme.typography.bodyMedium
+    override val headlineSmall: TextStyle @Composable get() = MaterialTheme.typography.headlineSmall
 
     @Composable
     override fun Text(text: String, modifier: Modifier, style: TextStyle) {
@@ -103,8 +106,15 @@ class MobileFoundations : Foundations {
     }
 
     @Composable
-    override fun Surface(modifier: Modifier, content: @Composable() (RowScope.() -> Unit)) {
-        androidx.compose.material3.Surface(modifier = modifier) {
+    override fun Surface(
+        modifier: Modifier,
+        shape: Shape,
+        content: @Composable (RowScope.() -> Unit)
+    ) {
+        androidx.compose.material3.Surface(
+            modifier = modifier,
+            shape = shape,
+        ) {
             Row(content = content)
         }
     }
@@ -113,7 +123,7 @@ class MobileFoundations : Foundations {
     override fun Surface(
         onClick: () -> Unit,
         modifier: Modifier,
-        content: @Composable() (RowScope.() -> Unit)
+        content: @Composable (RowScope.() -> Unit)
     ) {
         androidx.compose.material3.Surface(onClick = onClick, modifier = modifier) {
             Row(content = content)
@@ -130,7 +140,6 @@ class MobileFoundations : Foundations {
         content: @Composable ColumnScope.() -> Unit
     ) {
         androidx.compose.material3.Card(
-//            onClick = onClick,
             modifier = modifier.combinedClickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -138,7 +147,6 @@ class MobileFoundations : Foundations {
                 onLongClick = onLongClick,
                 onClick = onClick,
             ),
-//            interactionSource = interactionSource,
             content = content,
         )
     }

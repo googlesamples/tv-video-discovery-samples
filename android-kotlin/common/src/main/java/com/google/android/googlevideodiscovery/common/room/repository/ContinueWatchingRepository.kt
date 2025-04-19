@@ -36,7 +36,7 @@ class ContinueWatchingRepository @Inject constructor(
         continueWatchingDao.insertOrUpdate(entity.toDbContinueWatchingEntity())
     }
 
-    suspend fun removeOne(entityId: String) {
-        continueWatchingDao.removeFromContinueWatching(entityId)
+    suspend fun removeOne(entityId: String, profileId: String) {
+        continueWatchingDao.removeFromContinueWatching(entityId = entityId, profileId = profileId)
     }
 }

@@ -1,14 +1,31 @@
 package com.google.android.googlevideodiscovery.common.ui.navigation
 
-import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.models.MovieEntity
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisodeEntity
+import com.google.android.googlevideodiscovery.common.ui.foundation.Button
+import com.google.android.googlevideodiscovery.common.ui.foundation.MaterialTheme
+import com.google.android.googlevideodiscovery.common.ui.foundation.Text
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreenDefaults
@@ -56,6 +73,7 @@ class NavigationScreensImpl : NavigationScreens {
         continueWatchingEntities: List<ContinueWatchingEntity>,
         movieEntities: List<MovieEntity>,
         tvEpisodeEntities: List<TvEpisodeEntity>,
+        onConfirmRemoveFromContinueWatchingRow: (ContinueWatchingEntity) -> Unit,
         onEntityClick: (String) -> Unit,
     ) {
         CommonHomeScreen(
@@ -64,6 +82,23 @@ class NavigationScreensImpl : NavigationScreens {
                 null
             } else {
                 { rootHorizontalPadding ->
+                    var confirmRemoveContinueWatchingEntity by remember {
+                        mutableStateOf<ContinueWatchingEntity?>(null)
+                    }
+
+                    if (confirmRemoveContinueWatchingEntity != null) {
+                        HomeScreenDefaults.RemoveContinueWatchingEntityConfirmationDialog(
+                            continueWatchingEntity = confirmRemoveContinueWatchingEntity!!,
+                            onDismiss = { confirmRemoveContinueWatchingEntity = null },
+                            onConfirm = {
+                                onConfirmRemoveFromContinueWatchingRow(
+                                    confirmRemoveContinueWatchingEntity!!
+                                )
+                                confirmRemoveContinueWatchingEntity = null
+                            },
+                        )
+                    }
+
                     HomeScreenDefaults.ContinueWatchingChannel(
                         rootHorizontalPadding = rootHorizontalPadding,
                         continueWatchingEntitiesCount = continueWatchingEntities.size,
@@ -80,8 +115,6 @@ class NavigationScreensImpl : NavigationScreens {
                                 )
                             }
 
-                            val context = LocalContext.current
-
                             HomeScreenDefaults.ChannelCard(
                                 title = cardTitle,
                                 subtitle = HomeScreenDefaults.buildSubtitle(
@@ -91,8 +124,7 @@ class NavigationScreensImpl : NavigationScreens {
                                 ),
                                 onClick = { onEntityClick(entity.id) },
                                 onLongClick = {
-                                    Toast.makeText(context, "long clicked", Toast.LENGTH_LONG)
-                                        .show()
+                                    confirmRemoveContinueWatchingEntity = continueWatchingEntity
                                 }
                             ) {
                                 HomeScreenDefaults.ProgressBar(progressPercent = progressPercent)

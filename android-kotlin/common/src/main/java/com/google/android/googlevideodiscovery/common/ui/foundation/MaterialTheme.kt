@@ -39,5 +39,7 @@ object MaterialTheme {
     object typography {
         val titleMedium @Composable get() = LocalFoundations.current.titleMedium
         val bodySmall @Composable get() = LocalFoundations.current.bodySmall
+        val bodyMedium @Composable get() = LocalFoundations.current.bodyMedium
+        val headlineSmall @Composable get() = LocalFoundations.current.headlineSmall
     }
 }

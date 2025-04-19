@@ -30,6 +30,7 @@ interface NavigationScreens {
         continueWatchingEntities: List<ContinueWatchingEntity>,
         movieEntities: List<MovieEntity>,
         tvEpisodeEntities: List<TvEpisodeEntity>,
+        onConfirmRemoveFromContinueWatchingRow: (ContinueWatchingEntity) -> Unit,
         onEntityClick: (String) -> Unit,
     )
 

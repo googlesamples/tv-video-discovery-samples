@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.tv.material3.LocalContentColor
@@ -50,6 +51,8 @@ class TvFoundations : Foundations {
 
     override val titleMedium: TextStyle @Composable get() = MaterialTheme.typography.titleMedium
     override val bodySmall: TextStyle @Composable get() = MaterialTheme.typography.bodySmall
+    override val bodyMedium: TextStyle @Composable get() = MaterialTheme.typography.bodyMedium
+    override val headlineSmall: TextStyle @Composable get() = MaterialTheme.typography.headlineSmall
 
     @Composable
     override fun Text(text: String, modifier: Modifier, style: TextStyle) {
@@ -105,9 +108,10 @@ class TvFoundations : Foundations {
     @Composable
     override fun Surface(
         modifier: Modifier,
+        shape: Shape,
         content: @Composable RowScope.() -> Unit
     ) {
-        androidx.tv.material3.Surface(modifier = modifier) {
+        androidx.tv.material3.Surface(modifier = modifier, shape = shape) {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 content = content

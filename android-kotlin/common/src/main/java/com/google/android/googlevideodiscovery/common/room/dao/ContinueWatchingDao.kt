@@ -15,6 +15,6 @@ interface ContinueWatchingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdate(entity: DbContinueWatchingEntity)
 
-    @Query("DELETE FROM continue_watching_rows WHERE entityId = :entityId")
-    suspend fun removeFromContinueWatching(entityId: String)
+    @Query("DELETE FROM continue_watching_rows WHERE entityId = :entityId AND profileId = :profileId")
+    suspend fun removeFromContinueWatching(entityId: String, profileId: String)
 }

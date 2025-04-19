@@ -39,7 +39,10 @@ class ContinueWatchingService @Inject constructor(
         )
 
         if (isNearingEnd(continueWatchingEntity)) {
-            continueWatchingRepository.removeOne(entityId = continueWatchingEntity.entity.id)
+            continueWatchingRepository.removeOne(
+                entityId = continueWatchingEntity.entity.id,
+                profileId = profileId
+            )
             val nextEntity = findNextContinueWatchingEntity(
                 continueWatchingEntity = continueWatchingEntity,
                 profileId = profileId
@@ -48,6 +51,13 @@ class ContinueWatchingService @Inject constructor(
         } else {
             continueWatchingRepository.insertOrUpdateOne(continueWatchingEntity)
         }
+    }
+
+    suspend fun removeFromContinueWatching(continueWatchingEntity: ContinueWatchingEntity) {
+        continueWatchingRepository.removeOne(
+            entityId = continueWatchingEntity.entity.id,
+            profileId = continueWatchingEntity.profileId
+        )
     }
 
     private fun isNearingEnd(continueWatchingEntity: ContinueWatchingEntity): Boolean {

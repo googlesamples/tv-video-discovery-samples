@@ -136,12 +136,14 @@ class TvFoundations : Foundations {
     override fun Card(
         onClick: () -> Unit,
         modifier: Modifier,
+        onLongClick: () -> Unit,
         interactionSource: MutableInteractionSource,
         content: @Composable ColumnScope.() -> Unit
     ) {
         androidx.tv.material3.Card(
             onClick = onClick,
             modifier = modifier,
+            onLongClick = onLongClick,
             interactionSource = interactionSource,
             content = content,
         )

@@ -1,5 +1,7 @@
 package com.google.android.googlevideodiscovery.mobile.ui.foundations
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -10,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import com.google.android.googlevideodiscovery.common.ui.foundation.Foundations
 
@@ -117,17 +120,25 @@ class MobileFoundations : Foundations {
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun Card(
         onClick: () -> Unit,
         modifier: Modifier,
+        onLongClick: () -> Unit,
         interactionSource: MutableInteractionSource,
         content: @Composable ColumnScope.() -> Unit
     ) {
         androidx.compose.material3.Card(
-            onClick = onClick,
-            modifier = modifier,
-            interactionSource = interactionSource,
+//            onClick = onClick,
+            modifier = modifier.combinedClickable(
+                interactionSource = interactionSource,
+                indication = null,
+                role = Role.Button,
+                onLongClick = onLongClick,
+                onClick = onClick,
+            ),
+//            interactionSource = interactionSource,
             content = content,
         )
     }

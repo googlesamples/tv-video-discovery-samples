@@ -10,12 +10,14 @@ import androidx.compose.ui.Modifier
 fun Card(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onLongClick: () -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable ColumnScope.() -> Unit,
 ) {
     LocalFoundations.current.Card(
         onClick = onClick,
         modifier = modifier,
+        onLongClick = onLongClick,
         interactionSource = interactionSource,
         content = content
     )

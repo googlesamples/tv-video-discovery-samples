@@ -129,6 +129,7 @@ internal object HomeScreenDefaults {
         title: String,
         subtitle: String,
         onClick: () -> Unit,
+        onLongClick: () -> Unit = {},
         cardContent: @Composable () -> Unit,
     ) {
         Column(
@@ -140,6 +141,7 @@ internal object HomeScreenDefaults {
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(16f / 9),
+                onLongClick = onLongClick,
             ) {
                 cardContent()
             }

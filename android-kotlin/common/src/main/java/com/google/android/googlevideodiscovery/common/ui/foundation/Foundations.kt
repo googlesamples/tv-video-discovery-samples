@@ -91,6 +91,7 @@ interface Foundations {
     fun Card(
         onClick: () -> Unit,
         modifier: Modifier,
+        onLongClick: () -> Unit,
         interactionSource: MutableInteractionSource,
         content: @Composable ColumnScope.() -> Unit,
     )

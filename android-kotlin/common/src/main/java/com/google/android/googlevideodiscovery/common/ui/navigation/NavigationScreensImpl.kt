@@ -1,6 +1,8 @@
 package com.google.android.googlevideodiscovery.common.ui.navigation
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
@@ -78,6 +80,8 @@ class NavigationScreensImpl : NavigationScreens {
                                 )
                             }
 
+                            val context = LocalContext.current
+
                             HomeScreenDefaults.ChannelCard(
                                 title = cardTitle,
                                 subtitle = HomeScreenDefaults.buildSubtitle(
@@ -85,7 +89,11 @@ class NavigationScreensImpl : NavigationScreens {
                                     duration = entity.duration,
                                     genre = entity.genre
                                 ),
-                                onClick = { onEntityClick(entity.id) }
+                                onClick = { onEntityClick(entity.id) },
+                                onLongClick = {
+                                    Toast.makeText(context, "long clicked", Toast.LENGTH_LONG)
+                                        .show()
+                                }
                             ) {
                                 HomeScreenDefaults.ProgressBar(progressPercent = progressPercent)
                             }

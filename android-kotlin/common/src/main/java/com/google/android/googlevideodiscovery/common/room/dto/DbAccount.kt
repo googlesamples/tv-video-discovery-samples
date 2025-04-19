@@ -15,5 +15,6 @@ data class DbAccount(
 fun DbAccount.toAccount() = Account(
     id = id,
     name = name,
-    profiles = listOf()
+    profiles = listOf(),
+    userConsentToSendDataToGoogle = userConsentToSendDataToGoogle,
 )

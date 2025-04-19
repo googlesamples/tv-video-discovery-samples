@@ -97,6 +97,9 @@ fun NavigationGraph(
                 val mediaContentViewModel = hiltViewModel<MediaContentViewModel>()
                 val continueWatchingViewModel = hiltViewModel<ContinueWatchingViewModel>()
 
+                val loggedInAccount =
+                    iamViewModel.loggedInAccount.collectAsStateWithLifecycle(null).value
+                        ?: return@composable
                 val activeProfile = iamViewModel.activeProfile.collectAsStateWithLifecycle().value
                     ?: return@composable
 
@@ -109,6 +112,7 @@ fun NavigationGraph(
                     mediaContentViewModel.tvEpisodes.collectAsStateWithLifecycle().value
 
                 screens.HomeScreen(
+                    loggedInAccount = loggedInAccount,
                     activeProfile = activeProfile,
                     continueWatchingEntities = continueWatchingEntities,
                     movieEntities = movies,
@@ -126,6 +130,9 @@ fun NavigationGraph(
                                 inclusive = true
                             }
                         }
+                    },
+                    updateUserConsentToShareDataWithGoogle = { newConsentValue ->
+                        iamViewModel.updateSyncAcrossDevicesConsentValue(newConsentValue)
                     },
                     onEntityClick = { entityId ->
                         navController.navigate(EntityScreen(entityId = entityId))

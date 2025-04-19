@@ -9,6 +9,7 @@ import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.services.EngageInteractionService
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import com.google.android.googlevideodiscovery.common.services.PublishContinueWatchingReason
+import com.google.android.googlevideodiscovery.common.services.SyncAcrossDevicesConsentService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.collectLatest
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class IdentityAndAccountManagementViewModel @Inject constructor(
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
     private val engageInteractionService: EngageInteractionService,
+    private val syncAcrossDevicesConsentService: SyncAcrossDevicesConsentService,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
     val loggedInAccount = identityAndAccountManagementService.loggedInAccount
@@ -70,6 +72,16 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
     fun performLogout() {
         viewModelScope.launch {
             identityAndAccountManagementService.logoutAccounts()
+        }
+    }
+
+    fun updateSyncAcrossDevicesConsentValue(newConsentValue: Boolean) {
+        val accountId = activeProfile.value?.account?.id ?: return
+        viewModelScope.launch {
+            syncAcrossDevicesConsentService.updateSyncAcrossDevicesConsentValue(
+                accountId = accountId,
+                newConsentValue = newConsentValue,
+            )
         }
     }
 

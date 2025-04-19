@@ -13,10 +13,12 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.tv.material3.LocalContentColor
+import androidx.tv.material3.LocalTextStyle
 import androidx.tv.material3.MaterialTheme
 import com.google.android.googlevideodiscovery.common.ui.foundation.Foundations
 
 class TvFoundations : Foundations {
+    override val localTextStyle: TextStyle @Composable get() = LocalTextStyle.current
     override val localContentColor: Color @Composable get() = LocalContentColor.current
 
     override val primary: Color @Composable get() = MaterialTheme.colorScheme.primary
@@ -161,5 +163,28 @@ class TvFoundations : Foundations {
         valueRange: ClosedFloatingPointRange<Float>
     ) {
         androidx.tv.material3.Text("Slider....")
+    }
+
+    @Composable
+    override fun ListItem(
+        selected: Boolean,
+        onClick: () -> Unit,
+        headlineContent: @Composable () -> Unit,
+        modifier: Modifier,
+        overlineContent: @Composable() (() -> Unit)?,
+        supportingContent: @Composable() (() -> Unit)?,
+        leadingContent: @Composable() (() -> Unit)?,
+        trailingContent: @Composable() (() -> Unit)?
+    ) {
+        androidx.tv.material3.ListItem(
+            selected = selected,
+            onClick = onClick,
+            headlineContent = headlineContent,
+            modifier = modifier,
+            overlineContent = overlineContent,
+            supportingContent = supportingContent,
+            leadingContent = { leadingContent?.invoke() },
+            trailingContent = trailingContent,
+        )
     }
 }

@@ -19,6 +19,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,6 +44,7 @@ import com.google.android.googlevideodiscovery.common.ui.foundation.Button
 import com.google.android.googlevideodiscovery.common.ui.foundation.Card
 import com.google.android.googlevideodiscovery.common.ui.foundation.Icon
 import com.google.android.googlevideodiscovery.common.ui.foundation.IconButton
+import com.google.android.googlevideodiscovery.common.ui.foundation.ListItem
 import com.google.android.googlevideodiscovery.common.ui.foundation.MaterialTheme
 import com.google.android.googlevideodiscovery.common.ui.foundation.Text
 import kotlin.time.Duration
@@ -279,7 +285,11 @@ internal object HomeScreenDefaults {
 
     @Composable
     fun SettingsContent(
-        openProfileSelectionPage: () -> Unit, logout: () -> Unit, closeDialog: () -> Unit
+        currentUserConsentValue: Boolean,
+        openProfileSelectionPage: () -> Unit,
+        logout: () -> Unit,
+        closeDialog: () -> Unit,
+        updateUserConsentToShareDataWithGoogle: (newConsentValue: Boolean) -> Unit
     ) {
         Column(
             modifier = Modifier
@@ -296,21 +306,60 @@ internal object HomeScreenDefaults {
                     color = MaterialTheme.colorScheme.onSurface,
                 )
             )
-            Button(
+
+            ListItem(
+                selected = currentUserConsentValue,
+                onClick = { updateUserConsentToShareDataWithGoogle(!currentUserConsentValue) },
+                leadingContent = {
+                    val icon =
+                        if (currentUserConsentValue) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null
+                    )
+                },
+                headlineContent = {
+                    Text("Share data with Google?")
+                },
+                supportingContent = {
+                    Text("Sharing your Continue Watching, Subscription information and our App recommendations for you with Google will improve your experience across all Google devices.")
+                }
+            )
+
+            ListItem(
+                selected = false,
                 onClick = {
                     closeDialog()
                     openProfileSelectionPage()
-                }) {
-                Text("Change profile")
-            }
-            Button(
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.People,
+                        contentDescription = null
+                    )
+                },
+                headlineContent = {
+                    Text("Change profile")
+                },
+            )
+
+            ListItem(
+                selected = false,
                 onClick = {
                     closeDialog()
                     logout()
-                }
-            ) {
-                Text("Logout")
-            }
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Logout,
+                        contentDescription = null
+                    )
+                },
+                headlineContent = {
+                    Text("Logout")
+                },
+            )
+
             Button(onClick = closeDialog) {
                 Text("Close")
             }

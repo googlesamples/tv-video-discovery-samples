@@ -26,6 +26,7 @@ interface NavigationScreens {
 
     @Composable
     fun HomeScreen(
+        loggedInAccount: Account,
         activeProfile: AccountProfile,
         continueWatchingEntities: List<ContinueWatchingEntity>,
         movieEntities: List<MovieEntity>,
@@ -33,6 +34,7 @@ interface NavigationScreens {
         onConfirmRemoveFromContinueWatchingRow: (ContinueWatchingEntity) -> Unit,
         openProfileSelectionPage: () -> Unit,
         logout: () -> Unit,
+        updateUserConsentToShareDataWithGoogle: (consentValue: Boolean) -> Unit,
         onEntityClick: (String) -> Unit,
     )
 

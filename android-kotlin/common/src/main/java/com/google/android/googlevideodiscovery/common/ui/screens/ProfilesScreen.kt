@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.ui.foundation.Icon
+import com.google.android.googlevideodiscovery.common.ui.foundation.MaterialTheme
 import com.google.android.googlevideodiscovery.common.ui.foundation.Surface
 import com.google.android.googlevideodiscovery.common.ui.foundation.Text
 
@@ -96,7 +97,7 @@ object ProfilesScreenDefaults {
                         .fillMaxWidth()
                         .aspectRatio(1f)
                 )
-                Text(title)
+                Text(title, style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

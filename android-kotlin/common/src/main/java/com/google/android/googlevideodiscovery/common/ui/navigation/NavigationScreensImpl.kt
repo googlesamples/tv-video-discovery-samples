@@ -69,6 +69,7 @@ class NavigationScreensImpl : NavigationScreens {
 
     @Composable
     override fun HomeScreen(
+        loggedInAccount: Account,
         activeProfile: AccountProfile,
         continueWatchingEntities: List<ContinueWatchingEntity>,
         movieEntities: List<MovieEntity>,
@@ -76,6 +77,7 @@ class NavigationScreensImpl : NavigationScreens {
         onConfirmRemoveFromContinueWatchingRow: (ContinueWatchingEntity) -> Unit,
         openProfileSelectionPage: () -> Unit,
         logout: () -> Unit,
+        updateUserConsentToShareDataWithGoogle: (consentValue: Boolean) -> Unit,
         onEntityClick: (String) -> Unit,
     ) {
         CommonHomeScreen(
@@ -175,9 +177,11 @@ class NavigationScreensImpl : NavigationScreens {
             },
             settingsDialogContent = { dismissDialog ->
                 HomeScreenDefaults.SettingsContent(
+                    currentUserConsentValue = loggedInAccount.userConsentToSendDataToGoogle,
                     openProfileSelectionPage = openProfileSelectionPage,
                     logout = logout,
-                    closeDialog = dismissDialog
+                    closeDialog = dismissDialog,
+                    updateUserConsentToShareDataWithGoogle = updateUserConsentToShareDataWithGoogle,
                 )
             }
         )

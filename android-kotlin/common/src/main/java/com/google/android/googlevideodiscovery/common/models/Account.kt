@@ -6,10 +6,12 @@ data class Account(
     val id: String,
     val name: String,
     val profiles: List<AccountProfile> = listOf(),
+    val userConsentToSendDataToGoogle: Boolean,
 )
 
 fun Account.toDbAccount(isLoggedIn: Boolean = true) = DbAccount(
     id = id,
     name = name,
-    isLoggedIn = isLoggedIn
+    isLoggedIn = isLoggedIn,
+    userConsentToSendDataToGoogle = userConsentToSendDataToGoogle
 )

@@ -9,6 +9,7 @@ fun generateFakeAccount(): Account {
     fakeAccount = fakeAccount ?: Account(
         id = "account-000001",
         name = "Champ",
+        userConsentToSendDataToGoogle = true,
     )
 
     val account = fakeAccount!!

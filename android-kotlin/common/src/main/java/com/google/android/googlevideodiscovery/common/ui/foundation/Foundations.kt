@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 
 interface Foundations {
+    val localTextStyle: TextStyle @Composable get
     val localContentColor: Color @Composable get
 
     val primary: Color @Composable get
@@ -106,5 +107,17 @@ interface Foundations {
         onValueChange: (Float) -> Unit,
         modifier: Modifier,
         valueRange: ClosedFloatingPointRange<Float>,
+    )
+
+    @Composable
+    fun ListItem(
+        selected: Boolean,
+        onClick: () -> Unit,
+        headlineContent: @Composable () -> Unit,
+        modifier: Modifier,
+        overlineContent: (@Composable () -> Unit)?,
+        supportingContent: (@Composable () -> Unit)?,
+        leadingContent: (@Composable () -> Unit)?,
+        trailingContent: (@Composable () -> Unit)?,
     )
 }

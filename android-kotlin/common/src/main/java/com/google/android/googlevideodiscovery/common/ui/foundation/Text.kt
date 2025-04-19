@@ -18,7 +18,7 @@ fun Text(
     LocalFoundations.current.Text(
         text = text,
         modifier = modifier,
-        style = TextStyle.Default.copy(
+        style = LocalFoundations.current.localTextStyle.copy(
             color = color,
             fontSize = fontSize,
             fontStyle = fontStyle,
@@ -30,7 +30,7 @@ fun Text(
 fun Text(
     text: String,
     modifier: Modifier = Modifier,
-    style: TextStyle = TextStyle.Default
+    style: TextStyle = LocalFoundations.current.localTextStyle
 ) {
     LocalFoundations.current.Text(
         text = text,

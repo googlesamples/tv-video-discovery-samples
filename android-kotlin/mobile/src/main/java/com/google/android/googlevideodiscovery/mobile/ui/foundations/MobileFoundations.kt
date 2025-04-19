@@ -1,12 +1,14 @@
 package com.google.android.googlevideodiscovery.mobile.ui.foundations
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +20,7 @@ import androidx.compose.ui.text.TextStyle
 import com.google.android.googlevideodiscovery.common.ui.foundation.Foundations
 
 class MobileFoundations : Foundations {
+    override val localTextStyle: TextStyle @Composable get() = LocalTextStyle.current
     override val localContentColor: Color @Composable get() = LocalContentColor.current
 
     override val primary: Color @Composable get() = MaterialTheme.colorScheme.primary
@@ -163,6 +166,27 @@ class MobileFoundations : Foundations {
             onValueChange = onValueChange,
             modifier = modifier,
             valueRange = valueRange,
+        )
+    }
+
+    @Composable
+    override fun ListItem(
+        selected: Boolean,
+        onClick: () -> Unit,
+        headlineContent: @Composable () -> Unit,
+        modifier: Modifier,
+        overlineContent: @Composable() (() -> Unit)?,
+        supportingContent: @Composable() (() -> Unit)?,
+        leadingContent: @Composable() (() -> Unit)?,
+        trailingContent: @Composable() (() -> Unit)?
+    ) {
+        androidx.compose.material3.ListItem(
+            headlineContent = headlineContent,
+            modifier = modifier.clickable { onClick() },
+            overlineContent = overlineContent,
+            supportingContent = supportingContent,
+            leadingContent = leadingContent,
+            trailingContent = trailingContent
         )
     }
 }

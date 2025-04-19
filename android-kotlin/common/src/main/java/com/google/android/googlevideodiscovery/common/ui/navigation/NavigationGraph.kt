@@ -98,7 +98,7 @@ fun NavigationGraph(
                 val continueWatchingViewModel = hiltViewModel<ContinueWatchingViewModel>()
 
                 val activeProfile = iamViewModel.activeProfile.collectAsStateWithLifecycle().value
-                    ?: throw Error("No active profile selected")
+                    ?: return@composable
 
                 val continueWatchingEntities =
                     continueWatchingViewModel.continueWatchingEntities.collectAsStateWithLifecycle(
@@ -115,6 +115,17 @@ fun NavigationGraph(
                     tvEpisodeEntities = tvEpisodes,
                     onConfirmRemoveFromContinueWatchingRow = { continueWatchingEntity ->
                         continueWatchingViewModel.removeFromContinueWatching(continueWatchingEntity = continueWatchingEntity)
+                    },
+                    openProfileSelectionPage = {
+                        navController.navigate(ProfilesScreen)
+                    },
+                    logout = {
+                        iamViewModel.performLogout()
+                        navController.navigate(LoginScreen) {
+                            popUpTo(HomeScreen) {
+                                inclusive = true
+                            }
+                        }
                     },
                     onEntityClick = { entityId ->
                         navController.navigate(EntityScreen(entityId = entityId))

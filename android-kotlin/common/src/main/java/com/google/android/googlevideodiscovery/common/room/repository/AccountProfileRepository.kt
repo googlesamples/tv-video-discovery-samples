@@ -39,4 +39,8 @@ class AccountProfileRepository @Inject constructor(
     suspend fun updateLoginStatus(accountId: String, isLoggedIn: Boolean) {
         accountProfileDao.updateLoginStatus(accountId = accountId, isLoggedIn = isLoggedIn)
     }
+
+    suspend fun logoutAccounts() {
+        accountProfileDao.logoutAccounts()
+    }
 }

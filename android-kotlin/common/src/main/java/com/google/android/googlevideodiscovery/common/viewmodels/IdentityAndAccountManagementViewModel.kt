@@ -67,6 +67,12 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
         )
     }
 
+    fun performLogout() {
+        viewModelScope.launch {
+            identityAndAccountManagementService.logoutAccounts()
+        }
+    }
+
     private fun Account.getNewProfileName(): String? {
         val existingNames = profiles.map { it.name }
         return when {

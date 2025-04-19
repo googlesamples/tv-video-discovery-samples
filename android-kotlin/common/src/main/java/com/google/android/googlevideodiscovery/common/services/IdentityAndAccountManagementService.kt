@@ -70,7 +70,12 @@ class IdentityAndAccountManagementService @Inject constructor(
         return Result.success(Unit)
     }
 
-    fun setActiveProfile(profile: AccountProfile) {
+    suspend fun logoutAccounts() {
+        accountProfileRepository.logoutAccounts()
+        setActiveProfile(null)
+    }
+
+    fun setActiveProfile(profile: AccountProfile?) {
         _activeProfile.value = profile
     }
 }

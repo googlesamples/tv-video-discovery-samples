@@ -74,6 +74,8 @@ class NavigationScreensImpl : NavigationScreens {
         movieEntities: List<MovieEntity>,
         tvEpisodeEntities: List<TvEpisodeEntity>,
         onConfirmRemoveFromContinueWatchingRow: (ContinueWatchingEntity) -> Unit,
+        openProfileSelectionPage: () -> Unit,
+        logout: () -> Unit,
         onEntityClick: (String) -> Unit,
     ) {
         CommonHomeScreen(
@@ -170,6 +172,13 @@ class NavigationScreensImpl : NavigationScreens {
                             onClick = { onEntityClick(tvEpisode.id) }
                         ) {}
                     })
+            },
+            settingsDialogContent = { dismissDialog ->
+                HomeScreenDefaults.SettingsContent(
+                    openProfileSelectionPage = openProfileSelectionPage,
+                    logout = logout,
+                    closeDialog = dismissDialog
+                )
             }
         )
     }

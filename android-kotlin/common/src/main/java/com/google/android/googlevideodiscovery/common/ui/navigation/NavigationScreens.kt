@@ -31,6 +31,8 @@ interface NavigationScreens {
         movieEntities: List<MovieEntity>,
         tvEpisodeEntities: List<TvEpisodeEntity>,
         onConfirmRemoveFromContinueWatchingRow: (ContinueWatchingEntity) -> Unit,
+        openProfileSelectionPage: () -> Unit,
+        logout: () -> Unit,
         onEntityClick: (String) -> Unit,
     )
 

@@ -18,7 +18,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +37,8 @@ import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
 import com.google.android.googlevideodiscovery.common.ui.foundation.Button
 import com.google.android.googlevideodiscovery.common.ui.foundation.Card
+import com.google.android.googlevideodiscovery.common.ui.foundation.Icon
+import com.google.android.googlevideodiscovery.common.ui.foundation.IconButton
 import com.google.android.googlevideodiscovery.common.ui.foundation.MaterialTheme
 import com.google.android.googlevideodiscovery.common.ui.foundation.Text
 import kotlin.time.Duration
@@ -38,10 +46,11 @@ import kotlin.time.Duration
 @Composable
 internal fun HomeScreen(
     activeProfile: AccountProfile,
-    moviesContent: @Composable (Dp) -> Unit,
-    tvEpisodesContent: @Composable (Dp) -> Unit,
+    moviesContent: @Composable (rootHorizontalPadding: Dp) -> Unit,
+    tvEpisodesContent: @Composable (rootHorizontalPadding: Dp) -> Unit,
+    settingsDialogContent: @Composable (dismissDialog: () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
-    continueWatchingContent: (@Composable (Dp) -> Unit)? = null,
+    continueWatchingContent: (@Composable (rootHorizontalPadding: Dp) -> Unit)? = null,
 ) {
     BoxWithConstraints {
         val rootHorizontalPadding = when {
@@ -54,6 +63,25 @@ internal fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(25.dp),
             contentPadding = PaddingValues(vertical = 30.dp)
         ) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = rootHorizontalPadding),
+                ) {
+                    var showSettings by remember { mutableStateOf(false) }
+
+                    IconButton(onClick = { showSettings = true }) {
+                        Icon(Icons.Default.Settings, contentDescription = null)
+                    }
+
+                    if (showSettings) {
+                        Dialog(onDismissRequest = { showSettings = false }) {
+                            settingsDialogContent({ showSettings = false })
+                        }
+                    }
+                }
+            }
             item {
                 Text(
                     "Hi, ${activeProfile.name}",
@@ -208,8 +236,7 @@ internal object HomeScreenDefaults {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        MaterialTheme.colorScheme.surface,
-                        RoundedCornerShape(20.dp)
+                        MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp)
                     )
             ) {
                 Column(
@@ -235,8 +262,7 @@ internal object HomeScreenDefaults {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(
-                            15.dp,
-                            Alignment.End
+                            15.dp, Alignment.End
                         )
                     ) {
                         Button(onClick = onDismiss) {
@@ -247,6 +273,46 @@ internal object HomeScreenDefaults {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @Composable
+    fun SettingsContent(
+        openProfileSelectionPage: () -> Unit, logout: () -> Unit, closeDialog: () -> Unit
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp)
+                )
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                "Settings", style = MaterialTheme.typography.headlineSmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            )
+            Button(
+                onClick = {
+                    closeDialog()
+                    openProfileSelectionPage()
+                }) {
+                Text("Change profile")
+            }
+            Button(
+                onClick = {
+                    closeDialog()
+                    logout()
+                }
+            ) {
+                Text("Logout")
+            }
+            Button(onClick = closeDialog) {
+                Text("Close")
             }
         }
     }

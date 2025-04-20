@@ -1,6 +1,7 @@
 package com.google.android.googlevideodiscovery.common.engage.workers
 
 import android.content.Context
+import android.widget.Toast
 import androidx.hilt.work.HiltWorker
 import androidx.work.BackoffPolicy
 import androidx.work.CoroutineWorker
@@ -61,8 +62,17 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
     companion object {
         private const val INPUT_DATA_PROFILE_ID_KEY = "profile-id"
 
-        fun Context.publishContinuationCluster(profileId: String) {
+        fun Context.publishContinuationCluster(
+            profileId: String,
+            reason: PublishContinuationClusterReason
+        ) {
             val request = buildWorkRequest(profileId = profileId)
+
+            Toast.makeText(
+                this,
+                "Invoking Engage SDK's publish continuation cluster. Reason: ${reason.name}",
+                Toast.LENGTH_SHORT
+            ).show()
 
             WorkManager.getInstance(context = this)
                 .enqueue(request)
@@ -82,5 +92,8 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
                 .build()
         }
     }
+}
+
+enum class PublishContinuationClusterReason {
 
 }

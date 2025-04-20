@@ -3,6 +3,9 @@ package com.google.android.googlevideodiscovery.common.viewmodels
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.googlevideodiscovery.common.engage.converters.DeleteReason
+import com.google.android.googlevideodiscovery.common.engage.workers.DeleteClustersWorker.Companion.deleteClustersForEntireAccount
+import com.google.android.googlevideodiscovery.common.engage.workers.DeleteClustersWorker.Companion.deleteClustersForProfile
 import com.google.android.googlevideodiscovery.common.fakes.FakeProfileNames
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
@@ -75,8 +78,13 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
     }
 
     fun performLogout() {
+        val accountId = loggedInAccount.value?.id ?: return
         viewModelScope.launch {
             identityAndAccountManagementService.logoutAccounts()
+            context.deleteClustersForEntireAccount(
+                accountId = accountId,
+                reason = DeleteReason.USER_LOGOUT
+            )
         }
     }
 
@@ -84,6 +92,10 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
         val currentProfile = activeProfile.value ?: return
         viewModelScope.launch {
             identityAndAccountManagementService.deleteProfile(currentProfile)
+            context.deleteClustersForProfile(
+                profileId = currentProfile.id,
+                deleteReason = DeleteReason.ACCOUNT_PROFILE_DELETION
+            )
         }
     }
 
@@ -91,16 +103,26 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
         val currentAccount = loggedInAccount.value ?: return
         viewModelScope.launch {
             identityAndAccountManagementService.deleteAccount(currentAccount)
+            context.deleteClustersForEntireAccount(
+                accountId = currentAccount.id,
+                reason = DeleteReason.ACCOUNT_DELETION
+            )
         }
     }
 
     fun updateSyncAcrossDevicesConsentValue(newConsentValue: Boolean) {
-        val accountId = activeProfile.value?.account?.id ?: return
+        val accountId = loggedInAccount.value?.id ?: return
         viewModelScope.launch {
             syncAcrossDevicesConsentService.updateSyncAcrossDevicesConsentValue(
                 accountId = accountId,
                 newConsentValue = newConsentValue,
             )
+            if (!newConsentValue) {
+                context.deleteClustersForEntireAccount(
+                    accountId = accountId,
+                    reason = DeleteReason.LOSS_OF_CONSENT
+                )
+            }
         }
     }
 

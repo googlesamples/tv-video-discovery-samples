@@ -1,6 +1,7 @@
 package com.google.android.googlevideodiscovery.common.engage.workers
 
 import android.content.Context
+import android.widget.Toast
 import androidx.hilt.work.HiltWorker
 import androidx.work.BackoffPolicy
 import androidx.work.CoroutineWorker
@@ -14,6 +15,7 @@ import com.google.android.engage.service.AppEngagePublishClient
 import com.google.android.googlevideodiscovery.common.engage.converters.DeleteReason
 import com.google.android.googlevideodiscovery.common.engage.converters.buildEngageDeleteClustersRequest
 import com.google.android.googlevideodiscovery.common.engage.converters.toEngageAccountProfile
+import com.google.android.googlevideodiscovery.common.engage.workers.DeleteClustersWorker.Companion.deleteClustersForEntireAccount
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import com.google.android.googlevideodiscovery.common.services.SyncAcrossDevicesConsentService
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -79,10 +81,12 @@ class DeleteClustersWorker @Inject constructor(
         private const val INPUT_DATA_PROFILE_ID_KEY = "profile-id"
         private const val INPUT_DATA_DELETE_REASON_KEY = "delete-reason"
 
-        fun Context.deleteClustersForEntireAccount(accountId: String, deleteReason: DeleteReason) {
-            val request = buildWorkRequest(deleteReason = deleteReason) {
+        fun Context.deleteClustersForEntireAccount(accountId: String, reason: DeleteReason) {
+            val request = buildWorkRequest(deleteReason = reason) {
                 putString(INPUT_DATA_ACCOUNT_ID_KEY, accountId)
             }
+
+            displayToast("Invoking Engage SDK's deleteClusters. Reason: ${reason.name}")
 
             WorkManager.getInstance(context = this)
                 .enqueue(request)
@@ -92,6 +96,8 @@ class DeleteClustersWorker @Inject constructor(
             val request = buildWorkRequest(deleteReason = deleteReason) {
                 putString(INPUT_DATA_PROFILE_ID_KEY, profileId)
             }
+
+            displayToast("Invoking Engage SDK's deleteClusters. Reason: ${deleteReason.name}")
 
             WorkManager.getInstance(context = this)
                 .enqueue(request)
@@ -113,6 +119,10 @@ class DeleteClustersWorker @Inject constructor(
                     TimeUnit.MILLISECONDS
                 )
                 .build()
+        }
+
+        private fun Context.displayToast(message: String) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 

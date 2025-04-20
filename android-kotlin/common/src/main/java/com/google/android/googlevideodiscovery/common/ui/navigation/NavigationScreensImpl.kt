@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.google.android.googlevideodiscovery.common.engage.converters.PublishContinuationClusterReason
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
@@ -185,7 +186,7 @@ class NavigationScreensImpl : NavigationScreens {
         entity: PlaybackEntity?,
         isPlaying: Boolean,
         updateIsPlaying: (Boolean) -> Unit,
-        onUpdatePlaybackPosition: (Duration) -> Unit
+        onUpdatePlaybackPosition: (Duration, PublishContinuationClusterReason?) -> Unit
     ) {
         if (entity == null) {
             EntityScreenDefaults.LoadingEntityScreen()

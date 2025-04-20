@@ -1,6 +1,7 @@
 package com.google.android.googlevideodiscovery.common.ui.navigation
 
 import androidx.compose.runtime.Composable
+import com.google.android.googlevideodiscovery.common.engage.converters.PublishContinuationClusterReason
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEntity
@@ -48,7 +49,7 @@ interface NavigationScreens {
         entity: PlaybackEntity?,
         isPlaying: Boolean,
         updateIsPlaying: (Boolean) -> Unit,
-        onUpdatePlaybackPosition: (Duration) -> Unit
+        onUpdatePlaybackPosition: (Duration, PublishContinuationClusterReason?) -> Unit
     )
 }
 

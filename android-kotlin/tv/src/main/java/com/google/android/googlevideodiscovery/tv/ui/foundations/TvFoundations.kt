@@ -162,7 +162,12 @@ class TvFoundations : Foundations {
         modifier: Modifier,
         valueRange: ClosedFloatingPointRange<Float>
     ) {
-        androidx.tv.material3.Text("Slider....")
+        TvSlider(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier,
+            valueRange = valueRange,
+        )
     }
 
     @Composable

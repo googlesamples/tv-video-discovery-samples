@@ -47,10 +47,11 @@ class PlaybackEntityViewModel @Inject constructor(
         }
     }
 
-    fun updatePlaybackPosition(newPosition: Duration) {
+    fun updatePlaybackPosition(newPosition: Duration, reason: PublishContinuationClusterReason?) {
         _playbackEntity.value = _playbackEntity.value?.copy(
             playbackPosition = newPosition
         )
+        reason?.let { updateContinueWatching(reason) }
     }
 
     fun updateIsPlaying(isPlaying: Boolean) {

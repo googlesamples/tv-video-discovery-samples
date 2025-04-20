@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.googlevideodiscovery.common.engage.converters.PublishContinuationClusterReason
 import com.google.android.googlevideodiscovery.common.ui.foundation.Icon
 import com.google.android.googlevideodiscovery.common.ui.foundation.IconButton
 import com.google.android.googlevideodiscovery.common.ui.foundation.LocalContentColor
@@ -83,7 +84,7 @@ internal object EntityScreenDefaults {
         onPlaybackEnd: () -> Unit,
         modifier: Modifier = Modifier,
         currentPosition: Duration,
-        onUpdatePlaybackPosition: (Duration) -> Unit
+        onUpdatePlaybackPosition: (Duration, PublishContinuationClusterReason?) -> Unit
     ) {
         val updatedCurrentPosition = rememberUpdatedState(currentPosition)
 
@@ -103,6 +104,7 @@ internal object EntityScreenDefaults {
                         val newPlaybackPosition = (updatedCurrentPosition.value + 1.seconds)
                         onUpdatePlaybackPosition(
                             newPlaybackPosition.coerceAtMost(duration),
+                            null
                         )
 
                         if (newPlaybackPosition >= duration) {
@@ -119,7 +121,8 @@ internal object EntityScreenDefaults {
                 value = currentPosition.inWholeSeconds.toFloat(),
                 onValueChange = {
                     onUpdatePlaybackPosition(
-                        it.toInt().toDuration(DurationUnit.SECONDS)
+                        it.toInt().toDuration(DurationUnit.SECONDS),
+                        PublishContinuationClusterReason.USER_SCRUBBED_VIDEO
                     )
                 },
                 modifier = Modifier.weight(1f),

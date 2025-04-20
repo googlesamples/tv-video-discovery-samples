@@ -198,7 +198,7 @@ fun NavigationGraph(
                     updateIsPlaying = { newIsPlaying ->
                         playbackEntityViewModel.updateIsPlaying(isPlaying = newIsPlaying)
                     },
-                    onUpdatePlaybackPosition = { newPosition ->
+                    onUpdatePlaybackPosition = { newPosition, reason ->
                         playbackEntityViewModel.updatePlaybackPosition(
                             newPosition = newPosition,
                         )

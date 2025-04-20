@@ -197,9 +197,9 @@ private fun createTvEpisode(
         ),
         duration = duration,
         playbackUris = PlatformSpecificUris(
-            mobileUri = "https://googletvvideodiscovery.com/the-red-streak/episode-$episodeNumber/playbackUriForMobile",
-            tvUri = "https://googletvvideodiscovery.com/the-red-streak/episode-$episodeNumber/playbackUriForTv",
-            iosUri = "https://googletvvideodiscovery.com/the-red-streak/episode-$episodeNumber/playbackUriForIos",
+            mobileUri = "https://googletvvideodiscovery.com/$slug/playbackUriForMobile",
+            tvUri = "https://googletvvideodiscovery.com/$slug/playbackUriForTv",
+            iosUri = "https://googletvvideodiscovery.com/$slug/playbackUriForIos",
         ),
         releaseYear = 2014,
         genre = "Superhero",

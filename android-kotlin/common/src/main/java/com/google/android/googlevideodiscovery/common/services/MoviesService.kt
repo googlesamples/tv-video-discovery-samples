@@ -73,9 +73,9 @@ private fun createMovie(name: String, duration: Duration, releaseYear: Int): Mov
         ),
         duration = duration,
         playbackUris = PlatformSpecificUris(
-            mobileUri = "https://googletvvideodiscovery.com/slug/playbackUriForMobile",
-            tvUri = "https://googletvvideodiscovery.com/slug/playbackUriForTv",
-            iosUri = "https://googletvvideodiscovery.com/slug/playbackUriForIos",
+            mobileUri = "https://googletvvideodiscovery.com/$slug/playbackUriForMobile",
+            tvUri = "https://googletvvideodiscovery.com/$slug/playbackUriForTv",
+            iosUri = "https://googletvvideodiscovery.com/$slug/playbackUriForIos",
         ),
         releaseYear = releaseYear,
         genre = "Sci-Fi",

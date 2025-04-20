@@ -23,8 +23,8 @@ private fun MovieEntity.convertToEngageMovieEntity(continueWatchingEntity: Conti
         .setLastPlayBackPositionTimeMillis(continueWatchingEntity.playbackPosition.inWholeMilliseconds)
         .addPlatformSpecificPlaybackUris(
             constructPlaybackUris(
-                entityId = id,
-                playbackPositionMillis = continueWatchingEntity.playbackPosition.inWholeMilliseconds
+                profileId = continueWatchingEntity.profileId,
+                playbackUris = playbackUris
             )
         )
         .build()
@@ -43,8 +43,8 @@ private fun TvEpisodeEntity.convertToEngageTvEpisodeEntity(continueWatchingEntit
         .setLastPlayBackPositionTimeMillis(continueWatchingEntity.playbackPosition.inWholeMilliseconds)
         .addPlatformSpecificPlaybackUris(
             constructPlaybackUris(
-                entityId = id,
-                playbackPositionMillis = continueWatchingEntity.playbackPosition.inWholeMilliseconds
+                profileId = continueWatchingEntity.profileId,
+                playbackUris = playbackUris
             )
         )
         .build()

@@ -1,7 +1,10 @@
 package com.google.android.googlevideodiscovery.common.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.googlevideodiscovery.common.engage.converters.PublishContinuationClusterReason
+import com.google.android.googlevideodiscovery.common.engage.workers.PublishContinuationClusterWorker.Companion.publishContinuationCluster
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingType
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.toPlaybackEntity
@@ -9,6 +12,7 @@ import com.google.android.googlevideodiscovery.common.services.ContinueWatchingS
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import com.google.android.googlevideodiscovery.common.services.MediaContentService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,6 +23,7 @@ import kotlin.time.Duration
 class PlaybackEntityViewModel @Inject constructor(
     private val mediaContentService: MediaContentService,
     private val continueWatchingService: ContinueWatchingService,
+    @ApplicationContext private val context: Context,
     identityAndAccountManagementService: IdentityAndAccountManagementService,
 ) : ViewModel() {
     private val activeProfile = identityAndAccountManagementService.activeProfile
@@ -51,7 +56,7 @@ class PlaybackEntityViewModel @Inject constructor(
     fun updateIsPlaying(isPlaying: Boolean) {
         _isPlaying.value = isPlaying
         if (!isPlaying) {
-            updateContinueWatching()
+            updateContinueWatching(PublishContinuationClusterReason.VIDEO_STOPPED)
         }
     }
 
@@ -60,7 +65,7 @@ class PlaybackEntityViewModel @Inject constructor(
             ?.toPlaybackEntity(playbackPosition = null)
     }
 
-    private fun updateContinueWatching() {
+    private fun updateContinueWatching(reason: PublishContinuationClusterReason) {
         val entity = playbackEntity.value ?: return
         val activeProfileId = activeProfile.value?.id ?: return
 
@@ -71,6 +76,7 @@ class PlaybackEntityViewModel @Inject constructor(
                 profileId = activeProfileId,
                 playbackPosition = entity.playbackPosition
             )
+            context.publishContinuationCluster(profileId = activeProfileId, reason = reason)
         }
     }
 }

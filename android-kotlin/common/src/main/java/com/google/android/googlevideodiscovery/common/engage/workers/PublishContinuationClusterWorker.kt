@@ -50,7 +50,6 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
             entities = continueWatchingEntities,
             syncAcrossDevices = userConsentToSendDataToGoogle,
             accountProfile = profile,
-            reason = PublishContinuationClusterReason.valueOf(publishReason)
         )
 
         val isServiceAvailable = client.isServiceAvailable().await()
@@ -72,11 +71,11 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
             profileId: String,
             reason: PublishContinuationClusterReason
         ) {
-            val request = buildWorkRequest(profileId = profileId, reason = reason)
+            val request = buildWorkRequest(profileId = profileId)
 
             Toast.makeText(
                 this,
-                "Invoking Engage SDK's publish continuation cluster. Reason: ${reason.name}",
+                "Invoking Engage SDK's publish continuation cluster. Reason: ${reason.message}",
                 Toast.LENGTH_SHORT
             ).show()
 
@@ -84,13 +83,9 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
                 .enqueue(request)
         }
 
-        private fun buildWorkRequest(
-            profileId: String,
-            reason: PublishContinuationClusterReason
-        ): OneTimeWorkRequest {
+        private fun buildWorkRequest(profileId: String): OneTimeWorkRequest {
             val inputData = Data.Builder()
             inputData.putString(INPUT_DATA_PROFILE_ID_KEY, profileId)
-            inputData.putString(INPUT_DATA_PUBLISH_REASON_KEY, reason.name)
 
             return OneTimeWorkRequestBuilder<PublishContinuationClusterWorker>()
                 .setInputData(inputData.build())

@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.googlevideodiscovery.common.engage.converters.DeleteReason
+import com.google.android.googlevideodiscovery.common.engage.converters.PublishContinuationClusterReason
 import com.google.android.googlevideodiscovery.common.engage.workers.DeleteClustersWorker.Companion.deleteClustersForEntireAccount
 import com.google.android.googlevideodiscovery.common.engage.workers.DeleteClustersWorker.Companion.deleteClustersForProfile
+import com.google.android.googlevideodiscovery.common.engage.workers.PublishContinuationClusterWorker.Companion.publishContinuationCluster
 import com.google.android.googlevideodiscovery.common.fakes.FakeProfileNames
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
@@ -66,6 +68,10 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
     fun selectProfile(profile: AccountProfile, afterProfileSelection: () -> Unit) {
         identityAndAccountManagementService.setActiveProfile(profile)
         afterProfileSelection()
+        context.publishContinuationCluster(
+            profileId = profile.id,
+            reason = PublishContinuationClusterReason.PROFILE_SELECTION
+        )
     }
 
     fun performLogout() {

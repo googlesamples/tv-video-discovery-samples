@@ -22,6 +22,7 @@ interface NavigationScreens {
         account: Account,
         onCreateProfile: () -> Unit,
         onSelectProfile: (AccountProfile) -> Unit,
+        deleteCurrentAccount: () -> Unit
     )
 
     @Composable

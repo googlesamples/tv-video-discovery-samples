@@ -80,4 +80,8 @@ class IdentityAndAccountManagementService @Inject constructor(
     suspend fun deleteProfile(profile: AccountProfile) {
         accountProfileRepository.deleteProfile(profile)
     }
+
+    suspend fun deleteAccount(account: Account) {
+        accountProfileRepository.deleteAccount(account)
+    }
 }

@@ -49,7 +49,10 @@ interface AccountProfileDao {
     @Query("UPDATE accounts SET isLoggedIn = 1 WHERE id = :accountId")
     suspend fun loginAccount(accountId: String)
 
-    @Delete()
+    @Delete
     suspend fun deleteProfile(profile: DbAccountProfile)
+
+    @Delete
+    suspend fun deleteAccount(account: DbAccount)
 
 }

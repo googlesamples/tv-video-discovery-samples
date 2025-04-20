@@ -13,7 +13,7 @@ class AccountProfileRepository @Inject constructor(
     private val accountProfileDao: AccountProfileDao,
 ) {
     val loggedInAccount = accountProfileDao.getLoggedInAccount()
-    val  accountProfiles = accountProfileDao.getAccountProfiles()
+    val accountProfiles = accountProfileDao.getAccountProfiles()
 
     suspend fun getAccount(accountId: String): Account? {
         return accountProfileDao.getAccount(accountId)?.toAccount()
@@ -46,5 +46,9 @@ class AccountProfileRepository @Inject constructor(
 
     suspend fun deleteProfile(profile: AccountProfile) {
         accountProfileDao.deleteProfile(profile.toDbAccountProfile())
+    }
+
+    suspend fun deleteAccount(account: Account) {
+        accountProfileDao.deleteAccount(account.toDbAccount())
     }
 }

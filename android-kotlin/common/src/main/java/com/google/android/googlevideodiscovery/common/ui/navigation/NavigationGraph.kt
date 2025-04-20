@@ -88,6 +88,14 @@ fun NavigationGraph(
                                     }
                                 }
                             }
+                        },
+                        deleteCurrentAccount = {
+                            iamViewModel.deleteCurrentAccount()
+                            navController.navigate(LoginScreen) {
+                                popUpTo(ProfilesScreen) {
+                                    inclusive = true
+                                }
+                            }
                         }
                     )
                 }

@@ -87,6 +87,13 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
         }
     }
 
+    fun deleteCurrentAccount() {
+        val currentAccount = loggedInAccount.value ?: return
+        viewModelScope.launch {
+            identityAndAccountManagementService.deleteAccount(currentAccount)
+        }
+    }
+
     fun updateSyncAcrossDevicesConsentValue(newConsentValue: Boolean) {
         val accountId = activeProfile.value?.account?.id ?: return
         viewModelScope.launch {

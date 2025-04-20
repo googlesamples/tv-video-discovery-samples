@@ -123,6 +123,10 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
         }
     }
 
+    suspend fun getProfileById(profileId: String): AccountProfile? {
+        return identityAndAccountManagementService.getProfileById(profileId = profileId)
+    }
+
     private fun Account.getNewProfileName(): String? {
         val existingNames = profiles.map { it.name }
         return when {

@@ -14,6 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.google.android.googlevideodiscovery.common.ui.foundation.Foundations
 import com.google.android.googlevideodiscovery.common.ui.foundation.LocalFoundations
@@ -38,16 +39,61 @@ fun NavigationGraph(
             modifier = modifier,
             startDestination = LoginScreen
         ) {
+            composable<DeeplinkHandlerScreen>(
+                deepLinks = listOf(
+                    navDeepLink<DeeplinkHandlerScreen>(basePath = "https://googletvvideodiscovery.com"),
+                    navDeepLink<DeeplinkHandlerScreen>(basePath = "https://googletvvideodiscovery.com?entityId={entityId}&profileId={profileId}"),
+                )
+            ) {
+                val entityId = it.toRoute<DeeplinkHandlerScreen>().entityId
+                val profileId = it.toRoute<DeeplinkHandlerScreen>().profileId ?: return@composable
+
+                val iamViewModel = hiltViewModel<IdentityAndAccountManagementViewModel>()
+                val loggedInAccount =
+                    iamViewModel.loggedInAccount.collectAsStateWithLifecycle().value
+
+                LaunchedEffect(entityId, profileId, loggedInAccount) {
+                    val profile = iamViewModel.getProfileById(profileId) ?: return@LaunchedEffect
+                    if (loggedInAccount == null) {
+                        navController.navigate(
+                            LoginScreen
+                        ) {
+                            popUpTo(DeeplinkHandlerScreen) {
+                                inclusive = true
+                            }
+                        }
+                    } else if (loggedInAccount.id != profile.account.id) {
+                        navController.navigate(ProfilesScreen) {
+                            popUpTo(DeeplinkHandlerScreen) {
+                                inclusive = true
+                            }
+                        }
+                    } else {
+                        iamViewModel.selectProfile(profile) {
+                            navController.navigate(
+                                EntityScreen(entityId = entityId)
+                            ) {
+                                popUpTo(DeeplinkHandlerScreen) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             composable<LoginScreen> {
+//                val postLoginDeepLink = it.toRoute<LoginScreen>().postLoginNavigationDeeplink
+
                 val iamViewModel = hiltViewModel<IdentityAndAccountManagementViewModel>()
 
                 val accountState = iamViewModel.loggedInAccount.collectAsStateWithLifecycle(null)
                 val navigateToProfilesScreen = {
-                    navController.navigate(ProfilesScreen) {
-                        popUpTo(LoginScreen) {
-                            inclusive = true
+                        navController.navigate(ProfilesScreen) {
+                            popUpTo(LoginScreen) {
+                                inclusive = true
+                            }
                         }
-                    }
                 }
 
                 LaunchedEffect(accountState.value) {
@@ -201,6 +247,7 @@ fun NavigationGraph(
                     onUpdatePlaybackPosition = { newPosition, reason ->
                         playbackEntityViewModel.updatePlaybackPosition(
                             newPosition = newPosition,
+                            reason = reason,
                         )
                     },
                 )

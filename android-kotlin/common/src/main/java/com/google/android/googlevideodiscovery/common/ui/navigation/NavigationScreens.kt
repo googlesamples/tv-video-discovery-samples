@@ -54,6 +54,12 @@ interface NavigationScreens {
 }
 
 @Serializable
+internal data class DeeplinkHandlerScreen(
+    val entityId: String,
+    val profileId: String?
+)
+
+@Serializable
 internal object LoginScreen
 
 @Serializable
@@ -66,4 +72,4 @@ internal object HomeScreen
 internal object SettingsScreen
 
 @Serializable
-data class EntityScreen(val entityId: String)
+internal data class EntityScreen(val entityId: String)

@@ -10,6 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GoogleTvVideoDiscoverySample">
+        <meta-data
+            android:name="com.google.android.engage.service.ENV"
+            android:value="PRODUCTION" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

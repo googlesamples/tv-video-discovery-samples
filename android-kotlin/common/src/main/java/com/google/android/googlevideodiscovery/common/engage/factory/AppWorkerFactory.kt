@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
+import com.google.android.googlevideodiscovery.common.engage.workers.DeleteClustersWorker
 import com.google.android.googlevideodiscovery.common.engage.workers.PublishContinuationClusterWorker
 import com.google.android.googlevideodiscovery.common.services.ContinueWatchingService
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
@@ -27,6 +28,14 @@ class AppWorkerFactory @Inject constructor(
                 params = workerParameters,
                 identityAndAccountManagementService = identityAndAccountManagementService,
                 continueWatchingService = continueWatchingService,
+                syncAcrossDevicesConsentService = syncAcrossDevicesConsentService
+            )
+        }
+        if (workerClassName == "DeleteClustersWorker") {
+            return DeleteClustersWorker(
+                appContext = appContext,
+                params = workerParameters,
+                identityAndAccountManagementService = identityAndAccountManagementService,
                 syncAcrossDevicesConsentService = syncAcrossDevicesConsentService
             )
         }

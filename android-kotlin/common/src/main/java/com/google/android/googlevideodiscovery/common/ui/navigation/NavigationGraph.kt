@@ -129,11 +129,19 @@ fun NavigationGraph(
                         continueWatchingViewModel.removeFromContinueWatching(continueWatchingEntity = continueWatchingEntity)
                     },
                     openProfileSelectionPage = {
-                        navController.navigate(ProfilesScreen)
+                        navController.navigate(ProfilesScreen) {
+                            popUpTo(HomeScreen) {
+                                inclusive = true
+                            }
+                        }
                     },
                     deleteCurrentProfile = {
                         iamViewModel.deleteCurrentProfile()
-                        navController.navigate(ProfilesScreen)
+                        navController.navigate(ProfilesScreen) {
+                            popUpTo(HomeScreen) {
+                                inclusive = true
+                            }
+                        }
                     },
                     logout = {
                         iamViewModel.performLogout()

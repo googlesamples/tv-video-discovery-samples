@@ -33,6 +33,7 @@ interface NavigationScreens {
         tvEpisodeEntities: List<TvEpisodeEntity>,
         onConfirmRemoveFromContinueWatchingRow: (ContinueWatchingEntity) -> Unit,
         openProfileSelectionPage: () -> Unit,
+        deleteCurrentProfile: () -> Unit,
         logout: () -> Unit,
         updateUserConsentToShareDataWithGoogle: (consentValue: Boolean) -> Unit,
         onEntityClick: (String) -> Unit,

@@ -285,8 +285,10 @@ internal object HomeScreenDefaults {
 
     @Composable
     fun SettingsContent(
+        activeProfile: AccountProfile,
         currentUserConsentValue: Boolean,
         openProfileSelectionPage: () -> Unit,
+        deleteCurrentProfile: () -> Unit,
         logout: () -> Unit,
         closeDialog: () -> Unit,
         updateUserConsentToShareDataWithGoogle: (newConsentValue: Boolean) -> Unit
@@ -298,7 +300,7 @@ internal object HomeScreenDefaults {
                     MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp)
                 )
                 .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -340,6 +342,23 @@ internal object HomeScreenDefaults {
                 },
                 headlineContent = {
                     Text("Change profile")
+                },
+            )
+
+            ListItem(
+                selected = false,
+                onClick = {
+                    closeDialog()
+                    deleteCurrentProfile()
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.People,
+                        contentDescription = null
+                    )
+                },
+                headlineContent = {
+                    Text("Delete profile - '${activeProfile.name}'")
                 },
             )
 

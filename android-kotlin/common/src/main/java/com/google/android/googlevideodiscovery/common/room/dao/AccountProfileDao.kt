@@ -1,6 +1,7 @@
 package com.google.android.googlevideodiscovery.common.room.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -47,5 +48,8 @@ interface AccountProfileDao {
 
     @Query("UPDATE accounts SET isLoggedIn = 1 WHERE id = :accountId")
     suspend fun loginAccount(accountId: String)
+
+    @Delete()
+    suspend fun deleteProfile(profile: DbAccountProfile)
 
 }

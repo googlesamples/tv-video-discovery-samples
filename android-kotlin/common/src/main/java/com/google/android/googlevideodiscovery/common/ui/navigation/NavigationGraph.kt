@@ -123,6 +123,10 @@ fun NavigationGraph(
                     openProfileSelectionPage = {
                         navController.navigate(ProfilesScreen)
                     },
+                    deleteCurrentProfile = {
+                        iamViewModel.deleteCurrentProfile()
+                        navController.navigate(ProfilesScreen)
+                    },
                     logout = {
                         iamViewModel.performLogout()
                         navController.navigate(LoginScreen) {

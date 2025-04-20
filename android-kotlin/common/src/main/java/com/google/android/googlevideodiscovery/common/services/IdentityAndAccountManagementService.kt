@@ -46,7 +46,7 @@ class IdentityAndAccountManagementService @Inject constructor(
 
     suspend fun login(username: String, password: String): Result<Unit> {
         val account = generateFakeAccount()
-        accountProfileRepository.createAccount(account.toDbAccount())
+        accountProfileRepository.createAccount(account)
         account.profiles.map { profile ->
             createProfile(account, profile.name)
         }
@@ -56,7 +56,7 @@ class IdentityAndAccountManagementService @Inject constructor(
 
     suspend fun register(username: String, password: String): Result<Unit> {
         val account = generateFakeAccount()
-        accountProfileRepository.createAccount(account.toDbAccount())
+        accountProfileRepository.createAccount(account)
         account.profiles.map { profile ->
             createProfile(account, profile.name)
         }
@@ -66,7 +66,7 @@ class IdentityAndAccountManagementService @Inject constructor(
 
     suspend fun createProfile(account: Account, profileName: String): Result<Unit> {
         val profile = account.createFakeProfile(profileName)
-        accountProfileRepository.createAccountProfile(profile.toDbAccountProfile())
+        accountProfileRepository.createAccountProfile(profile)
         return Result.success(Unit)
     }
 
@@ -77,5 +77,9 @@ class IdentityAndAccountManagementService @Inject constructor(
 
     fun setActiveProfile(profile: AccountProfile?) {
         _activeProfile.value = profile
+    }
+
+    suspend fun deleteProfile(profile: AccountProfile) {
+        accountProfileRepository.deleteProfile(profile)
     }
 }

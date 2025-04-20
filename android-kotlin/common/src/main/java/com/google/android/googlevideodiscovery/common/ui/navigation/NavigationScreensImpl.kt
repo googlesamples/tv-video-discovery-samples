@@ -76,6 +76,7 @@ class NavigationScreensImpl : NavigationScreens {
         tvEpisodeEntities: List<TvEpisodeEntity>,
         onConfirmRemoveFromContinueWatchingRow: (ContinueWatchingEntity) -> Unit,
         openProfileSelectionPage: () -> Unit,
+        deleteCurrentProfile: () -> Unit,
         logout: () -> Unit,
         updateUserConsentToShareDataWithGoogle: (consentValue: Boolean) -> Unit,
         onEntityClick: (String) -> Unit,
@@ -177,8 +178,10 @@ class NavigationScreensImpl : NavigationScreens {
             },
             settingsDialogContent = { dismissDialog ->
                 HomeScreenDefaults.SettingsContent(
+                    activeProfile = activeProfile,
                     currentUserConsentValue = loggedInAccount.userConsentToSendDataToGoogle,
                     openProfileSelectionPage = openProfileSelectionPage,
+                    deleteCurrentProfile = deleteCurrentProfile,
                     logout = logout,
                     closeDialog = dismissDialog,
                     updateUserConsentToShareDataWithGoogle = updateUserConsentToShareDataWithGoogle,

@@ -2,9 +2,9 @@ package com.google.android.googlevideodiscovery.common.room.repository
 
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
+import com.google.android.googlevideodiscovery.common.models.toDbAccount
+import com.google.android.googlevideodiscovery.common.models.toDbAccountProfile
 import com.google.android.googlevideodiscovery.common.room.dao.AccountProfileDao
-import com.google.android.googlevideodiscovery.common.room.dto.DbAccount
-import com.google.android.googlevideodiscovery.common.room.dto.DbAccountProfile
 import com.google.android.googlevideodiscovery.common.room.dto.toAccount
 import com.google.android.googlevideodiscovery.common.room.dto.toAccountProfile
 import javax.inject.Inject
@@ -28,12 +28,12 @@ class AccountProfileRepository @Inject constructor(
         }
     }
 
-    suspend fun createAccount(account: DbAccount) {
-        accountProfileDao.createAccount(account)
+    suspend fun createAccount(account: Account) {
+        accountProfileDao.createAccount(account.toDbAccount())
     }
 
-    suspend fun createAccountProfile(profile: DbAccountProfile) {
-        accountProfileDao.createAccountProfile(profile)
+    suspend fun createAccountProfile(profile: AccountProfile) {
+        accountProfileDao.createAccountProfile(profile.toDbAccountProfile())
     }
 
     suspend fun updateLoginStatus(accountId: String, isLoggedIn: Boolean) {
@@ -42,5 +42,9 @@ class AccountProfileRepository @Inject constructor(
 
     suspend fun logoutAccounts() {
         accountProfileDao.logoutAccounts()
+    }
+
+    suspend fun deleteProfile(profile: AccountProfile) {
+        accountProfileDao.deleteProfile(profile.toDbAccountProfile())
     }
 }

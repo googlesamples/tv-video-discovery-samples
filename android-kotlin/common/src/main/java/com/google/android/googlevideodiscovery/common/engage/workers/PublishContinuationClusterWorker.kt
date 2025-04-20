@@ -12,6 +12,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import com.google.android.engage.service.AppEngagePublishClient
+import com.google.android.googlevideodiscovery.common.engage.converters.PublishContinuationClusterReason
 import com.google.android.googlevideodiscovery.common.engage.converters.buildEngagePublishContinuationRequest
 import com.google.android.googlevideodiscovery.common.services.ContinueWatchingService
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
@@ -36,6 +37,9 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val profileId = inputData.getString(INPUT_DATA_PROFILE_ID_KEY) ?: return Result.failure()
+        val publishReason =
+            inputData.getString(INPUT_DATA_PUBLISH_REASON_KEY) ?: return Result.failure()
+
         val profile = identityAndAccountManagementService.getProfileById(profileId)
             ?: return Result.failure()
         val continueWatchingEntities = continueWatchingService.getMany(profileId)
@@ -45,7 +49,8 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
         val request = buildEngagePublishContinuationRequest(
             entities = continueWatchingEntities,
             syncAcrossDevices = userConsentToSendDataToGoogle,
-            accountProfile = profile
+            accountProfile = profile,
+            reason = PublishContinuationClusterReason.valueOf(publishReason)
         )
 
         val isServiceAvailable = client.isServiceAvailable().await()
@@ -61,12 +66,13 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
 
     companion object {
         private const val INPUT_DATA_PROFILE_ID_KEY = "profile-id"
+        private const val INPUT_DATA_PUBLISH_REASON_KEY = "publish-reason"
 
         fun Context.publishContinuationCluster(
             profileId: String,
             reason: PublishContinuationClusterReason
         ) {
-            val request = buildWorkRequest(profileId = profileId)
+            val request = buildWorkRequest(profileId = profileId, reason = reason)
 
             Toast.makeText(
                 this,
@@ -78,9 +84,13 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
                 .enqueue(request)
         }
 
-        private fun buildWorkRequest(profileId: String): OneTimeWorkRequest {
+        private fun buildWorkRequest(
+            profileId: String,
+            reason: PublishContinuationClusterReason
+        ): OneTimeWorkRequest {
             val inputData = Data.Builder()
             inputData.putString(INPUT_DATA_PROFILE_ID_KEY, profileId)
+            inputData.putString(INPUT_DATA_PUBLISH_REASON_KEY, reason.name)
 
             return OneTimeWorkRequestBuilder<PublishContinuationClusterWorker>()
                 .setInputData(inputData.build())
@@ -92,8 +102,4 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
                 .build()
         }
     }
-}
-
-enum class PublishContinuationClusterReason {
-
 }

@@ -9,14 +9,11 @@ import com.google.android.googlevideodiscovery.common.engage.workers.DeleteClust
 import com.google.android.googlevideodiscovery.common.fakes.FakeProfileNames
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
-import com.google.android.googlevideodiscovery.common.services.EngageInteractionService
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
-import com.google.android.googlevideodiscovery.common.services.PublishContinueWatchingReason
 import com.google.android.googlevideodiscovery.common.services.SyncAcrossDevicesConsentService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class IdentityAndAccountManagementViewModel @Inject constructor(
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
-    private val engageInteractionService: EngageInteractionService,
     private val syncAcrossDevicesConsentService: SyncAcrossDevicesConsentService,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -70,11 +66,6 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
     fun selectProfile(profile: AccountProfile, afterProfileSelection: () -> Unit) {
         identityAndAccountManagementService.setActiveProfile(profile)
         afterProfileSelection()
-        engageInteractionService.publishContinuationCluster(
-            context = context,
-            profileId = profile.id,
-            reason = PublishContinueWatchingReason.PROFILE_SELECTION
-        )
     }
 
     fun performLogout() {

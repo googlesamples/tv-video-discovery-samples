@@ -12,7 +12,9 @@ import com.google.android.googlevideodiscovery.common.services.PublishContinueWa
 import com.google.android.googlevideodiscovery.common.services.SyncAcrossDevicesConsentService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +25,11 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
     private val syncAcrossDevicesConsentService: SyncAcrossDevicesConsentService,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
-    val loggedInAccount = identityAndAccountManagementService.loggedInAccount
+    val loggedInAccount = identityAndAccountManagementService.loggedInAccount.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        null
+    )
     val activeProfile = identityAndAccountManagementService.activeProfile
 
     fun performRegistration(afterRegistration: () -> Unit) {
@@ -52,10 +58,9 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
 
     fun createNewProfile() {
         viewModelScope.launch {
-            loggedInAccount.collectLatest { latestAccount ->
-                val newProfileName = latestAccount?.getNewProfileName() ?: return@collectLatest
-                identityAndAccountManagementService.createProfile(latestAccount, newProfileName)
-            }
+            val latestAccount = loggedInAccount.value
+            val newProfileName = latestAccount?.getNewProfileName() ?: return@launch
+            identityAndAccountManagementService.createProfile(latestAccount, newProfileName)
         }
     }
 

@@ -4,8 +4,6 @@ import com.google.android.googlevideodiscovery.common.fakes.createFakeProfile
 import com.google.android.googlevideodiscovery.common.fakes.generateFakeAccount
 import com.google.android.googlevideodiscovery.common.models.Account
 import com.google.android.googlevideodiscovery.common.models.AccountProfile
-import com.google.android.googlevideodiscovery.common.models.toDbAccount
-import com.google.android.googlevideodiscovery.common.models.toDbAccountProfile
 import com.google.android.googlevideodiscovery.common.room.dto.toAccount
 import com.google.android.googlevideodiscovery.common.room.dto.toAccountProfile
 import com.google.android.googlevideodiscovery.common.room.repository.AccountProfileRepository

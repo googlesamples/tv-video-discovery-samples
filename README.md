@@ -3,17 +3,21 @@
 This repository contains samples demonstrating how a 3p app can integrate with
 the video discovery APIs to send personalized user data to Google.
 
-## When should I invoke the APIs?
+## When should you invoke the APIs?
 
-> Important: The publish APIs are overwrite APIs. Every new publish API call
-> will overwrite the previously published requests for that specific
-> `AccountProfile`. So, please don't invoke the delete API to clear Continue
-> Watching row because delete APIs are reserved for special instances. Instead,
-> just invoke the publish APIs with empty list in the request body.
+> [!Caution]
+>
+> The publish APIs are overwrite APIs. Every new publish API call will overwrite
+> the previously published requests for that specific `AccountProfile`. So,
+> please don't invoke the delete API to clear Continue Watching row because
+> delete APIs are reserved for special instances. Instead, just invoke the
+> publish APIs with empty list in the request body.
 
-> Important: Remember to set the `syncAcrossDevices` flag to true (or false if
-> user hasn't consented to share the data with Google) in both the publish as
-> well as delete requests regardless of the PublishReason or DeleteReason.
+> [!Important]
+>
+> Remember to set the `syncAcrossDevices` flag to `true` (or `false` if user
+> hasn't consented to share the data with Google) in both the publish as well as
+> delete requests regardless of the PublishReason or DeleteReason.
 
 1. **Publish Continuation Clusters API**: This api should be invoked on the
    following user events:
@@ -54,8 +58,10 @@ GitHub issue is required along with your Pull request.
 You will also need to sign the CLA. When you raise a PR, the bot will ask you to
 do that.
 
-> Note: A pull request without an approved issue will be closed without giving
-> any reason.
+> [!Warning]
+>
+> A pull request without an approved issue will be closed without giving any
+> reason.
 
 ## Disclaimer
 

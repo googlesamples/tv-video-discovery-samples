@@ -94,7 +94,7 @@ class IdentityAndAccountManagementViewModel @Inject constructor(
             identityAndAccountManagementService.deleteProfile(currentProfile)
             context.deleteClustersForProfile(
                 profileId = currentProfile.id,
-                deleteReason = DeleteReason.ACCOUNT_PROFILE_DELETION
+                reason = DeleteReason.ACCOUNT_PROFILE_DELETION
             )
         }
     }

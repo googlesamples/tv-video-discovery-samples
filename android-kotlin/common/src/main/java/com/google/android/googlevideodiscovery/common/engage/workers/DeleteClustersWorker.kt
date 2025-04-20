@@ -82,7 +82,7 @@ class DeleteClustersWorker @Inject constructor(
         private const val INPUT_DATA_DELETE_REASON_KEY = "delete-reason"
 
         fun Context.deleteClustersForEntireAccount(accountId: String, reason: DeleteReason) {
-            val request = buildWorkRequest(deleteReason = reason) {
+            val request = buildWorkRequest(reason = reason) {
                 putString(INPUT_DATA_ACCOUNT_ID_KEY, accountId)
             }
 
@@ -92,24 +92,24 @@ class DeleteClustersWorker @Inject constructor(
                 .enqueue(request)
         }
 
-        fun Context.deleteClustersForProfile(profileId: String, deleteReason: DeleteReason) {
-            val request = buildWorkRequest(deleteReason = deleteReason) {
+        fun Context.deleteClustersForProfile(profileId: String, reason: DeleteReason) {
+            val request = buildWorkRequest(reason = reason) {
                 putString(INPUT_DATA_PROFILE_ID_KEY, profileId)
             }
 
-            displayToast("Invoking Engage SDK's deleteClusters. Reason: ${deleteReason.name}")
+            displayToast("Invoking Engage SDK's deleteClusters. Reason: ${reason.name}")
 
             WorkManager.getInstance(context = this)
                 .enqueue(request)
         }
 
         private fun buildWorkRequest(
-            deleteReason: DeleteReason,
+            reason: DeleteReason,
             dataBuilder: Data.Builder.() -> Unit
         ): OneTimeWorkRequest {
             val inputData = Data.Builder()
             inputData.dataBuilder()
-            inputData.putString(INPUT_DATA_DELETE_REASON_KEY, deleteReason.name)
+            inputData.putString(INPUT_DATA_DELETE_REASON_KEY, reason.name)
 
             return OneTimeWorkRequestBuilder<PublishContinuationClusterWorker>()
                 .setInputData(inputData.build())

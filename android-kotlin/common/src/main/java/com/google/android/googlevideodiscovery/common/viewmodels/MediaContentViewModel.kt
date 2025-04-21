@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +21,11 @@ class MediaContentViewModel @Inject constructor(
 ) : ViewModel() {
     private val _movies = MutableStateFlow<List<MovieEntity>>(emptyList())
     val movies = _movies
-        .onStart { _movies.value = moviesService.fetchMovies() }
+        .onStart {
+            _movies.update {
+                moviesService.fetchMovies()
+            }
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -29,7 +34,11 @@ class MediaContentViewModel @Inject constructor(
 
     private val _tvEpisodes = MutableStateFlow<List<TvEpisodeEntity>>(emptyList())
     val tvEpisodes = _tvEpisodes
-        .onStart { _tvEpisodes.value = tvShowsService.fetchTvEpisodes() }
+        .onStart {
+            _tvEpisodes.update {
+                tvShowsService.fetchTvEpisodes()
+            }
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),

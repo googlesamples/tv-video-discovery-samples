@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -43,19 +44,23 @@ class PlaybackEntityViewModel @Inject constructor(
                 profileId = activeProfileId
             )?.toPlaybackEntity()
 
-            _playbackEntity.value = continueWatchingEntity ?: fetchPlaybackEntity(entityId)
+            _playbackEntity.update {
+                continueWatchingEntity ?: fetchPlaybackEntity(entityId)
+            }
         }
     }
 
     fun updatePlaybackPosition(newPosition: Duration, reason: PublishContinuationClusterReason?) {
-        _playbackEntity.value = _playbackEntity.value?.copy(
-            playbackPosition = newPosition
-        )
+        _playbackEntity.update { old ->
+            old?.copy(
+                playbackPosition = newPosition
+            )
+        }
         reason?.let { updateContinueWatching(reason) }
     }
 
     fun updateIsPlaying(isPlaying: Boolean) {
-        _isPlaying.value = isPlaying
+        _isPlaying.update { isPlaying }
         if (!isPlaying) {
             updateContinueWatching(PublishContinuationClusterReason.VIDEO_STOPPED)
         }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -74,7 +75,7 @@ class IdentityAndAccountManagementService @Inject constructor(
     }
 
     fun setActiveProfile(profile: AccountProfile?) {
-        _activeProfile.value = profile
+        _activeProfile.update { profile }
     }
 
     suspend fun deleteProfile(profile: AccountProfile) {

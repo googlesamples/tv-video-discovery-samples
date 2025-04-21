@@ -52,8 +52,7 @@ dependencies {
     compileOnly("com.google.android.engage:engage-tv:1.0.2")
 
     // Navigation
-//    implementation("androidx.navigation:navigation-compose:2.8.9")
-    implementation("androidx.navigation:navigation-compose:2.9.0-beta01")
+    implementation("androidx.navigation:navigation-compose:2.8.9")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 

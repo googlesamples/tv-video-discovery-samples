@@ -42,9 +42,6 @@ interface NavigationScreens {
     )
 
     @Composable
-    fun SettingsScreen()
-
-    @Composable
     fun EntityScreen(
         entity: PlaybackEntity?,
         isPlaying: Boolean,
@@ -67,9 +64,6 @@ internal object ProfilesScreen
 
 @Serializable
 internal object HomeScreen
-
-@Serializable
-internal object SettingsScreen
 
 @Serializable
 internal data class EntityScreen(val entityId: String)

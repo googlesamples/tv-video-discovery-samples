@@ -205,7 +205,6 @@ fun NavigationGraph(
                     }
                 )
             }
-            composable<SettingsScreen> { screens.SettingsScreen() }
             composable<EntityScreen> {
                 val entityScreen = it.toRoute<EntityScreen>()
 

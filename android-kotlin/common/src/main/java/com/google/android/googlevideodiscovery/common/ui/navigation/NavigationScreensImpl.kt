@@ -24,7 +24,6 @@ import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDef
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreen as CommonHomeScreen
 import com.google.android.googlevideodiscovery.common.ui.screens.LoginScreen as CommonLoginScreen
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreen as CommonProfilesScreen
-import com.google.android.googlevideodiscovery.common.ui.screens.SettingsScreen as CommonSettingsScreen
 
 class NavigationScreensImpl : NavigationScreens {
     @Composable
@@ -219,10 +218,5 @@ class NavigationScreensImpl : NavigationScreens {
                 )
             },
         )
-    }
-
-    @Composable
-    override fun SettingsScreen() {
-        CommonSettingsScreen()
     }
 }

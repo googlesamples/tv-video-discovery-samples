@@ -4,8 +4,8 @@ import android.content.Context
 import android.widget.Toast
 import androidx.hilt.work.HiltWorker
 import androidx.work.BackoffPolicy
-import androidx.work.CoroutineWorker
 import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -15,7 +15,6 @@ import com.google.android.engage.service.AppEngagePublishClient
 import com.google.android.googlevideodiscovery.common.engage.converters.DeleteReason
 import com.google.android.googlevideodiscovery.common.engage.converters.buildEngageDeleteClustersRequest
 import com.google.android.googlevideodiscovery.common.engage.converters.toEngageAccountProfile
-import com.google.android.googlevideodiscovery.common.engage.workers.DeleteClustersWorker.Companion.deleteClustersForEntireAccount
 import com.google.android.googlevideodiscovery.common.services.IdentityAndAccountManagementService
 import com.google.android.googlevideodiscovery.common.services.SyncAcrossDevicesConsentService
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -30,16 +29,23 @@ class DeleteClustersWorker @Inject constructor(
     params: WorkerParameters,
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
     private val syncAcrossDevicesConsentService: SyncAcrossDevicesConsentService,
-) : CoroutineWorker(
-    appContext = appContext,
-    params = params,
+) : ThrottledWorker(
+    context = appContext,
+    workerParameters = params,
 ) {
     private val client = AppEngagePublishClient(appContext)
+    override suspend fun getThrottleKey(): String {
+        val engageAccountProfile = readEngageAccountProfile()
+        val id = engageAccountProfile?.profileId?.orNull() ?: engageAccountProfile?.accountId
+        ?: "unknown"
+        return buildUniqueThrottlingKey(id)
+    }
 
-    override suspend fun doWork(): Result {
+    override suspend fun doThrottledWork(): Result {
         val engageAccountProfile = readEngageAccountProfile() ?: return Result.failure()
-        val deleteReason =
+        val rawDeleteReason =
             inputData.getString(INPUT_DATA_DELETE_REASON_KEY) ?: return Result.failure()
+        val deleteReason = DeleteReason.valueOf(rawDeleteReason)
 
         val userConsentToSendDataToGoogle =
             syncAcrossDevicesConsentService.getSyncAcrossDevicesConsentValue(engageAccountProfile.accountId)
@@ -47,8 +53,10 @@ class DeleteClustersWorker @Inject constructor(
         val request = buildEngageDeleteClustersRequest(
             syncAcrossDevices = userConsentToSendDataToGoogle,
             accountProfile = engageAccountProfile,
-            deleteReason = DeleteReason.valueOf(deleteReason)
+            deleteReason = deleteReason
         )
+
+        applicationContext.displayToast("Running Engage SDK's deleteClusters worker. Reason: ${deleteReason.name}")
 
         val isServiceAvailable = client.isServiceAvailable().await()
 
@@ -86,10 +94,14 @@ class DeleteClustersWorker @Inject constructor(
                 putString(INPUT_DATA_ACCOUNT_ID_KEY, accountId)
             }
 
-            displayToast("Invoking Engage SDK's deleteClusters. Reason: ${reason.name}")
+            displayToast("Attempting to schedule deleteClusters worker. Reason: ${reason.name}")
 
             WorkManager.getInstance(context = this)
-                .enqueue(request)
+                .enqueueUniqueWork(
+                    buildUniqueThrottlingKey(accountId),
+                    ExistingWorkPolicy.REPLACE,
+                    request
+                )
         }
 
         fun Context.deleteClustersForProfile(profileId: String, reason: DeleteReason) {
@@ -97,10 +109,18 @@ class DeleteClustersWorker @Inject constructor(
                 putString(INPUT_DATA_PROFILE_ID_KEY, profileId)
             }
 
-            displayToast("Invoking Engage SDK's deleteClusters. Reason: ${reason.name}")
+            displayToast("Attempting to schedule deleteClusters worker. Reason: ${reason.name}")
 
             WorkManager.getInstance(context = this)
-                .enqueue(request)
+                .enqueueUniqueWork(
+                    buildUniqueThrottlingKey(profileId),
+                    ExistingWorkPolicy.REPLACE,
+                    request
+                )
+        }
+
+        private fun buildUniqueThrottlingKey(id: String): String {
+            return "delete_video_discovery:id=$id"
         }
 
         private fun buildWorkRequest(

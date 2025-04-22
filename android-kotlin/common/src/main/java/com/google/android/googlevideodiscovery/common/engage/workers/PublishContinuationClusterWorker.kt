@@ -4,8 +4,8 @@ import android.content.Context
 import android.widget.Toast
 import androidx.hilt.work.HiltWorker
 import androidx.work.BackoffPolicy
-import androidx.work.CoroutineWorker
 import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -29,16 +29,27 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
     private val identityAndAccountManagementService: IdentityAndAccountManagementService,
     private val continueWatchingService: ContinueWatchingService,
     private val syncAcrossDevicesConsentService: SyncAcrossDevicesConsentService,
-) : CoroutineWorker(
-    appContext = appContext,
-    params = params,
+) : ThrottledWorker(
+    context = appContext,
+    workerParameters = params,
 ) {
     private val client = AppEngagePublishClient(appContext)
+    override suspend fun getThrottleKey(): String {
+        val profileId = inputData.getString(INPUT_DATA_PROFILE_ID_KEY) ?: "unknown"
+        return buildUniqueThrottlingKey(profileId)
+    }
 
-    override suspend fun doWork(): Result {
+    override suspend fun doThrottledWork(): Result {
         val profileId = inputData.getString(INPUT_DATA_PROFILE_ID_KEY) ?: return Result.failure()
-        val publishReason =
+        val rawPublishReason =
             inputData.getString(INPUT_DATA_PUBLISH_REASON_KEY) ?: return Result.failure()
+        val reason = PublishContinuationClusterReason.valueOf(rawPublishReason)
+
+        Toast.makeText(
+            applicationContext,
+            "Running Engage SDK's publish continuation cluster worker. Reason: ${reason.message}",
+            Toast.LENGTH_SHORT
+        ).show()
 
         val profile = identityAndAccountManagementService.getProfileById(profileId)
             ?: return Result.failure()
@@ -71,21 +82,33 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
             profileId: String,
             reason: PublishContinuationClusterReason
         ) {
-            val request = buildWorkRequest(profileId = profileId)
+            val request = buildWorkRequest(profileId = profileId, reason = reason)
 
             Toast.makeText(
-                this,
-                "Invoking Engage SDK's publish continuation cluster. Reason: ${reason.message}",
+                applicationContext,
+                "Attempting to schedule publish continuation cluster. Reason: ${reason.message}",
                 Toast.LENGTH_SHORT
             ).show()
 
             WorkManager.getInstance(context = this)
-                .enqueue(request)
+                .enqueueUniqueWork(
+                    buildUniqueThrottlingKey(profileId),
+                    ExistingWorkPolicy.REPLACE,
+                    request
+                )
         }
 
-        private fun buildWorkRequest(profileId: String): OneTimeWorkRequest {
+        private fun buildUniqueThrottlingKey(profileId: String): String {
+            return "publish_continue_watching:profileId=$profileId"
+        }
+
+        private fun buildWorkRequest(
+            profileId: String,
+            reason: PublishContinuationClusterReason
+        ): OneTimeWorkRequest {
             val inputData = Data.Builder()
             inputData.putString(INPUT_DATA_PROFILE_ID_KEY, profileId)
+            inputData.putString(INPUT_DATA_PUBLISH_REASON_KEY, reason.name)
 
             return OneTimeWorkRequestBuilder<PublishContinuationClusterWorker>()
                 .setInputData(inputData.build())

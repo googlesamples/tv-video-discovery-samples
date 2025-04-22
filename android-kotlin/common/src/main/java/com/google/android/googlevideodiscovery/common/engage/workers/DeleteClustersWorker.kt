@@ -1,6 +1,7 @@
 package com.google.android.googlevideodiscovery.common.engage.workers
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.hilt.work.HiltWorker
 import androidx.work.BackoffPolicy
@@ -42,9 +43,15 @@ class DeleteClustersWorker @Inject constructor(
     }
 
     override suspend fun doThrottledWork(): Result {
-        val engageAccountProfile = readEngageAccountProfile() ?: return Result.failure()
+        val engageAccountProfile = readEngageAccountProfile() ?: run {
+            Log.i(TAG, "Failed to read profile id or account id from the input request")
+            return Result.failure()
+        }
         val rawDeleteReason =
-            inputData.getString(INPUT_DATA_DELETE_REASON_KEY) ?: return Result.failure()
+            inputData.getString(INPUT_DATA_DELETE_REASON_KEY) ?: run {
+                Log.i(TAG, "Failed to read delete reason from the input request")
+                return Result.failure()
+            }
         val deleteReason = DeleteReason.valueOf(rawDeleteReason)
 
         val userConsentToSendDataToGoogle =
@@ -56,11 +63,12 @@ class DeleteClustersWorker @Inject constructor(
             deleteReason = deleteReason
         )
 
-        applicationContext.displayToast("Running Engage SDK's deleteClusters worker. Reason: ${deleteReason.name}")
+        Log.i(TAG, "Running Engage SDK's deleteClusters worker. Reason: ${deleteReason.name}")
 
         val isServiceAvailable = client.isServiceAvailable().await()
 
         if (!isServiceAvailable) {
+            Log.i(TAG, "Engage service is unavailable")
             return Result.retry()
         }
 
@@ -85,6 +93,8 @@ class DeleteClustersWorker @Inject constructor(
     }
 
     companion object {
+        private const val TAG = "DeleteClustersWorker"
+
         private const val INPUT_DATA_ACCOUNT_ID_KEY = "account-id"
         private const val INPUT_DATA_PROFILE_ID_KEY = "profile-id"
         private const val INPUT_DATA_DELETE_REASON_KEY = "delete-reason"

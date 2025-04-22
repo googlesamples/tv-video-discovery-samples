@@ -1,6 +1,7 @@
 package com.google.android.googlevideodiscovery.common.engage.workers
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.hilt.work.HiltWorker
 import androidx.work.BackoffPolicy
@@ -40,19 +41,28 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
     }
 
     override suspend fun doThrottledWork(): Result {
-        val profileId = inputData.getString(INPUT_DATA_PROFILE_ID_KEY) ?: return Result.failure()
+        val profileId = inputData.getString(INPUT_DATA_PROFILE_ID_KEY) ?: run {
+            Log.i(TAG, "Profile id not found in input request")
+            return Result.failure()
+        }
         val rawPublishReason =
-            inputData.getString(INPUT_DATA_PUBLISH_REASON_KEY) ?: return Result.failure()
+            inputData.getString(INPUT_DATA_PUBLISH_REASON_KEY) ?: run {
+                Log.i(TAG, "Publish reason not found in input request")
+                return Result.failure()
+            }
         val reason = PublishContinuationClusterReason.valueOf(rawPublishReason)
 
-        Toast.makeText(
-            applicationContext,
-            "Running Engage SDK's publish continuation cluster worker. Reason: ${reason.message}",
-            Toast.LENGTH_SHORT
-        ).show()
+        Log.i(
+            TAG,
+            "Running Engage SDK's publish continuation cluster worker. Reason: ${reason.message}"
+        )
 
         val profile = identityAndAccountManagementService.getProfileById(profileId)
-            ?: return Result.failure()
+            ?: run {
+                Log.i(TAG, "Unable to fetch profile information")
+                return Result.failure()
+            }
+
         val continueWatchingEntities = continueWatchingService.getMany(profileId)
         val userConsentToSendDataToGoogle =
             syncAcrossDevicesConsentService.getSyncAcrossDevicesConsentValue(profile.account.id)
@@ -66,6 +76,7 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
         val isServiceAvailable = client.isServiceAvailable().await()
 
         if (!isServiceAvailable) {
+            Log.i(TAG, "Engage service unavailable")
             return Result.retry()
         }
 
@@ -75,6 +86,8 @@ class PublishContinuationClusterWorker @AssistedInject constructor(
     }
 
     companion object {
+        private const val TAG = "PublishContinuationClusterWorker"
+
         private const val INPUT_DATA_PROFILE_ID_KEY = "profile-id"
         private const val INPUT_DATA_PUBLISH_REASON_KEY = "publish-reason"
 

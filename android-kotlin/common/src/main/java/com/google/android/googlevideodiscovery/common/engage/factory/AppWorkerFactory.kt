@@ -1,6 +1,7 @@
 package com.google.android.googlevideodiscovery.common.engage.factory
 
 import android.content.Context
+import android.util.Log
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
@@ -22,7 +23,7 @@ class AppWorkerFactory @Inject constructor(
         workerClassName: String,
         workerParameters: WorkerParameters
     ): ListenableWorker? {
-        if (workerClassName == "PublishContinuationClusterWorker") {
+        if (workerClassName.endsWith("PublishContinuationClusterWorker")) {
             return PublishContinuationClusterWorker(
                 appContext = appContext,
                 params = workerParameters,
@@ -31,7 +32,7 @@ class AppWorkerFactory @Inject constructor(
                 syncAcrossDevicesConsentService = syncAcrossDevicesConsentService
             )
         }
-        if (workerClassName == "DeleteClustersWorker") {
+        if (workerClassName.endsWith("DeleteClustersWorker")) {
             return DeleteClustersWorker(
                 appContext = appContext,
                 params = workerParameters,

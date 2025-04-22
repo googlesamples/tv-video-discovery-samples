@@ -38,7 +38,7 @@ abstract class ThrottledWorker(
 
         return if (timeSinceLastRun < getThrottleDuration().inWholeMilliseconds) {
             Log.i(
-                "ThrottledWorker",
+                TAG,
                 "Throttled ${getThrottleKey()} for ${
                     getThrottleDuration() - timeSinceLastRun.toDuration(DurationUnit.MILLISECONDS)
                 }"
@@ -55,6 +55,8 @@ abstract class ThrottledWorker(
     }
 
     companion object {
+        private const val TAG = "ThrottledWorker"
+
         private val THROTTLE_DURATION = 10.seconds
         private const val THROTTLED_WORKER_PREFERENCES_KEY = "throttled_worker_prefs"
     }

@@ -4,6 +4,7 @@ import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEnt
 import com.google.android.googlevideodiscovery.common.models.ContinueWatchingType
 import com.google.android.googlevideodiscovery.common.models.MovieEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisodeEntity
+import com.google.android.googlevideodiscovery.common.models.VideoClipEntity
 import com.google.android.googlevideodiscovery.common.room.repository.ContinueWatchingRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
@@ -61,7 +62,7 @@ class ContinueWatchingService @Inject constructor(
 
     private fun isNearingEnd(continueWatchingEntity: ContinueWatchingEntity): Boolean {
         val playbackPosition = continueWatchingEntity.playbackPosition
-        val duration = continueWatchingEntity.entity.duration
+        val duration = continueWatchingEntity.duration
         return duration - playbackPosition < END_THRESHOLD
     }
 
@@ -82,6 +83,11 @@ class ContinueWatchingService @Inject constructor(
             playbackPosition = 0.seconds,
             lastEngagementTime = Instant.now()
         )
+
+        is VideoClipEntity -> null
+
+        else -> throw IllegalStateException("Unsupported video type for Continue Watching: $entity")
+
     }
 
 

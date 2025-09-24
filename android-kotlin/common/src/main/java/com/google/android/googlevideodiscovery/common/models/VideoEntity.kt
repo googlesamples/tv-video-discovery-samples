@@ -6,12 +6,7 @@ import kotlin.time.Duration.Companion.seconds
 
 sealed interface VideoEntity {
     val id: String
-    val duration: Duration
     val name: String
-    val playbackUris: PlatformSpecificUris
-    val images: List<Image>
-    val releaseYear: Int
-    val genre: String
     val type: EntityType
 
     fun toContinueWatchingEntity(
@@ -33,16 +28,14 @@ sealed interface VideoEntity {
 data class MovieEntity(
     override val id: String,
     override val name: String,
-    override val duration: Duration,
-    override val playbackUris: PlatformSpecificUris,
-    override val images: List<Image>,
-    override val releaseYear: Int,
-    override val genre: String,
+    val images: List<Image>,
+    val duration: Duration,
+    val playbackUris: PlatformSpecificUris,
+    val releaseYear: Int,
+    val genre: String,
     var nextMovieEntity: MovieEntity?,
 ) : VideoEntity {
-    override val type = EntityType.MOVIE
-
-    fun toPlaybackEntity() = toPlaybackEntity(playbackPosition = null)
+    override val type = EntityType.Movie
     override fun toPlaybackEntity(playbackPosition: Duration?) = PlaybackEntity(
         entityId = id,
         title = name,
@@ -56,24 +49,71 @@ data class MovieEntity(
 data class TvEpisodeEntity(
     override val id: String,
     override val name: String,
-    override val duration: Duration,
-    override val playbackUris: PlatformSpecificUris,
-    override val images: List<Image>,
-    override val releaseYear: Int,
-    override val genre: String,
+    val images: List<Image>,
+    val duration: Duration,
+    val playbackUris: PlatformSpecificUris,
+    val releaseYear: Int,
+    val genre: String,
     val episodeNumber: Int,
     val seasonNumber: Int,
     val showTitle: String,
     var nextEpisode: TvEpisodeEntity?,
 ) : VideoEntity {
-    override val type = EntityType.TV_EPISODE
+    override val type = EntityType.TvEpisode
 
-    fun toPlaybackEntity() = toPlaybackEntity(playbackPosition = null)
     override fun toPlaybackEntity(playbackPosition: Duration?) = PlaybackEntity(
         entityId = id,
         title = name,
-        releaseYear = releaseYear,
         duration = duration,
+        releaseYear = releaseYear,
+        genre = genre,
+        playbackPosition = playbackPosition ?: 0.seconds
+    )
+}
+
+data class VideoClipEntity(
+    override val id: String,
+    override val name: String,
+    val images: List<Image>,
+    val duration: Duration,
+    val playbackUris: PlatformSpecificUris,
+    val releaseYear: Int,
+    val genre: String,
+    val creatorImage: String,
+    val creator: String,
+    var nextVideoClipEntity: VideoClipEntity?,
+) : VideoEntity {
+    override val type = EntityType.VideoClip
+
+    override fun toPlaybackEntity(playbackPosition: Duration?) = PlaybackEntity(
+        entityId = id,
+        title = name,
+        duration = duration,
+        releaseYear = releaseYear,
+        genre = genre,
+        playbackPosition = playbackPosition ?: 0.seconds
+    )
+}
+
+data class TvShowEntity(
+    override val id: String,
+    override val name: String,
+    val images: List<Image>,
+    val description: String,
+    val platformSpecificUris: PlatformSpecificUris,
+    val releaseYear: Int,
+    val genre: String,
+    val seasonCount: Integer,
+    val duration: Duration,
+    var nextTvShowEntity: TvShowEntity?,
+) : VideoEntity {
+    override val type = EntityType.TvShow
+
+    override fun toPlaybackEntity(playbackPosition: Duration?) = PlaybackEntity(
+        entityId = id,
+        title = name,
+        duration = duration,
+        releaseYear = releaseYear,
         genre = genre,
         playbackPosition = playbackPosition ?: 0.seconds
     )

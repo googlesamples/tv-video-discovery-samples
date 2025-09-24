@@ -12,6 +12,7 @@ import com.google.android.googlevideodiscovery.common.models.ContinueWatchingEnt
 import com.google.android.googlevideodiscovery.common.models.MovieEntity
 import com.google.android.googlevideodiscovery.common.models.PlaybackEntity
 import com.google.android.googlevideodiscovery.common.models.TvEpisodeEntity
+import com.google.android.googlevideodiscovery.common.models.VideoClipEntity
 import com.google.android.googlevideodiscovery.common.ui.screens.EntityScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.HomeScreenDefaults
 import com.google.android.googlevideodiscovery.common.ui.screens.ProfilesScreenDefaults
@@ -100,29 +101,29 @@ class NavigationScreensImpl : NavigationScreens {
                         cardContent = { index ->
                             val continueWatchingEntity = continueWatchingEntities[index]
                             val entity = continueWatchingEntity.entity
-                            val progressPercent =
-                                continueWatchingEntity.playbackPosition.inWholeMilliseconds.toFloat() / entity.duration.inWholeMilliseconds
                             val cardTitle = when (entity) {
                                 is MovieEntity -> entity.name
                                 is TvEpisodeEntity -> HomeScreenDefaults.buildEpisodeTitle(
                                     episodeName = entity.name,
                                     episodeNumber = entity.episodeNumber,
                                 )
+                                is VideoClipEntity -> entity.name
+                                else -> throw IllegalStateException("Unsupported video type for Continue Watching: $entity")
                             }
 
                             HomeScreenDefaults.ChannelCard(
                                 title = cardTitle,
                                 subtitle = HomeScreenDefaults.buildSubtitle(
-                                    releaseYear = entity.releaseYear,
-                                    duration = entity.duration,
-                                    genre = entity.genre
+                                    releaseYear = continueWatchingEntity.releaseYear,
+                                    duration = continueWatchingEntity.duration,
+                                    genre = continueWatchingEntity.genre
                                 ),
                                 onClick = { onEntityClick(entity.id) },
                                 onLongClick = {
                                     confirmRemoveContinueWatchingEntity = continueWatchingEntity
                                 }
                             ) {
-                                HomeScreenDefaults.ProgressBar(progressPercent = progressPercent)
+                                HomeScreenDefaults.ProgressBar(progressPercent = continueWatchingEntity.progressPercent)
                             }
                         }
                     )
